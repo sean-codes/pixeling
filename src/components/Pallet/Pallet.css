@@ -1,15 +1,15 @@
 .pallet {
-  background:#151a1a;
-  width:100px;
-  padding:0 5px;
-  box-sizing:border-box;
-  height:100%;
-  display:flex;
-  flex-wrap:wrap;
-  align-content:flex-start;
+   background: #151a1a;
+   width: 100px;
+   padding: 0 5px;
+   box-sizing: border-box;
+   height: 100%;
+   display: flex;
+   flex-wrap: wrap;
+   align-content: flex-start;
 }
 
 .pallet .color {
-  width:30px;
-  height:30px;
+   width: 30px;
+   height: 30px;
 }

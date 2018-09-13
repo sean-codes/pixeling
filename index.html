@@ -1,93 +1,93 @@
 <!doctype html>
 <html>
-  <head>
-    <!-- shared -->
-    <link rel="stylesheet" href="./src/shared/shared.css">
-    <link rel="stylesheet" href="./src/shared/icons.css">
 
-    <!-- components -->
-    <link rel="stylesheet" href="./src/components/Appbar/Appbar.css"/>
-    <script src="./src/components/Appbar/Appbar.js"></script>
-    <link rel="stylesheet" href="./src/components/Pallet/Pallet.css"/>
-    <script src="./src/components/Pallet/Pallet.js"></script>
-    <link rel="stylesheet" href="./src/components/Canvas/Canvas.css"/>
-    <script src="./src/components/Canvas/Canvas.js"></script>
-    <link rel="stylesheet" href="./src/components/Tools/Tools.css"/>
-    <script src="./src/components/Tools/Tools.js"></script>
-    <link rel="stylesheet" href="./src/components/Statusbar/Statusbar.css"/>
-    <script src="./src/components/Statusbar/Statusbar.js"></script>
+<head>
+   <!-- shared -->
+   <link rel="stylesheet" href="./src/shared/shared.css">
+   <link rel="stylesheet" href="./src/shared/icons.css">
 
-  </head>
-  <body>
-    <div class="layout">
+   <!-- components -->
+   <link rel="stylesheet" href="./src/components/Appbar/Appbar.css" />
+   <script src="./src/components/Appbar/Appbar.js"></script>
+   <link rel="stylesheet" href="./src/components/Pallet/Pallet.css" />
+   <script src="./src/components/Pallet/Pallet.js"></script>
+   <link rel="stylesheet" href="./src/components/Canvas/Canvas.css" />
+   <script src="./src/components/Canvas/Canvas.js"></script>
+   <link rel="stylesheet" href="./src/components/Tools/Tools.css" />
+   <script src="./src/components/Tools/Tools.js"></script>
+   <link rel="stylesheet" href="./src/components/Statusbar/Statusbar.css" />
+   <script src="./src/components/Statusbar/Statusbar.js"></script>
+
+</head>
+
+<body>
+   <div class="layout">
       <div class="row">
-        <div class="appbar">pixel art editor</div>
+         <div class="appbar">pixel art editor</div>
       </div>
       <div class="row flex">
-        <div class="column">
-          <div class="pallet"></div>
-        </div>
-        <div class="column fill">
-          <div class="canvas"></div>
-        </div>
-        <div class="column">
-          <div class="tools"></div>
-        </div>
+         <div class="column">
+            <div class="pallet"></div>
+         </div>
+         <div class="column fill">
+            <div class="canvas"></div>
+         </div>
+         <div class="column">
+            <div class="tools"></div>
+         </div>
       </div>
       <div class="row">
-        <div class="statusbar"></div>
+         <div class="statusbar"></div>
       </div>
-    </div>
+   </div>
 
-    <script>
+   <script>
       var app = {}
       app.html = {
-        appbar: document.querySelector('.appbar'),
-        pallet: document.querySelector('.pallet'),
-        canvas: document.querySelector('.canvas'),
-        tools: document.querySelector('.tools'),
-        statusbar: document.querySelector('.statusbar')
+         appbar: document.querySelector('.appbar'),
+         pallet: document.querySelector('.pallet'),
+         canvas: document.querySelector('.canvas'),
+         tools: document.querySelector('.tools'),
+         statusbar: document.querySelector('.statusbar')
       }
 
       app.global = {}
-      app.global.status = [
-        {
-          name: 'scale',
-          innerHTML: 'scale: 1'
-        }
-      ]
+      app.global.status = [{
+         name: 'scale',
+         innerHTML: 'scale: 1'
+      }]
 
       app.script = {
-        bakeHTML: function(templates) {
-          var bakedHTML = {
-            elements: [],
-            appendTo: function(parent) {
-              for(var element of this.elements) {
-                parent.appendChild(element)
-              }
+         bakeHTML: function(templates) {
+            var bakedHTML = {
+               elements: [],
+               appendTo: function(parent) {
+                  for (var element of this.elements) {
+                     parent.appendChild(element)
+                  }
+               }
             }
-          }
 
-          for(var template of templates) {
-            var element = document.createElement(template.tag || 'div')
-            element.innerHTML = template.innerHTML || ''
-            // add styles / classes / children
-            for(var style in template.styles || [])
-              element.style[style] = template.styles[style]
+            for (var template of templates) {
+               var element = document.createElement(template.tag || 'div')
+               element.innerHTML = template.innerHTML || ''
+               // add styles / classes / children
+               for (var style in template.styles || [])
+                  element.style[style] = template.styles[style]
 
-            for(var className of template.classes || [])
-              element.classList.add(className)
+               for (var className of template.classes || [])
+                  element.classList.add(className)
 
-            if(template.children)
-            app.script.bakeHTML(template.children).appendTo(element)
+               if (template.children)
+                  app.script.bakeHTML(template.children).appendTo(element)
 
-            bakedHTML.elements.push(element)
-          }
-          return bakedHTML
-        },
-        onNew: function() {
+               bakedHTML.elements.push(element)
+            }
+            return bakedHTML
+         },
+         onNew: function() {
 
-        }
+         }
       }
 
       app.component = {}
@@ -96,8 +96,9 @@
       app.component.canvas = new Canvas(app.html.canvas)
       app.component.tools = new Tools(app.html.tools)
       app.component.statusbar = new Statusbar(app.html.statusbar, {
-        status: app.global.status
+         status: app.global.status
       })
-    </script>
-  </body>
+   </script>
+</body>
+
 </html>
