@@ -1,0 +1,12 @@
+.statusbar {
+  background:#151a1a;
+  color:#FFF;
+  width:100%;
+  height:40px;
+  line-height:40px;
+  font-size:12px;
+}
+
+.statusbar .status {
+  padding: 0 5px;
+}

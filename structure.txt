@@ -1,0 +1,36 @@
+// pixel editor
+
+// globals
+tool
+color
+selection
+
+// components
+selection
+  typically full width
+
+mouse / touch
+  down -> call on down
+  move => call on move / downMove
+  position
+
+pallet
+  colors -> array
+  colorPicker
+
+tools
+  draw
+    onDown -> add pixel
+    onMove -> add pixel
+
+  fill
+    onDown -> fill pixels
+    onMove -> nothing
+
+  select
+    onDown -> set selection
+    onMove -> expand selection
+
+  hand
+    onDown -> set pixels held
+    onMove -> move pixels
