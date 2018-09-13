@@ -22,7 +22,6 @@ class Pallet {
    }
 
    render() {
-      console.log('cats', this.html)
       var htmlRecipe = this.colors.map((color) => {
          return {
             classes: ['color'],

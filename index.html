@@ -17,7 +17,6 @@
    <script src="./src/components/Tools/Tools.js"></script>
    <link rel="stylesheet" href="./src/components/Statusbar/Statusbar.css" />
    <script src="./src/components/Statusbar/Statusbar.js"></script>
-
 </head>
 
 <body>
@@ -58,7 +57,7 @@
       }]
 
       app.script = {
-         bakeHTML: function(templates) {
+         bakeHTML: function(recipe) {
             var bakedHTML = {
                elements: [],
                appendTo: function(parent) {
@@ -68,7 +67,7 @@
                }
             }
 
-            for (var template of templates) {
+            for (var template of recipe) {
                var element = document.createElement(template.tag || 'div')
                element.innerHTML = template.innerHTML || ''
                // add styles / classes / children / events
