@@ -71,7 +71,7 @@
             for (var template of templates) {
                var element = document.createElement(template.tag || 'div')
                element.innerHTML = template.innerHTML || ''
-               // add styles / classes / children
+               // add styles / classes / children / events
                for (var style in template.styles || [])
                   element.style[style] = template.styles[style]
 
@@ -80,6 +80,12 @@
 
                if (template.children)
                   app.script.bakeHTML(template.children).appendTo(element)
+
+               for (let eventName in template.events || []) {
+                  element.addEventListener(eventName, (e) => {
+                     template.events[eventName](e, element)
+                  })
+               }
 
                bakedHTML.elements.push(element)
             }
