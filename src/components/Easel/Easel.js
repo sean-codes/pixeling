@@ -16,8 +16,8 @@ class Easel {
       this.canvasX = 0
       this.canvasY = 0
       this.canvasMoveDampen = 2
-      this.canvasScale = 1
-      this.canvasScaleMax = 5
+      this.canvasScale = 5
+      this.canvasScaleMax = 20
       this.canvasScaleMin = 0.1
       this.canvasScaleDampen = 100
       this.bakeHTML()
@@ -53,6 +53,8 @@ class Easel {
    }
 
    eventScroll(e) {
+      e.preventDefault()
+      
       var isZoom = e.ctrlKey
       if(isZoom) {
          this.canvasScale -= e.deltaY/this.canvasScaleDampen
