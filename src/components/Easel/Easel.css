@@ -1,0 +1,17 @@
+.easel {
+   height: 100%;
+   width: 100%;
+   background: #444;
+}
+
+.easel .scroll {
+   position: relative;
+   height: 100%;
+   overflow: hidden;
+}
+
+.easel .scroll canvas {
+   position: absolute;
+   background: #FFF;
+   box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
+}

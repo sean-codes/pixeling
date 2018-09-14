@@ -13,6 +13,8 @@
    <script src="./src/components/Pallet/Pallet.js"></script>
    <link rel="stylesheet" href="./src/components/Canvas/Canvas.css" />
    <script src="./src/components/Canvas/Canvas.js"></script>
+   <link rel="stylesheet" href="./src/components/Easel/Easel.css" />
+   <script src="./src/components/Easel/Easel.js"></script>
    <link rel="stylesheet" href="./src/components/Tools/Tools.css" />
    <script src="./src/components/Tools/Tools.js"></script>
    <link rel="stylesheet" href="./src/components/Statusbar/Statusbar.css" />
@@ -29,7 +31,7 @@
             <div class="pallet"></div>
          </div>
          <div class="column fill">
-            <div class="canvas"></div>
+            <div class="easel"></div>
          </div>
          <div class="column">
             <div class="tools"></div>
@@ -45,16 +47,12 @@
       app.html = {
          appbar: document.querySelector('.appbar'),
          pallet: document.querySelector('.pallet'),
-         canvas: document.querySelector('.canvas'),
+         easel: document.querySelector('.easel'),
          tools: document.querySelector('.tools'),
          statusbar: document.querySelector('.statusbar')
       }
 
       app.global = {}
-      app.global.status = [{
-         name: 'scale',
-         innerHTML: 'scale: 1'
-      }]
 
       app.script = {
          bakeHTML: function(recipe) {
@@ -80,6 +78,10 @@
                if (template.children)
                   app.script.bakeHTML(template.children).appendTo(element)
 
+               for(var append of template.append || [])
+                  element.appendChild(append)
+
+               // let does something interesting here
                for (let eventName in template.events || []) {
                   element.addEventListener(eventName, (e) => {
                      template.events[eventName](e, element)
@@ -97,12 +99,29 @@
 
       app.component = {}
       app.component.appbar = new Appbar(app.html.appbar)
-      app.component.pallet = new Pallet(app.html.pallet)
-      app.component.canvas = new Canvas(app.html.canvas)
-      app.component.tools = new Tools(app.html.tools)
       app.component.statusbar = new Statusbar(app.html.statusbar, {
-         status: app.global.status
+         status: {
+            scale: '[ scale: 1 ]',
+            pos: '[ pos: 0, 0 ]',
+         }
       })
+
+      app.component.pallet = new Pallet(app.html.pallet)
+      app.component.canvas = new Canvas({
+         onDown: (mouse) => {
+            
+         },
+         onMove: (mouse) => {
+            app.component.statusbar.updateStatus({
+               pos: `[pos: ${mouse.pos.x}, ${mouse.pos.y}]`
+            })
+         }
+      })
+      app.component.easel = new Easel(app.html.easel, {
+         canvas: app.component.canvas
+      })
+      app.component.tools = new Tools(app.html.tools)
+
    </script>
 </body>
 
