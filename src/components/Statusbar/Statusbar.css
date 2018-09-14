@@ -5,6 +5,7 @@
    height: 40px;
    line-height: 40px;
    font-size: 12px;
+   display: flex;
 }
 
 .statusbar .status {

@@ -1,15 +1,35 @@
 class Statusbar {
    constructor(html, options) {
       this.html = html
-      this.setStatus(options.status)
-      this.render()
+
+      this.setupStatusArray(options.status)
+      this.createStatusElements(options.status)
    }
 
-   setStatus(status) {
-      this.status = JSON.parse(JSON.stringify(status))
+   setupStatusArray(status) {
+      this.status = []
+
+      var cloneStatus = JSON.parse(JSON.stringify(status))
+      for(var cloneStatusKey in cloneStatus) {
+         this.status.push({
+            name: cloneStatusKey,
+            innerHTML: cloneStatus[cloneStatusKey]
+         })
+      }
    }
 
-   render() {
+   updateStatus(newStatusObject) {
+      for(var statusName in newStatusObject) {
+         for(var status of this.status) {
+            if(status.name == statusName) {
+               status.element.innerHTML = newStatusObject[statusName]
+               break
+            }
+         }
+      }
+   }
+
+   createStatusElements() {
       var batchCookingRecipe = this.status.map((status) => {
          return {
             classes: ['status'],
@@ -19,5 +39,9 @@ class Statusbar {
 
       var bakedHTML = app.script.bakeHTML(batchCookingRecipe)
       bakedHTML.appendTo(this.html)
+
+      for(var elementID in bakedHTML.elements) {
+         this.status[elementID].element = bakedHTML.elements[elementID]
+      }
    }
 }
