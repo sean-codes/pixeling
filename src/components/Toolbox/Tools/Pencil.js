@@ -1,7 +1,7 @@
 class ToolPencil {
 
-   stroke() {
-      console.log('pencil stroke')
+   stroke(mouse) {
+      app.script.addPixel(mouse.positionCurrent)
    }
 
    down() {
@@ -9,6 +9,6 @@ class ToolPencil {
    }
 
    up() {
-      
+
    }
 }

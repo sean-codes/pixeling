@@ -1,6 +1,7 @@
 class Pallet {
    constructor(html, options) {
       this.html = html
+      this.color = '#000'
       this.colors = [
          '#FFF',
          '#DDD',

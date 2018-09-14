@@ -15,18 +15,19 @@ class Canvas {
 
    eventMousedown(e, element) {
       this.mouse.down = true
+      this.mouse.positionStart = { x: e.offsetX, y: e.offsetY }
       this.onDown()
    }
 
    eventMousemove(e, element) {
-      this.mouse.pos.x = e.clientX
-      this.mouse.pos.y = e.clientY
+      this.mouse.positionCurrent  = { x: e.offsetX, y: e.offsetY }
       this.onMove(this.mouse)
       if(this.mouse.down) this.onStroke(this.mouse)
    }
 
    eventMouseup(e, element) {
       this.mouse.down = false
+      this.mouse.positionEnd  = { x: e.offsetX, y: e.offsetY }
       this.onUp()
    }
 
@@ -43,5 +44,13 @@ class Canvas {
 
       var bakedHTML = app.script.bakeHTML(htmlBakeRecipe)
       this.htmlCanvas = bakedHTML.elements[0]
+      this.ctx = this.htmlCanvas.getContext('2d')
+   }
+
+   renderImage(image) {
+      for(var pixel of image.pixels) {
+         this.ctx.fillStyle = pixel.color
+         this.ctx.fillRect(pixel.position.x, pixel.position.y, 1, 1)
+      }
    }
 }

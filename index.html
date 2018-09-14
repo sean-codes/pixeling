@@ -100,6 +100,12 @@
          },
          onNew: function() {
 
+         },
+         addPixel: function(position) {
+            var color = app.component.pallet.color
+            app.image.pixels.push({ position, color })
+
+            app.component.canvas.renderImage(app.image)
          }
       }
 
@@ -121,11 +127,11 @@
 
          },
          onStroke: (mouse) => {
-            app.component.tools.stroke()
+            app.component.tools.stroke(mouse)
          },
          onMove: (mouse) => {
             app.component.statusbar.updateStatus({
-               pos: `[pos: ${mouse.pos.x}, ${mouse.pos.y}]`
+               pos: `[pos: ${mouse.positionCurrent.x}, ${mouse.positionCurrent.y}]`
             })
          }
       })

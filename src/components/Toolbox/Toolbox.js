@@ -1,16 +1,19 @@
 class Toolbox {
    constructor(html) {
       this.html = html
+
       this.tools = [{
          icon: 'draw',
          tool: new ToolPencil()
       }]
 
+      this.currentTool = this.tools[0].tool
+
       this.render()
    }
 
-   stroke() {
-      console.log('run tools stroke action')
+   stroke(position) {
+      var action = this.currentTool.stroke(position)
    }
 
    render() {
