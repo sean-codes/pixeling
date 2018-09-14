@@ -2,6 +2,7 @@ class Easel {
    constructor(html, options) {
       this.html = html
       this.htmlCanvas = options.canvas.htmlCanvas
+      this.onScale = options.onScale || function(){}
 
       this.mouse = {
          moving: false,

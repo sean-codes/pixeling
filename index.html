@@ -15,10 +15,13 @@
    <script src="./src/components/Canvas/Canvas.js"></script>
    <link rel="stylesheet" href="./src/components/Easel/Easel.css" />
    <script src="./src/components/Easel/Easel.js"></script>
-   <link rel="stylesheet" href="./src/components/Tools/Tools.css" />
-   <script src="./src/components/Tools/Tools.js"></script>
+   <link rel="stylesheet" href="./src/components/Toolbox/Toolbox.css" />
+   <script src="./src/components/Toolbox/Toolbox.js"></script>
    <link rel="stylesheet" href="./src/components/Statusbar/Statusbar.css" />
    <script src="./src/components/Statusbar/Statusbar.js"></script>
+
+   <!-- tools -->
+   <script src="./src/components/Toolbox/Tools/Pencil.js"></script>
 </head>
 
 <body>
@@ -34,7 +37,7 @@
             <div class="easel"></div>
          </div>
          <div class="column">
-            <div class="tools"></div>
+            <div class="toolbox"></div>
          </div>
       </div>
       <div class="row">
@@ -48,11 +51,14 @@
          appbar: document.querySelector('.appbar'),
          pallet: document.querySelector('.pallet'),
          easel: document.querySelector('.easel'),
-         tools: document.querySelector('.tools'),
+         toolbox: document.querySelector('.toolbox'),
          statusbar: document.querySelector('.statusbar')
       }
 
       app.global = {}
+      app.image = {
+         pixels: []
+      }
 
       app.script = {
          bakeHTML: function(recipe) {
@@ -107,9 +113,15 @@
       })
 
       app.component.pallet = new Pallet(app.html.pallet)
+      app.component.tools = new Toolbox(app.html.toolbox)
+
       app.component.canvas = new Canvas({
+         image: app.image,
          onDown: (mouse) => {
-            
+
+         },
+         onStroke: (mouse) => {
+            app.component.tools.stroke()
          },
          onMove: (mouse) => {
             app.component.statusbar.updateStatus({
@@ -117,10 +129,15 @@
             })
          }
       })
+
       app.component.easel = new Easel(app.html.easel, {
-         canvas: app.component.canvas
+         canvas: app.component.canvas,
+         onScale: (scale) => {
+            app.component.statusbar.updateStatus({
+               scale: `[scale: ${scale}]`
+            })
+         }
       })
-      app.component.tools = new Tools(app.html.tools)
 
    </script>
 </body>

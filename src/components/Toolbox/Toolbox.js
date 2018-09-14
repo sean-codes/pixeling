@@ -1,15 +1,19 @@
-class Tools {
+class Toolbox {
    constructor(html) {
       this.html = html
       this.tools = [{
-         icon: 'draw'
+         icon: 'draw',
+         tool: new ToolPencil()
       }]
 
       this.render()
    }
 
+   stroke() {
+      console.log('run tools stroke action')
+   }
+
    render() {
-      console.log('test')
       var htmlRecipe = this.tools.map((tool) => {
          return {
             classes: ['tool'],

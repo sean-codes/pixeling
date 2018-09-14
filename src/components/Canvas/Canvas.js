@@ -2,8 +2,10 @@ class Canvas {
    constructor(options) {
       this.createCanvas()
 
-      this.onDown = options.onDown
-      this.onMove = options.onMove
+      this.onDown = options.onDown || function(){}
+      this.onMove = options.onMove || function(){}
+      this.onStroke = options.onStroke || function(){}
+      this.onUp = options.onUp || function(){}
 
       this.mouse = {
          down: false,
@@ -20,10 +22,12 @@ class Canvas {
       this.mouse.pos.x = e.clientX
       this.mouse.pos.y = e.clientY
       this.onMove(this.mouse)
+      if(this.mouse.down) this.onStroke(this.mouse)
    }
 
    eventMouseup(e, element) {
       this.mouse.down = false
+      this.onUp()
    }
 
    createCanvas() {

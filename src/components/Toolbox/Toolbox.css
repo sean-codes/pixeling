@@ -1,21 +1,21 @@
-.tools {
+.toolbox {
    height: 100%;
    width: 40px;
    background: #151a1a;
 }
 
-.tools .tool {
+.toolbox .tool {
    width: 100%;
    height: 40px;
    display: flex;
 }
 
-.tools .tool .icon {
+.toolbox .tool .icon {
    font-size: 19px;
    transform: rotateZ(-45deg);
 }
 
-.tools .tool:hover {
+.toolbox .tool:hover {
    background: rgba(0, 0, 0, 0.1);
    cursor: pointer;
 }
