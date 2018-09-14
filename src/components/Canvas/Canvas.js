@@ -91,7 +91,7 @@ class Canvas {
             mousemove: (e, ele) => this.eventMousemove(e, ele),
             mousedown: (e, ele) => this.eventMousedown(e, ele),
             mouseup: (e, ele) => this.eventMouseup(e, ele),
-            mouseout: (e, ele) => this.eventMouseup(e, ele),
+            mouseleave: (e, ele) => this.eventMouseup(e, ele),
             mousewheel: (e, ele) => this.eventScroll(e, ele)
          },
          children: [{
