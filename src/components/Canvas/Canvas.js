@@ -3,12 +3,14 @@ class Canvas {
       this.html = html
 
       this.mouse = {
+         moving: false,
          down: false,
          pos: {
             x: 0,
             y: 0
          }
       }
+
       this.canvasX = 0
       this.canvasY = 0
       this.canvasMoveDampen = 2
@@ -21,10 +23,15 @@ class Canvas {
    }
 
    eventMousedown(e, element) {
-      this.mouse.down = true
+      var isLeftButton = e.button == 1
+      var isMiddleButton = e.button == 1
+
+      if(isMiddleButton) this.mouse.moving = true
+      if(isLeftButton) this.mouse.down = true
    }
 
    eventMouseup(e, element) {
+      this.mouse.moving = false
       this.mouse.down = false
    }
 
@@ -35,9 +42,11 @@ class Canvas {
       this.mouse.pos.x = e.clientX
       this.mouse.pos.y = e.clientY
 
-      if (this.mouse.down) {
-         this.htmlScroll.parentElement.scrollLeft = this.htmlScroll.parentElement.scrollLeft + deltaX
-         this.htmlScroll.parentElement.scrollTop = this.htmlScroll.parentElement.scrollTop + deltaY
+      if (this.mouse.moving) {
+         this.canvasX -= deltaX
+         this.canvasY -= deltaY
+
+         this.transformCanvas()
       }
    }
 
