@@ -93,15 +93,14 @@ class Canvas {
    resetCanvas() {
       this.ctx.clearRect(0, 0, this.htmlCanvas.width, this.htmlCanvas.height)
       this.htmlCanvas.width = this.image.width*this.scale
-      this.htmlCanvas.height = this.image.width*this.scale
+      this.htmlCanvas.height = this.image.height*this.scale
       this.drawCheckerBoard()
    }
 
    drawCheckerBoard() {
       var size = 16
-      var spacesX = this.image.width / size
-      var spacesY = this.image.height / size
-
+      var spacesX = Math.ceil(this.image.width / size)
+      var spacesY = Math.ceil(this.image.height / size)
       var counter = 0
       for(var x = 0; x < spacesX; x++) {
          for(var y = 0; y < spacesY; y++) {
@@ -112,9 +111,9 @@ class Canvas {
                this.scale*size,
                this.scale*size
             )
-            counter += 1 
+            counter += 1
          }
-         counter += 1
+         if(spacesY % 2 == 0) counter += 1
       }
    }
 }
