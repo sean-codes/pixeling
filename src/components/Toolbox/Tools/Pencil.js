@@ -1,14 +1,31 @@
 class ToolPencil {
+   constructor() {
+      this.size = 1
+   }
+
+   down(mouse) {
+      this.drawPixelAtPosition(mouse.positionStart)
+   }
+
+   move(mouse) {
+      this.updateCursorPosition(mouse.positionCurrent)
+   }
 
    stroke(mouse) {
-      app.script.addPixel(mouse.positionCurrent)
+      this.updateCursorPosition(mouse.positionCurrent)
+      this.drawPixelAtPosition(mouse.positionCurrent)
    }
 
-   down() {
-
+   drawPixelAtPosition(position) {
+      app.script.addPixel(position)
    }
 
-   up() {
-
+   updateCursorPosition(position) {
+      app.script.setCursor({
+         x: position.x,
+         y: position.y,
+         width: this.size,
+         height: this.size
+      })
    }
 }

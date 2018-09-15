@@ -1,7 +1,12 @@
 class Easel {
    constructor(html, options) {
       this.html = html
-      this.htmlCanvas = options.canvas.htmlCanvas
+
+      this.canvas = options.canvas
+      this.cursor = options.cursor
+
+      this.htmlCanvas = this.canvas.htmlCanvas
+      this.htmlCursor = this.cursor.htmlCanvas
       this.onScale = options.onScale || function(){}
 
       this.mouse = {
@@ -16,7 +21,7 @@ class Easel {
       this.canvasX = 0
       this.canvasY = 0
       this.canvasMoveDampen = 2
-      this.canvasScale = 5
+      this.canvasScale = 1
       this.canvasScaleMax = 20
       this.canvasScaleMin = 0.1
       this.canvasScaleDampen = 100
@@ -48,40 +53,52 @@ class Easel {
          this.canvasX -= deltaX
          this.canvasY -= deltaY
 
-         this.transformCanvas()
+         this.transformCanvasAndCursor()
       }
    }
 
    eventScroll(e) {
       e.preventDefault()
-      
+
       var isZoom = e.ctrlKey
       if(isZoom) {
          this.canvasScale -= e.deltaY/this.canvasScaleDampen
          this.canvasScale = Math.min(this.canvasScaleMax, Math.max(this.canvasScaleMin, this.canvasScale))
+
+         this.cursor.updateScale(this.canvasScale)
       } else {
          this.canvasX -= e.deltaX / this.canvasMoveDampen
          this.canvasY -= e.deltaY / this.canvasMoveDampen
       }
 
-      this.transformCanvas()
+      this.transformCanvasAndCursor()
    }
 
    centerCanvas() {
       var canvasRect = this.htmlCanvas.getBoundingClientRect()
+      var cursorRect = this.htmlCursor.getBoundingClientRect()
       var scrollRect = this.htmlScroll.getBoundingClientRect()
 
       this.canvasX = (scrollRect.width / 2) - (canvasRect.width / 2)
       this.canvasY = (scrollRect.height / 2) - (canvasRect.height / 2)
 
-      this.transformCanvas()
+      this.cursorX = (scrollRect.width / 2) - (cursorRect.width / 2)
+      this.cursorY = (scrollRect.height / 2) - (cursorRect.height / 2)
+
+      this.transformCanvasAndCursor()
    }
 
-   transformCanvas() {
+   transformCanvasAndCursor() {
       var x = this.canvasX
       var y = this.canvasY
       var scale = this.canvasScale
       this.htmlCanvas.style.transform = `
+        translateX(${x}px)
+        translateY(${y}px)
+        scale(${scale})
+      `
+
+      this.htmlCursor.style.transform = `
         translateX(${x}px)
         translateY(${y}px)
         scale(${scale})
@@ -98,12 +115,12 @@ class Easel {
             mouseleave: this.eventMouseup.bind(this),
             mousewheel: this.eventScroll.bind(this)
          },
-         append: [this.htmlCanvas]
+         append: [this.htmlCanvas, this.htmlCursor]
       }]
 
       var bakedHTML = app.script.bakeHTML(htmlBakeRecipe)
       this.htmlScroll = bakedHTML.elements[0]
-      this.htmlCanvas = this.htmlScroll.querySelector('canvas')
+
       bakedHTML.appendTo(this.html)
    }
 }

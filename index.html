@@ -13,6 +13,8 @@
    <script src="./src/components/Pallet/Pallet.js"></script>
    <link rel="stylesheet" href="./src/components/Canvas/Canvas.css" />
    <script src="./src/components/Canvas/Canvas.js"></script>
+   <link rel="stylesheet" href="./src/components/Cursor/Cursor.css" />
+   <script src="./src/components/Cursor/Cursor.js"></script>
    <link rel="stylesheet" href="./src/components/Easel/Easel.css" />
    <script src="./src/components/Easel/Easel.js"></script>
    <link rel="stylesheet" href="./src/components/Toolbox/Toolbox.css" />
@@ -70,6 +72,9 @@
                   for (var element of this.elements) {
                      parent.appendChild(element)
                   }
+               },
+               first: function() {
+                  return this.elements[0]
                }
             }
 
@@ -108,6 +113,9 @@
             app.image.pixels.push({ position, color })
 
             app.component.canvas.renderImage(app.image)
+         },
+         setCursor: function(options) {
+            app.component.cursor.update(options)
          }
       }
 
@@ -121,17 +129,19 @@
       })
 
       app.component.pallet = new Pallet(app.html.pallet)
-      app.component.tools = new Toolbox(app.html.toolbox)
+      app.component.toolbox = new Toolbox(app.html.toolbox)
 
+      app.component.cursor = new Cursor()
       app.component.canvas = new Canvas({
          image: app.image,
          onDown: (mouse) => {
-
+            app.component.toolbox.down(mouse)
          },
          onStroke: (mouse) => {
-            app.component.tools.stroke(mouse)
+            app.component.toolbox.stroke(mouse)
          },
          onMove: (mouse) => {
+            app.component.toolbox.move(mouse)
             app.component.statusbar.updateStatus({
                pos: `[pos: ${mouse.positionCurrent.x}, ${mouse.positionCurrent.y}]`
             })
@@ -140,6 +150,7 @@
 
       app.component.easel = new Easel(app.html.easel, {
          canvas: app.component.canvas,
+         cursor: app.component.cursor,
          onScale: (scale) => {
             app.component.statusbar.updateStatus({
                scale: `[scale: ${scale}]`

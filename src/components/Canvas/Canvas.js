@@ -1,8 +1,6 @@
 class Canvas {
    constructor(options) {
       this.createCanvas()
-      this.renderImage(options.image)
-
       this.onDown = options.onDown || function(){}
       this.onMove = options.onMove || function(){}
       this.onStroke = options.onStroke || function(){}
@@ -12,6 +10,9 @@ class Canvas {
          down: false,
          pos: { x: 0, y: 0 }
       }
+
+      this.scale = 10
+      this.renderImage(options.image)
    }
 
    eventMousedown(e, element) {
@@ -19,20 +20,26 @@ class Canvas {
       if(mouseButton != 'left') return
 
       this.mouse.down = true
-      this.mouse.positionStart = { x: e.offsetX, y: e.offsetY }
-      this.onDown()
+      this.mouse.positionStart = {
+         x: Math.floor(e.offsetX / this.scale),
+         y: Math.floor(e.offsetY / this.scale)
+      }
+      this.onDown(this.mouse)
    }
 
    eventMousemove(e, element) {
-      if(!this.mouse.down) return
+      this.mouse.positionCurrent = {
+         x: Math.floor(e.offsetX / this.scale),
+         y: Math.floor(e.offsetY / this.scale)
+      }
 
-      this.mouse.positionCurrent  = { x: e.offsetX, y: e.offsetY }
+      this.onMove(this.mouse)
+
       // i see you noticed the pixel skipping
       // within / around here
       // we need to run this between delta x and y to fill in the gaps
       // 1. find the angle between last position and current
       // 2. we could brute force or run on only the pixels between once
-      this.onMove(this.mouse)
       if(this.mouse.down) this.onStroke(this.mouse)
    }
 
@@ -46,6 +53,7 @@ class Canvas {
    createCanvas() {
       var htmlBakeRecipe = [{
          tag: 'canvas',
+         classes: ['canvas'],
          events: {
             mousedown: this.eventMousedown.bind(this),
             mousemove: this.eventMousemove.bind(this),
@@ -60,11 +68,17 @@ class Canvas {
    }
 
    renderImage(image) {
-      this.htmlCanvas.width = image.width
-      this.htmlCanvas.height = image.height
+      this.htmlCanvas.width = image.width*this.scale
+      this.htmlCanvas.height = image.height*this.scale
+
       for(var pixel of image.pixels) {
          this.ctx.fillStyle = pixel.color
-         this.ctx.fillRect(pixel.position.x, pixel.position.y, 1, 1)
+         this.ctx.fillRect(
+            pixel.position.x*this.scale,
+            pixel.position.y*this.scale,
+            this.scale,
+            this.scale
+         )
       }
    }
 }

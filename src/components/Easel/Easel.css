@@ -12,6 +12,21 @@
 
 .easel .scroll canvas {
    position: absolute;
-   background: #FFF;
-   box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
+
+   /* Legal fallback */
+   image-rendering: optimizeSpeed;
+   /* Firefox        */
+   image-rendering: -moz-crisp-edges;
+   /* Opera          */
+   image-rendering: -o-crisp-edges;
+   /* Safari         */
+   image-rendering: -webkit-optimize-contrast;
+   /* CSS3 Proposed  */
+   image-rendering: optimize-contrast;
+   /* CSS4 Proposed  */
+   image-rendering: crisp-edges;
+   /* CSS4 Proposed  */
+   image-rendering: pixelated;
+   /* IE8+           */
+   -ms-interpolation-mode: nearest-neighbor;
 }

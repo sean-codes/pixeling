@@ -12,8 +12,16 @@ class Toolbox {
       this.render()
    }
 
-   stroke(position) {
-      var action = this.currentTool.stroke(position)
+   down(mouse) {
+      this.currentTool.down(mouse)
+   }
+
+   move(mouse) {
+      this.currentTool.move(mouse)
+   }
+
+   stroke(mouse) {
+      this.currentTool.stroke(mouse)
    }
 
    render() {
