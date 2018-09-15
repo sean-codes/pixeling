@@ -64,7 +64,7 @@ class Easel {
       if(isZoom) {
          this.canvasScale -= e.deltaY/this.canvasScaleDampen
          this.canvasScale = Math.min(this.canvasScaleMax, Math.max(this.canvasScaleMin, this.canvasScale))
-
+         this.onScale(Math.round(this.canvasScale*100)/100)
          this.cursor.updateScale(this.canvasScale)
       } else {
          this.canvasX -= e.deltaX / this.canvasMoveDampen
