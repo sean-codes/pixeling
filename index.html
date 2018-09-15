@@ -112,7 +112,7 @@
             var color = app.component.pallet.color
             app.image.pixels.push({ position, color })
 
-            app.component.canvas.renderImage(app.image)
+            app.component.canvas.updateImage(app.image)
          },
          setCursor: function(options) {
             app.component.cursor.update(options)

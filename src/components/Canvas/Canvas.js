@@ -1,6 +1,7 @@
 class Canvas {
    constructor(options) {
       this.createCanvas()
+      this.image = options.image
       this.onDown = options.onDown || function(){}
       this.onMove = options.onMove || function(){}
       this.onStroke = options.onStroke || function(){}
@@ -12,7 +13,11 @@ class Canvas {
       }
 
       this.scale = 10
-      this.renderImage(options.image)
+      this.htmlCanvas.width = this.image.width*this.scale
+      this.htmlCanvas.height = this.image.height*this.scale
+
+      this.resetCanvas()
+      this.renderImage()
    }
 
    eventMousedown(e, element) {
@@ -67,11 +72,14 @@ class Canvas {
       this.ctx = this.htmlCanvas.getContext('2d')
    }
 
-   renderImage(image) {
-      this.htmlCanvas.width = image.width*this.scale
-      this.htmlCanvas.height = image.height*this.scale
+   updateImage(image) {
+      this.image = image
+      this.resetCanvas()
+      this.renderImage()
+   }
 
-      for(var pixel of image.pixels) {
+   renderImage() {
+      for(var pixel of this.image.pixels) {
          this.ctx.fillStyle = pixel.color
          this.ctx.fillRect(
             pixel.position.x*this.scale,
@@ -79,6 +87,34 @@ class Canvas {
             this.scale,
             this.scale
          )
+      }
+   }
+
+   resetCanvas() {
+      this.ctx.clearRect(0, 0, this.htmlCanvas.width, this.htmlCanvas.height)
+      this.htmlCanvas.width = this.image.width*this.scale
+      this.htmlCanvas.height = this.image.width*this.scale
+      this.drawCheckerBoard()
+   }
+
+   drawCheckerBoard() {
+      var size = 16
+      var spacesX = this.image.width / size
+      var spacesY = this.image.height / size
+
+      var counter = 0
+      for(var x = 0; x < spacesX; x++) {
+         for(var y = 0; y < spacesY; y++) {
+            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'
+            if(counter % 2) this.ctx.fillRect(
+               x*size*this.scale,
+               y*size*this.scale,
+               this.scale*size,
+               this.scale*size
+            )
+            counter += 1 
+         }
+         counter += 1
       }
    }
 }
