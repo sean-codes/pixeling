@@ -3,6 +3,10 @@ class ToolEraser {
       this.size = 1
    }
 
+   select() {
+      app.script.setColor('rgba(0, 0, 0, 0)')
+   }
+
    down(mouse) {
       this.erasePixelAtPosition(mouse.positionStart)
    }
@@ -17,7 +21,7 @@ class ToolEraser {
    }
 
    erasePixelAtPosition(position) {
-      app.script.removePixel(position)
+      app.script.setPixel(position)
    }
 
    updateCursorPosition(position) {
@@ -25,7 +29,8 @@ class ToolEraser {
          x: position.x,
          y: position.y,
          width: this.size,
-         height: this.size
+         height: this.size,
+         color: 'rgba(0, 0, 0, 0)'
       })
    }
 }

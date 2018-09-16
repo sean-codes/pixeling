@@ -58,7 +58,10 @@
          statusbar: document.querySelector('.statusbar')
       }
 
-      app.global = {}
+      app.global = {
+         color: '#000'
+      }
+
       app.image = {
          width: 48,
          height: 32,
@@ -112,18 +115,14 @@
             }
             return bakedHTML
          },
-         onNew: function() {
-
+         usePalletColor: function() {
+            app.script.setColor(app.component.pallet.color)
          },
-         addPixel: function(position) {
-            var color = app.component.pallet.color
-            var pixelID = position.x + '-' + position.y
-            app.image.pixels[pixelID] = { position, color }
-
-            app.component.canvas.updateImage(app.image)
+         setColor: function(color) {
+            app.global.color = color
          },
-         removePixel: function(position) {
-            var color = 'transparent'
+         setPixel: function(position) {
+            var color = app.global.color
             var pixelID = position.x + '-' + position.y
             app.image.pixels[pixelID] = { position, color }
 
@@ -143,7 +142,9 @@
          }
       })
 
-      app.component.pallet = new Pallet(app.html.pallet)
+      app.component.pallet = new Pallet(app.html.pallet, {
+         onChange: app.script.setColor
+      })
       app.component.toolbox = new Toolbox(app.html.toolbox)
 
       app.component.cursor = new Cursor()

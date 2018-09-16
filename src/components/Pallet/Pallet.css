@@ -13,3 +13,7 @@
    width: 30px;
    height: 30px;
 }
+
+.pallet .color.active {
+   border:3px dashed hsl(188, 75%, 50%);
+}

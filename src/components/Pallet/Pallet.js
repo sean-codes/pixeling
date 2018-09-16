@@ -1,6 +1,8 @@
 class Pallet {
    constructor(html, options) {
       this.html = html
+      this.onChange = options.onChange
+      
       this.color = '#000'
       this.colors = [
          '#FFF',
@@ -22,16 +24,31 @@ class Pallet {
       this.render()
    }
 
+   changeColor(e, element) {
+      this.color = element.dataset.color
+      for(var element of this.bakedHTML.elements) {
+         var isSelected = element.dataset.color == this.color
+         element.classList.toggle('active', isSelected)
+      }
+
+      this.onChange(this.color)
+   }
+
    render() {
       var htmlRecipe = this.colors.map((color) => {
          return {
-            classes: ['color'],
+            classes: ['color'].concat(color == this.color ? ['active'] : []),
+            data: { color: color },
             styles: {
                background: color
+            },
+            events: {
+               click: this.changeColor.bind(this)
             }
          }
       })
 
-      app.script.bakeHTML(htmlRecipe).appendTo(this.html)
+      this.bakedHTML = app.script.bakeHTML(htmlRecipe)
+      this.bakedHTML.appendTo(this.html)
    }
 }

@@ -1,24 +1,18 @@
 class Cursor {
    constructor() {
-      this.position = { x: 0, y: 0 }
-      this.size = {
-         width: 1,
-         height: 1
-      }
+      this.x = 0
+      this.y = 0
+      this.width = 1
+      this.height = 1
       this.scale = 1
+      this.color = '#000'
       this.createCursorCanvas()
       this.renderCursor()
    }
 
    update(options) {
-      this.position = {
-         x: options.x,
-         y: options.y
-      }
-
-      this.size = {
-         width: options.width,
-         height: options.height
+      for(var option in options) {
+         this[option] = options[option]
       }
 
       this.renderCursor()
@@ -34,8 +28,9 @@ class Cursor {
       this.htmlCanvas.width = app.image.width*cursorScale
       this.htmlCanvas.height = app.image.height*cursorScale
 
-      var x = Math.floor(this.position.x*cursorScale)
-      var y = Math.floor(this.position.y*cursorScale)
+      var x = Math.floor(this.x*cursorScale)
+      var y = Math.floor(this.y*cursorScale)
+      this.ctx.fillStyle = this.color
       this.ctx.fillRect(x, y, cursorScale, cursorScale)
       this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)'
       this.ctx.strokeRect(x-0.5, y-0.5, cursorScale+1, cursorScale+1)

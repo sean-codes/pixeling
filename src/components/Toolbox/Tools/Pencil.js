@@ -3,6 +3,10 @@ class ToolPencil {
       this.size = 1
    }
 
+   select() {
+      app.script.usePalletColor()
+   }
+
    down(mouse) {
       this.drawPixelAtPosition(mouse.positionStart)
    }
@@ -17,7 +21,7 @@ class ToolPencil {
    }
 
    drawPixelAtPosition(position) {
-      app.script.addPixel(position)
+      app.script.setPixel(position)
    }
 
    updateCursorPosition(position) {
@@ -25,7 +29,8 @@ class ToolPencil {
          x: position.x,
          y: position.y,
          width: this.size,
-         height: this.size
+         height: this.size,
+         color: '#000'
       })
    }
 }

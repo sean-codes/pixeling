@@ -41,6 +41,7 @@ class Toolbox {
 
          if(tool.active) {
             this.currentTool = tool.tool
+            this.currentTool.select && this.currentTool.select()
          }
       }
    }
