@@ -79,7 +79,8 @@ class Canvas {
    }
 
    renderImage() {
-      for(var pixel of this.image.pixels) {
+      for(var pixelID in this.image.pixels) {
+         var pixel = this.image.pixels[pixelID]
          this.ctx.fillStyle = pixel.color
          this.ctx.fillRect(
             pixel.position.x*this.scale,

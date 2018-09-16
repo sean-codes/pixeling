@@ -16,17 +16,26 @@
 
 /* icons */
 .icon.draw:after {
-   width: 0.45em;
+   width: 0.5em;
    height: 0.65em;
    bottom: 0;
    box-shadow: inset 0 0.35em 0, inset 0 -0.15em 0;
 }
 
 .icon.draw:before {
-   top: -0.3em;
-   border-width: 0.25em;
+   top: -0.35em;
+   border-width: 0.3em;
    border-style: solid;
    border-top-color: transparent;
    border-left-color: transparent;
    border-right-color: transparent;
+}
+
+.icon.eraser:before {
+   top: -0.1em;
+   width:0.4em;
+   height: 0.85em;
+   border-width: 0.1em;
+   border-style: solid;
+   box-shadow: inset 0 0.5em 0;
 }

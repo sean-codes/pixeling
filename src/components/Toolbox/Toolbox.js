@@ -2,10 +2,19 @@ class Toolbox {
    constructor(html) {
       this.html = html
 
-      this.tools = [{
-         icon: 'draw',
-         tool: new ToolPencil()
-      }]
+      this.tools = [
+         {
+            name: 'draw',
+            icon: 'draw',
+            tool: new ToolPencil(),
+            active: true
+         },
+         {
+            name: 'eraser',
+            icon: 'eraser',
+            tool: new ToolEraser()
+         }
+   ]
 
       this.currentTool = this.tools[0].tool
 
@@ -24,14 +33,36 @@ class Toolbox {
       this.currentTool.stroke(mouse)
    }
 
-   render() {
-      var htmlRecipe = this.tools.map((tool) => {
-         return {
-            classes: ['tool'],
-            innerHTML: '<div class="icon draw"></div>'
-         }
-      })
+   toolClicked(e, element) {
+      var toolName = element.dataset.name
+      for(var tool of this.tools) {
+         tool.active = tool.name == toolName ? true : false
+         tool.element.classList.toggle('active', tool.active)
 
-      app.script.bakeHTML(htmlRecipe).appendTo(this.html)
+         if(tool.active) {
+            this.currentTool = tool.tool
+         }
+      }
+   }
+
+   render() {
+      var htmlRecipe = []
+      for(let tool of this.tools) {
+         htmlRecipe.push({
+            classes: ['tool'].concat(tool.active ? ['active'] : []),
+            data: { name: tool.name },
+            innerHTML: `<div class="icon ${tool.icon}"></div>`,
+            events: {
+               click: this.toolClicked.bind(this)
+            }
+         })
+      }
+
+      var htmlTools = app.script.bakeHTML(htmlRecipe)
+      for(var toolID in htmlTools.elements) {
+         this.tools[toolID].element = htmlTools.elements[toolID]
+      }
+
+      htmlTools.appendTo(this.html)
    }
 }
