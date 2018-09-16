@@ -3,8 +3,8 @@ class ToolEraser {
       this.size = 1
    }
 
-   select() {
-      app.script.setColor('rgba(0, 0, 0, 0)')
+   colorChange() {
+      app.global.color = 'rgba(0, 0, 0, 0)'
    }
 
    down(mouse) {
@@ -12,6 +12,7 @@ class ToolEraser {
    }
 
    move(mouse) {
+      app.global.color = 'rgba(0, 0, 0, 0)'
       this.updateCursorPosition(mouse.positionCurrent)
    }
 

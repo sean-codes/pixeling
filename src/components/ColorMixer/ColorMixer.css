@@ -1,0 +1,96 @@
+.colorMixer, .colorMixer * {
+  box-sizing: border-box;
+  background: none;
+  padding: 0;
+  margin: 0;
+}
+
+.colorMixer {
+  position: absolute;
+  width: 200px;
+  bottom: 5px;
+  right: -20px;
+  transform: translateX(100%);
+  background: #FFF;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.colorMixer.hide {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(100%) scale(0.9);
+}
+
+.colorMixer:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 5px;
+  transform: translateX(-100%);
+  border: 10px solid transparent;
+  border-right-color: #FFF;
+}
+
+.colorMixer .option {
+  height: 20px;
+  width: 100%;
+  border-radius: 2px;
+  display: flex;
+  user-select: none;
+}
+
+.colorMixer .option + .option {
+  margin-top: 10.5px;
+}
+
+.colorMixer .option .name {
+  color: #222;
+  text-transform: uppercase;
+  font-weight: 600;
+  width: 20px;
+}
+
+.colorMixer .option .canvas {
+  flex: 1;
+  background: #FFF;
+  max-width: 100%;
+  position: relative;
+}
+
+.colorMixer .option .canvas canvas {
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+}
+
+.colorMixer .option .canvas .cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0px;
+  height: 100%;
+}
+
+.colorMixer .option .canvas .cursor:after, .colorMixer .option .canvas .cursor:before {
+  content: "";
+  border: 4px solid transparent;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.colorMixer .option .canvas .cursor:after {
+  bottom: 0;
+  transform: translateX(-50%) translateY(50%);
+  border-bottom: 4px solid #000;
+}
+
+.colorMixer .option .canvas .cursor:before {
+  top: 0;
+  transform: translateX(-50%) translateY(-50%);
+  border-top: 4px solid #000;
+}

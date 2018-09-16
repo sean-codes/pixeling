@@ -6,7 +6,7 @@ class Toolbox {
          {
             name: 'draw',
             icon: 'draw',
-            tool: new ToolPencil(),
+            tool: new ToolDraw(),
             active: true
          },
          {
@@ -33,8 +33,17 @@ class Toolbox {
       this.currentTool.stroke(mouse)
    }
 
+   colorChange(mouse) {
+      this.currentTool.colorChange
+         && this.currentTool.colorChange(mouse)
+   }
+
    toolClicked(e, element) {
       var toolName = element.dataset.name
+      this.selectTool(toolName)
+   }
+
+   selectTool(toolName) {
       for(var tool of this.tools) {
          tool.active = tool.name == toolName ? true : false
          tool.element.classList.toggle('active', tool.active)

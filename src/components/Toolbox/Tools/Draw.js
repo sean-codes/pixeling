@@ -1,6 +1,7 @@
-class ToolPencil {
+class ToolDraw {
    constructor() {
       this.size = 1
+      this.color = '#FFF'
    }
 
    select() {

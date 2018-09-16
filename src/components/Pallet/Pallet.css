@@ -5,15 +5,33 @@
    box-sizing: border-box;
    height: 100%;
    display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+   position:relative;
+   z-index:1000;
+}
+
+.pallet #colorPicker {
+   display:none;
+}
+
+.pallet .colors {
+   display:flex;
    flex-wrap: wrap;
    align-content: flex-start;
 }
 
-.pallet .color {
+.pallet .colors .color {
    width: 30px;
    height: 30px;
 }
 
-.pallet .color.active {
+.pallet .colors .color.active {
    border:3px dashed hsl(188, 75%, 50%);
+}
+
+.pallet .mixer {
+   position:relative;
+   height:40px;
+   width:100%;
 }

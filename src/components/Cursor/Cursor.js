@@ -5,7 +5,7 @@ class Cursor {
       this.width = 1
       this.height = 1
       this.scale = 1
-      this.color = '#000'
+
       this.createCursorCanvas()
       this.renderCursor()
    }
@@ -30,7 +30,7 @@ class Cursor {
 
       var x = Math.floor(this.x*cursorScale)
       var y = Math.floor(this.y*cursorScale)
-      this.ctx.fillStyle = this.color
+      this.ctx.fillStyle = app.global.color
       this.ctx.fillRect(x, y, cursorScale, cursorScale)
       this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)'
       this.ctx.strokeRect(x-0.5, y-0.5, cursorScale+1, cursorScale+1)

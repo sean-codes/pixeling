@@ -11,6 +11,8 @@
    <script src="./src/components/Appbar/Appbar.js"></script>
    <link rel="stylesheet" href="./src/components/Pallet/Pallet.css" />
    <script src="./src/components/Pallet/Pallet.js"></script>
+   <link rel="stylesheet" href="./src/components/ColorMixer/ColorMixer.css" />
+   <script src="./src/components/ColorMixer/ColorMixer.js"></script>
    <link rel="stylesheet" href="./src/components/Canvas/Canvas.css" />
    <script src="./src/components/Canvas/Canvas.js"></script>
    <link rel="stylesheet" href="./src/components/Cursor/Cursor.css" />
@@ -23,7 +25,7 @@
    <script src="./src/components/Statusbar/Statusbar.js"></script>
 
    <!-- tools -->
-   <script src="./src/components/Toolbox/Tools/Pencil.js"></script>
+   <script src="./src/components/Toolbox/Tools/Draw.js"></script>
    <script src="./src/components/Toolbox/Tools/Eraser.js"></script>
 </head>
 
@@ -69,6 +71,12 @@
       }
 
       app.script = {
+         init: function() {
+            app.component.toolbox.selectTool('draw')
+            //app.component.pallet.setPallet(['#FFF', '#DDD', '#CCC'])
+            //app.component.pallet.setColor('#FFF')
+            //app.component.pallet.showMixer()
+         },
          bakeHTML: function(recipe) {
             var bakedHTML = {
                elements: [],
@@ -93,6 +101,10 @@
                   element.dataset[data] = template.data[data]
                }
 
+               for (var attr in template.attr || {}){
+                  element.setAttribute(attr, template.attr[attr])
+               }
+
                for (var className of template.classes || [])
                   element.classList.add(className)
 
@@ -115,11 +127,12 @@
             }
             return bakedHTML
          },
-         usePalletColor: function() {
-            app.script.setColor(app.component.pallet.color)
-         },
          setColor: function(color) {
             app.global.color = color
+            app.component.toolbox.colorChange()
+         },
+         usePalletColor: function() {
+            app.global.color = app.component.pallet.color
          },
          setPixel: function(position) {
             var color = app.global.color
@@ -142,9 +155,6 @@
          }
       })
 
-      app.component.pallet = new Pallet(app.html.pallet, {
-         onChange: app.script.setColor
-      })
       app.component.toolbox = new Toolbox(app.html.toolbox)
 
       app.component.cursor = new Cursor()
@@ -174,6 +184,14 @@
          }
       })
 
+      app.component.colorMixer = new ColorMixer()
+      app.component.pallet = new Pallet(app.html.pallet, {
+         mixer: app.component.colorMixer,
+         onChange: app.script.setColor,
+      })
+
+
+      app.script.init()
    </script>
 </body>
 
