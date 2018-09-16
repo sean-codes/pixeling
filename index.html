@@ -129,6 +129,9 @@
          },
          setColor: function(color) {
             app.global.color = color
+            app.component.statusbar.updateStatus({
+               color: `[ color: ${app.global.color} ]`
+            })
             app.component.toolbox.colorChange()
          },
          usePalletColor: function() {
@@ -150,8 +153,9 @@
       app.component.appbar = new Appbar(app.html.appbar)
       app.component.statusbar = new Statusbar(app.html.statusbar, {
          status: {
-            scale: '[ scale: 1x ]',
+            color: '[ hsla() ]',
             pos: '[ pos: 0, 0 ]',
+            scale: '[ scale: 1x ]',
          }
       })
 

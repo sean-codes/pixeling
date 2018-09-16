@@ -20,7 +20,7 @@ class Pallet {
          { h: 0, s: 0, l: 10, a: 1 },
          { h: 0, s: 0, l:  0, a: 1 }
       ]
-      this.color = this.colors[0]
+      this.selected = 0
 
       this.htmlCreate()
    }
@@ -36,17 +36,19 @@ class Pallet {
 
       element.classList.add('active')
       this.html.active = element
-
+      this.selected = element.dataset.colorID
       this.setColor(this.colors[element.dataset.colorID])
    }
 
    setColor(color) {
-      this.color = this.colorObjectToString(color)
-      this.html.color.style.background = this.color
-      this.html.active.style.background = this.color
-      this.html.active.dataset.color = this.color
+      this.colors[this.selected] = color
+      var stringColor = this.colorObjectToString(color)
+
+      this.html.color.style.background = stringColor
+      this.html.active.style.background = stringColor
+      this.html.active.dataset.color = stringColor
       this.mixer.setColor(color)
-      this.onChange(this.color)
+      this.onChange(stringColor)
    }
 
    colorObjectToString(color) {

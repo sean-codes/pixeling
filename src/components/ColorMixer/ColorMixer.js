@@ -47,7 +47,16 @@ class ColorMixer {
       colorPart.value = colorPart.max * Math.ceil(percent*100)/100
 
       this.updateColor()
-      this.onChange(color)
+      this.onChange(this.getHSLA())
+   }
+
+   getHSLA() {
+      return {
+         h: this.hsla.hue.value,
+         s: this.hsla.saturation.value,
+         l: this.hsla.lightness.value,
+         a: this.hsla.alpha.value
+      }
    }
 
    setColor(color) {
