@@ -3,25 +3,26 @@ class Pallet {
       this.html = {
          container: html
       }
+
       this.mixer = options.mixer
       this.onChange = options.onChange
 
-      this.color = '#000'
       this.colors = [
-         'hsla(0, 0%, 100%, 1)',
-         'hsla(0, 0%, 90%, 1)',
-         'hsla(0, 0%, 80%, 1)',
-         'hsla(0, 0%, 70%, 1)',
-         'hsla(0, 0%, 60%, 1)',
-         'hsla(0, 0%, 50%, 1)',
-         'hsla(0, 0%, 40%, 1)',
-         'hsla(0, 0%, 30%, 1)',
-         'hsla(0, 0%, 20%, 1)',
-         'hsla(0, 0%, 10%, 1)',
-         'hsla(0, 0%, 0%, 1)',
+         { h: 0, s: 0, l: 100, a: 1 },
+         { h: 0, s: 0, l: 90, a: 1 },
+         { h: 0, s: 0, l: 80, a: 1 },
+         { h: 0, s: 0, l: 70, a: 1 },
+         { h: 0, s: 0, l: 60, a: 1 },
+         { h: 0, s: 0, l: 50, a: 1 },
+         { h: 0, s: 0, l: 40, a: 1 },
+         { h: 0, s: 0, l: 30, a: 1 },
+         { h: 0, s: 0, l: 20, a: 1 },
+         { h: 0, s: 0, l: 10, a: 1 },
+         { h: 0, s: 0, l:  0, a: 1 }
       ]
+      this.color = this.colors[0]
 
-      this.render()
+      this.htmlCreate()
    }
 
    eventClickColor(e, element) {
@@ -36,27 +37,32 @@ class Pallet {
       element.classList.add('active')
       this.html.active = element
 
-      this.setColor(element.dataset.color)
+      this.setColor(this.colors[element.dataset.colorID])
    }
 
    setColor(color) {
-      this.color = color
+      this.color = this.colorObjectToString(color)
       this.html.color.style.background = this.color
       this.html.active.style.background = this.color
       this.html.active.dataset.color = this.color
+      this.mixer.setColor(color)
       this.onChange(this.color)
    }
 
-   render() {
+   colorObjectToString(color) {
+      return `hsla(${color.h}, ${color.s}%, ${color.l}%, ${color.a})`
+   }
+
+   htmlCreate() {
       var htmlColorsRecipe = [
          {
             classes: ['colors'],
-            children: this.colors.map((color) => {
+            children: this.colors.map((color, id) => {
                return {
                   classes: ['color'],
-                  data: { color: color },
+                  data: { colorID: id },
                   styles: {
-                     background: color
+                     background: this.colorObjectToString(this.colors[id])
                   },
                   events: {
                      click: this.eventClickColor.bind(this)
@@ -75,8 +81,10 @@ class Pallet {
       ]
 
       var bakedHTML = app.script.bakeHTML(htmlColorsRecipe)
+
       this.html.colors = bakedHTML.elements[0].children
       this.html.color = bakedHTML.elements[1]
+
       this.setActiveColorElement(this.html.colors[0])
 
       // link up mixer

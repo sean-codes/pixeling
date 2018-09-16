@@ -47,7 +47,16 @@ class ColorMixer {
       colorPart.value = colorPart.max * Math.ceil(percent*100)/100
 
       this.updateColor()
-      this.updateCanvasColors()
+      this.onChange(color)
+   }
+
+   setColor(color) {
+      this.hsla.hue.value = color.h
+      this.hsla.saturation.value = color.s
+      this.hsla.lightness.value = color.l
+      this.hsla.alpha.value = color.a
+
+      this.updateColor()
    }
 
    updateColor() {
@@ -56,7 +65,8 @@ class ColorMixer {
       var l = Math.round(this.hsla.lightness.value)
       var a = Math.round(this.hsla.alpha.value*100)/100
       var color = `hsla(${h}, ${s}%, ${l}%, ${a})`
-      this.onChange(color)
+
+      this.updateCanvasColors()
    }
 
    updateCanvasColors() {
