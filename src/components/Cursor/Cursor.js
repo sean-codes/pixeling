@@ -6,8 +6,11 @@ class Cursor {
       this.height = 1
       this.scale = 1
 
+      this.selected = undefined
+
       this.createCursorCanvas()
       this.renderCursor()
+
    }
 
    update(options) {
@@ -33,7 +36,24 @@ class Cursor {
       this.ctx.fillStyle = app.global.color
       this.ctx.fillRect(x, y, cursorScale, cursorScale)
       this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)'
-      this.ctx.strokeRect(x-0.5, y-0.5, cursorScale+1, cursorScale+1)
+      this.ctx.strokeRect(x+0.5, y+0.5, cursorScale-1, cursorScale-1)
+      this.renderSelected()
+   }
+
+   renderSelected() {
+      if(!this.selected) return
+      var cursorScale = 10
+      var x = Math.floor(this.selected.x*cursorScale)
+      var y = Math.floor(this.selected.y*cursorScale)
+      var width = Math.floor(this.selected.width*cursorScale)
+      var height = Math.floor(this.selected.height*cursorScale)
+      this.ctx.lineWidth = 4
+
+      this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)'
+      this.ctx.strokeRect(x+this.ctx.lineWidth/2, y+this.ctx.lineWidth/2, width-this.ctx.lineWidth, height-this.ctx.lineWidth)
+      this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)'
+      this.ctx.setLineDash([9]);
+      this.ctx.strokeRect(x+this.ctx.lineWidth/2, y+this.ctx.lineWidth/2, width-this.ctx.lineWidth, height-this.ctx.lineWidth)
    }
 
    createCursorCanvas() {

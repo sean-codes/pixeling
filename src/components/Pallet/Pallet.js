@@ -51,6 +51,10 @@ class Pallet {
       this.onChange(stringColor)
    }
 
+   getColor() {
+      return this.colorObjectToString(this.colors[this.selected])
+   }
+
    colorObjectToString(color) {
       return `hsla(${color.h}, ${color.s}%, ${color.l}%, ${color.a})`
    }

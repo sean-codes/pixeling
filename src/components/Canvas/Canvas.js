@@ -38,21 +38,19 @@ class Canvas {
          y: Math.floor(e.offsetY / this.scale)
       }
 
-      this.onMove(this.mouse)
-
       // i see you noticed the pixel skipping
       // within / around here
       // we need to run this between delta x and y to fill in the gaps
       // 1. find the angle between last position and current
       // 2. we could brute force or run on only the pixels between once
-      if(this.mouse.down) this.onStroke(this.mouse)
+      this.mouse.down ? this.onStroke(this.mouse) : this.onMove(this.mouse)
    }
 
    eventMouseup(e, element) {
       if(!this.mouse.down) return
       this.mouse.down = false
       this.mouse.positionEnd  = { x: e.offsetX, y: e.offsetY }
-      this.onUp()
+      this.onUp(this.mouse)
    }
 
    createCanvas() {

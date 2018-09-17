@@ -27,6 +27,7 @@
    <!-- tools -->
    <script src="./src/components/Toolbox/Tools/Draw.js"></script>
    <script src="./src/components/Toolbox/Tools/Eraser.js"></script>
+   <script src="./src/components/Toolbox/Tools/Select.js"></script>
 </head>
 
 <body>
@@ -73,6 +74,7 @@
       app.script = {
          init: function() {
             app.component.toolbox.selectTool('draw')
+            app.global.color = app.component.pallet.getColor()
             //app.component.pallet.setPallet(['#FFF', '#DDD', '#CCC'])
             //app.component.pallet.setColor('#FFF')
             //app.component.pallet.showMixer()
@@ -166,6 +168,9 @@
          image: app.image,
          onDown: (mouse) => {
             app.component.toolbox.down(mouse)
+         },
+         onUp: (mouse) => {
+            app.component.toolbox.up(mouse)
          },
          onStroke: (mouse) => {
             app.component.toolbox.stroke(mouse)

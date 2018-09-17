@@ -4,6 +4,11 @@ class Toolbox {
 
       this.tools = [
          {
+            name: 'select',
+            icon: 'select',
+            tool: new ToolSelect()
+         },
+         {
             name: 'draw',
             icon: 'draw',
             tool: new ToolDraw(),
@@ -14,7 +19,7 @@ class Toolbox {
             icon: 'eraser',
             tool: new ToolEraser()
          }
-   ]
+      ]
 
       this.currentTool = this.tools[0].tool
 
@@ -22,15 +27,23 @@ class Toolbox {
    }
 
    down(mouse) {
-      this.currentTool.down(mouse)
+      this.currentTool.down
+         && this.currentTool.down(mouse)
+   }
+
+   up(mouse) {
+      this.currentTool.up
+         && this.currentTool.up(mouse)
    }
 
    move(mouse) {
-      this.currentTool.move(mouse)
+      this.currentTool.move
+         && this.currentTool.move(mouse)
    }
 
    stroke(mouse) {
-      this.currentTool.stroke(mouse)
+      this.currentTool.stroke
+         && this.currentTool.stroke(mouse)
    }
 
    colorChange(mouse) {
