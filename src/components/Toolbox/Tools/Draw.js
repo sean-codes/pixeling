@@ -4,10 +4,6 @@ class ToolDraw {
       this.color = '#FFF'
    }
 
-   select() {
-      app.script.usePalletColor()
-   }
-
    down(mouse) {
       this.drawPixelAtPosition(mouse.positionStart)
    }
@@ -22,7 +18,7 @@ class ToolDraw {
    }
 
    drawPixelAtPosition(position) {
-      app.script.setPixel(position)
+      app.script.updatePixel(position)
    }
 
    updateCursorPosition(position) {

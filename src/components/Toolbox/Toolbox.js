@@ -81,7 +81,7 @@ class Toolbox {
          })
       }
 
-      var htmlTools = app.script.bakeHTML(htmlRecipe)
+      var htmlTools = app.bakeHTML(htmlRecipe)
       for(var toolID in htmlTools.elements) {
          this.tools[toolID].element = htmlTools.elements[toolID]
       }

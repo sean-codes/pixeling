@@ -5,6 +5,8 @@
    <!-- shared -->
    <link rel="stylesheet" href="./src/shared/shared.css">
    <link rel="stylesheet" href="./src/shared/icons.css">
+   <script src="./src/shared/BakeHTML.js"></script>
+   <script src="./src/shared/Utility.js"></script>
 
    <!-- components -->
    <link rel="stylesheet" href="./src/components/Appbar/Appbar.css" />
@@ -50,158 +52,7 @@
          <div class="statusbar"></div>
       </div>
    </div>
-
-   <script>
-      var app = {}
-      app.html = {
-         appbar: document.querySelector('.appbar'),
-         pallet: document.querySelector('.pallet'),
-         easel: document.querySelector('.easel'),
-         toolbox: document.querySelector('.toolbox'),
-         statusbar: document.querySelector('.statusbar')
-      }
-
-      app.global = {
-         color: '#000'
-      }
-
-      app.image = {
-         width: 48,
-         height: 32,
-         pixels: {}
-      }
-
-      app.script = {
-         init: function() {
-            app.component.toolbox.selectTool('draw')
-            app.global.color = app.component.pallet.getColor()
-            //app.component.pallet.setPallet(['#FFF', '#DDD', '#CCC'])
-            //app.component.pallet.setColor('#FFF')
-            //app.component.pallet.showMixer()
-         },
-         bakeHTML: function(recipe) {
-            var bakedHTML = {
-               elements: [],
-               appendTo: function(parent) {
-                  for (var element of this.elements) {
-                     parent.appendChild(element)
-                  }
-               },
-               first: function() {
-                  return this.elements[0]
-               }
-            }
-
-            for (var template of recipe) {
-               var element = document.createElement(template.tag || 'div')
-               element.innerHTML = template.innerHTML || ''
-               // add styles / classes / children / events
-               for (var style in template.styles || [])
-                  element.style[style] = template.styles[style]
-
-               for (var data in template.data || {}){
-                  element.dataset[data] = template.data[data]
-               }
-
-               for (var attr in template.attr || {}){
-                  element.setAttribute(attr, template.attr[attr])
-               }
-
-               for (var className of template.classes || [])
-                  element.classList.add(className)
-
-               if (template.children)
-                  app.script.bakeHTML(template.children).appendTo(element)
-
-               for(var append of template.append || [])
-                  element.appendChild(append)
-
-               // let does something interesting here
-               for (let eventName in template.events || []) {
-                  element.addEventListener(eventName, ((element) => {
-                     return (e) => {
-                        template.events[eventName](e, element)
-                     }
-                  })(element))
-               }
-
-               bakedHTML.elements.push(element)
-            }
-            return bakedHTML
-         },
-         setColor: function(color) {
-            app.global.color = color
-            app.component.statusbar.updateStatus({
-               color: `[ color: ${app.global.color} ]`
-            })
-            app.component.toolbox.colorChange()
-         },
-         usePalletColor: function() {
-            app.global.color = app.component.pallet.color
-         },
-         setPixel: function(position) {
-            var color = app.global.color
-            var pixelID = position.x + '-' + position.y
-            app.image.pixels[pixelID] = { position, color }
-
-            app.component.canvas.updateImage(app.image)
-         },
-         setCursor: function(options) {
-            app.component.cursor.update(options)
-         }
-      }
-
-      app.component = {}
-      app.component.appbar = new Appbar(app.html.appbar)
-      app.component.statusbar = new Statusbar(app.html.statusbar, {
-         status: {
-            color: '[ hsla() ]',
-            pos: '[ pos: 0, 0 ]',
-            scale: '[ scale: 1x ]',
-         }
-      })
-
-      app.component.toolbox = new Toolbox(app.html.toolbox)
-
-      app.component.cursor = new Cursor()
-      app.component.canvas = new Canvas({
-         image: app.image,
-         onDown: (mouse) => {
-            app.component.toolbox.down(mouse)
-         },
-         onUp: (mouse) => {
-            app.component.toolbox.up(mouse)
-         },
-         onStroke: (mouse) => {
-            app.component.toolbox.stroke(mouse)
-         },
-         onMove: (mouse) => {
-            app.component.toolbox.move(mouse)
-            app.component.statusbar.updateStatus({
-               pos: `[ pos: ${mouse.positionCurrent.x}, ${mouse.positionCurrent.y} ]`
-            })
-         }
-      })
-
-      app.component.easel = new Easel(app.html.easel, {
-         canvas: app.component.canvas,
-         cursor: app.component.cursor,
-         onScale: (scale) => {
-            app.component.statusbar.updateStatus({
-               scale: `[ scale: ${scale}x ]`
-            })
-         }
-      })
-
-      app.component.colorMixer = new ColorMixer()
-      app.component.pallet = new Pallet(app.html.pallet, {
-         mixer: app.component.colorMixer,
-         onChange: app.script.setColor,
-      })
-
-
-      app.script.init()
-   </script>
+   <script src="./index.js"></script>
 </body>
 
 </html>

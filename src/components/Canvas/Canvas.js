@@ -9,7 +9,10 @@ class Canvas {
 
       this.mouse = {
          down: false,
-         pos: { x: 0, y: 0 }
+         positionLast: { x: 0, y: 0 },
+         positionCurrent: { x: 0, y: 0 },
+         positionStart: { x: 0, y: 0 },
+         PositionEnd: { x: 0, y: 0 }
       }
 
       this.scale = 10
@@ -29,14 +32,29 @@ class Canvas {
          x: Math.floor(e.offsetX / this.scale),
          y: Math.floor(e.offsetY / this.scale)
       }
+
+      this.mouse.positionLast = {
+         x: Math.floor(e.offsetX / this.scale),
+         y: Math.floor(e.offsetY / this.scale)
+      }
       this.onDown(this.mouse)
    }
 
    eventMousemove(e, element) {
-      this.mouse.positionCurrent = {
-         x: Math.floor(e.offsetX / this.scale),
-         y: Math.floor(e.offsetY / this.scale)
-      }
+      var x = Math.floor(e.offsetX / this.scale)
+      var y = Math.floor(e.offsetY / this.scale)
+
+
+
+      var samePosition =
+         this.mouse.positionCurrent.x == x &&
+         this.mouse.positionCurrent.y == y
+
+      // if same pixel skip (mouse did move but in same pixel)
+      if(samePosition) return
+
+
+      this.mouse.positionCurrent = { x, y }
 
       // i see you noticed the pixel skipping
       // within / around here
@@ -65,7 +83,7 @@ class Canvas {
          }
       }]
 
-      var bakedHTML = app.script.bakeHTML(htmlBakeRecipe)
+      var bakedHTML = app.bakeHTML(htmlBakeRecipe)
       this.htmlCanvas = bakedHTML.elements[0]
       this.ctx = this.htmlCanvas.getContext('2d')
    }
@@ -79,7 +97,7 @@ class Canvas {
    renderImage() {
       for(var pixelID in this.image.pixels) {
          var pixel = this.image.pixels[pixelID]
-         this.ctx.fillStyle = pixel.color
+         this.ctx.fillStyle = app.utility.hslaToString(pixel.color)
          this.ctx.fillRect(
             pixel.position.x*this.scale,
             pixel.position.y*this.scale,

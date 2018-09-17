@@ -42,21 +42,17 @@ class Pallet {
 
    setColor(color) {
       this.colors[this.selected] = color
-      var stringColor = this.colorObjectToString(color)
+      var stringColor = app.utility.hslaToString(color)
 
       this.html.color.style.background = stringColor
       this.html.active.style.background = stringColor
       this.html.active.dataset.color = stringColor
       this.mixer.setColor(color)
-      this.onChange(stringColor)
+      this.onChange(color)
    }
 
    getColor() {
-      return this.colorObjectToString(this.colors[this.selected])
-   }
-
-   colorObjectToString(color) {
-      return `hsla(${color.h}, ${color.s}%, ${color.l}%, ${color.a})`
+      return JSON.parse(JSON.stringify(this.colors[this.selected]))
    }
 
    htmlCreate() {
@@ -68,7 +64,7 @@ class Pallet {
                   classes: ['color'],
                   data: { colorID: id },
                   styles: {
-                     background: this.colorObjectToString(this.colors[id])
+                     background: app.utility.hslaToString(this.colors[id])
                   },
                   events: {
                      click: this.eventClickColor.bind(this)
@@ -86,7 +82,7 @@ class Pallet {
          }
       ]
 
-      var bakedHTML = app.script.bakeHTML(htmlColorsRecipe)
+      var bakedHTML = app.bakeHTML(htmlColorsRecipe)
 
       this.html.colors = bakedHTML.elements[0].children
       this.html.color = bakedHTML.elements[1]

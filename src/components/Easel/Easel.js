@@ -118,7 +118,7 @@ class Easel {
          append: [this.htmlCanvas, this.htmlCursor]
       }]
 
-      var bakedHTML = app.script.bakeHTML(htmlBakeRecipe)
+      var bakedHTML = app.bakeHTML(htmlBakeRecipe)
       this.htmlScroll = bakedHTML.elements[0]
 
       bakedHTML.appendTo(this.html)

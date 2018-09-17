@@ -37,7 +37,7 @@ class Statusbar {
          }
       })
 
-      var bakedHTML = app.script.bakeHTML(batchCookingRecipe)
+      var bakedHTML = app.bakeHTML(batchCookingRecipe)
       bakedHTML.appendTo(this.html)
 
       for(var elementID in bakedHTML.elements) {

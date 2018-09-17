@@ -5,7 +5,7 @@ class Cursor {
       this.width = 1
       this.height = 1
       this.scale = 1
-
+      this.fill = true
       this.selected = undefined
 
       this.createCursorCanvas()
@@ -33,8 +33,12 @@ class Cursor {
 
       var x = Math.floor(this.x*cursorScale)
       var y = Math.floor(this.y*cursorScale)
-      this.ctx.fillStyle = app.global.color
-      this.ctx.fillRect(x, y, cursorScale, cursorScale)
+
+      if(this.fill) {
+         this.ctx.fillStyle = app.global.colorString
+         this.ctx.fillRect(x, y, cursorScale, cursorScale)
+      }
+
       this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)'
       this.ctx.strokeRect(x+0.5, y+0.5, cursorScale-1, cursorScale-1)
       this.renderSelected()
@@ -57,7 +61,7 @@ class Cursor {
    }
 
    createCursorCanvas() {
-      this.htmlCanvas = app.script.bakeHTML([
+      this.htmlCanvas = app.bakeHTML([
          {
             tag: 'canvas',
             classes: ['cursor']
