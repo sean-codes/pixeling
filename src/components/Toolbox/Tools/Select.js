@@ -8,7 +8,7 @@ class ToolSelect {
 
    select() {
       app.global.color = 'rgba(0, 0, 0, 0)'
-      app.script.setCursor({ selected: undefined })
+      app.script.setCursor({ selected: undefined, fill: false })
    }
 
 
@@ -31,8 +31,6 @@ class ToolSelect {
    }
 
    stroke(mouse) {
-      console.log(this.getSelected(mouse))
-
       app.script.setCursor({
          selected: this.getSelected(mouse)
       })

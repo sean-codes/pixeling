@@ -10,7 +10,6 @@ class Cursor {
 
       this.createCursorCanvas()
       this.renderCursor()
-
    }
 
    update(options) {

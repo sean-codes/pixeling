@@ -8,19 +8,27 @@ class Pallet {
       this.onChange = options.onChange
 
       this.colors = [
-         { h: 0, s: 0, l: 100, a: 1 },
-         { h: 0, s: 0, l: 90, a: 1 },
-         { h: 0, s: 0, l: 80, a: 1 },
-         { h: 0, s: 0, l: 70, a: 1 },
-         { h: 0, s: 0, l: 60, a: 1 },
+         { h: 0, s: 0, l: 0, a: 1 },
+         { h: 0, s: 0, l: 25, a: 1 },
          { h: 0, s: 0, l: 50, a: 1 },
-         { h: 0, s: 0, l: 40, a: 1 },
-         { h: 0, s: 0, l: 30, a: 1 },
-         { h: 0, s: 0, l: 20, a: 1 },
-         { h: 0, s: 0, l: 10, a: 1 },
-         { h: 0, s: 0, l:  0, a: 1 }
+         { h: 0, s: 0, l: 75, a: 1 },
+         { h: 0, s: 60, l: 60, a: 1 },
+         { h: 25, s: 60, l: 60, a: 1 },
+         { h: 50, s: 60, l: 60, a: 1 },
+         { h: 75, s: 60, l: 60, a: 1 },
+         { h: 100, s: 60, l: 60, a: 1 },
+         { h: 125, s: 60, l: 60, a: 1 },
+         { h: 150, s: 60, l: 60, a: 1 },
+         { h: 175, s: 60, l: 60, a: 1 },
+         { h: 200, s: 60, l: 60, a: 1 },
+         { h: 225, s: 60, l: 60, a: 1 },
+         { h: 250, s: 60, l: 60, a: 1 },
+         { h: 275, s: 60, l: 60, a: 1 },
+         { h: 300, s: 60, l: 60, a: 1 },
+         { h: 325, s: 60, l: 60, a: 1 },
+         { h: 350, s: 60, l: 60, a: 1 },
       ]
-      this.selected = 0
+      this.selected = this.colors.length - 1
 
       this.htmlCreate()
    }
@@ -87,7 +95,7 @@ class Pallet {
       this.html.colors = bakedHTML.elements[0].children
       this.html.color = bakedHTML.elements[1]
 
-      this.setActiveColorElement(this.html.colors[0])
+      this.setActiveColorElement(this.html.colors[this.selected])
 
       // link up mixer
       this.mixer.setLabel(this.html.color)

@@ -1,5 +1,5 @@
-class Utility {
-   addHSLColor(color, targetColor) {
+app.utility = {
+   addHSLColor: function(color, targetColor) {
       var percent = targetColor.a
       var h = Math.ceil(color.h + (targetColor.h - color.h) * percent)
       var s = Math.ceil(color.s + (targetColor.s - color.s) * percent)
@@ -7,9 +7,9 @@ class Utility {
       var a = Math.min(1, color.a + targetColor.a)
 
       return { h, s, l, a }
-   }
+   },
 
-   hslaToString(hsla) {
+   hslaToString: function(hsla) {
       return `hsla(${hsla.h}, ${hsla.s}%, ${hsla.l}%, ${hsla.a})`
    }
 }

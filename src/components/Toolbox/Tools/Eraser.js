@@ -4,7 +4,7 @@ class ToolEraser {
    }
 
    select() {
-      app.script.setCursor({ fill: false})
+      app.script.setCursor({ fill: false, selected: false })
    }
 
    down(mouse) {

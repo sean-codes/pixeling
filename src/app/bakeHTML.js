@@ -1,4 +1,4 @@
-function BakeHTML(recipe) {
+app.bakeHTML = function(recipe) {
    var bakedHTML = {
       elements: [],
       appendTo: function(parent) {
@@ -30,7 +30,7 @@ function BakeHTML(recipe) {
          element.classList.add(className)
 
       if (template.children)
-         BakeHTML(template.children).appendTo(element)
+         app.bakeHTML(template.children).appendTo(element)
 
       for(var append of template.append || [])
          element.appendChild(append)

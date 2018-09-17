@@ -9,7 +9,7 @@
   position: absolute;
   width: 200px;
   bottom: 5px;
-  right: -20px;
+  right: -15px;
   transform: translateX(100%);
   background: #FFF;
   padding: 10px;
@@ -29,9 +29,9 @@
   content: "";
   position: absolute;
   left: 0;
-  bottom: 5px;
+  bottom: 10px;
   transform: translateX(-100%);
-  border: 10px solid transparent;
+  border: 6px solid transparent;
   border-right-color: #FFF;
 }
 

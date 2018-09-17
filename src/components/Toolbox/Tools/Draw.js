@@ -4,6 +4,10 @@ class ToolDraw {
       this.color = '#FFF'
    }
 
+   select() {
+      app.script.setCursor({ fill: true, selected: false })
+   }
+
    down(mouse) {
       this.drawPixelAtPosition(mouse.positionStart)
    }
