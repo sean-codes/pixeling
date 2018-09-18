@@ -2,26 +2,8 @@ app.command = {
    copy: function() {
       var selected = app.component.cursor.selected
       if(selected) {
-         console.log('copy: selecting', selected)
-         var copy = {
-            dimensions: {
-               x: 0,
-               y: 0,
-               width: selected.width,
-               height: selected.height
-            },
-            pixels: {}
-         }
-
-         app.utility.loopPixels(selected, app.image.pixels, (pixelID, pixel) => {
-            pixel.position.x -= selected.x
-            pixel.position.y -= selected.y
-            var newID = app.utility.pixelID(pixel.position.x, pixel.position.y)
-            copy.pixels[newID] = pixel
-
-         })
-
-         console.log('copy: add to clipboard', copy)
+         var copy = app.utility.copyArea(selected)
+         console.log('copy: adding to clipboard', copy)
          app.global.clipboard.push(copy)
       }
    },

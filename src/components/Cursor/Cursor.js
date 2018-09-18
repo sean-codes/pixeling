@@ -31,6 +31,7 @@ class Cursor {
       if(mouseButton != 'left') return
 
       this.mouse.down = true
+      this.mouse.dragging = this.canMoveSelected()
       this.mouse.positionStart = {
          x: Math.floor(e.offsetX / this.scale),
          y: Math.floor(e.offsetY / this.scale)
@@ -55,7 +56,11 @@ class Cursor {
       if(samePosition) return
 
       this.mouse.positionCurrent = { x, y }
-
+      this.mouse.positionDelta = {
+         x: x - this.mouse.positionLast.x,
+         y: y - this.mouse.positionLast.y
+      }
+      this.mouse.positionLast = { x, y }
       // i see you noticed the pixel skipping
       // within / around here
       // we need to run this between delta x and y to fill in the gaps
@@ -72,15 +77,17 @@ class Cursor {
    }
 
    getCursor() {
+      if(this.canMoveSelected()) return 'move'
+      return 'default'
+   }
+
+   canMoveSelected() {
       var mx = this.mouse.positionCurrent.x
       var my = this.mouse.positionCurrent.y
 
-      var canMoveSelected = this.selected
+      return this.selected
          && this.selected.x <= mx && this.selected.x + this.selected.width > mx
          && this.selected.y <= my && this.selected.y + this.selected.height > my
-
-      if(canMoveSelected) return 'move'
-      return 'default'
    }
 
    update(options) {

@@ -31,12 +31,66 @@ app.utility = {
       return `hsla(${hsla.h}, ${hsla.s}%, ${hsla.l}%, ${hsla.a})`
    },
 
-   loopPixels: function(dimension, pixels, run) {
-      var startX = dimension.x || 0
-      var startY = dimension.y || 0
-      for(var x = startX; x < startX+dimension.width; x++) {
-         for(var y = startY || 0; y < startY+dimension.height; y++) {
+   moveArea: function(area, move) {
+      // i need to loop these in the right direction
+      app.utility.loopPixels(area, app.image.pixels, (pixelID, pixel) => {
+         pixel.position.x += move.x
+         pixel.position.y += move.y
+
+         var newID = app.utility.pixelID(pixel.position.x, pixel.position.y)
+         app.image.pixels[newID] = JSON.parse(JSON.stringify(pixel))
+         delete app.image.pixels[pixelID]
+      }, move)
+
+      app.component.canvas.updateImage(app.image)
+      app.component.cursor.update({
+         selected: {
+            x: app.component.cursor.selected.x + move.x,
+            y: app.component.cursor.selected.y + move.y,
+            width: app.component.cursor.selected.width,
+            height: app.component.cursor.selected.height
+         }
+      })
+   },
+
+   copyArea: function(area) {
+      var copy = {
+         dimensions: {
+            x: 0,
+            y: 0,
+            width: area.width,
+            height: area.height
+         },
+         pixels: {}
+      }
+
+      app.utility.loopPixels(area, app.image.pixels, (pixelID, pixel) => {
+         pixel.position.x -= area.x
+         pixel.position.y -= area.y
+         var newID = app.utility.pixelID(pixel.position.x, pixel.position.y)
+         copy.pixels[newID] = pixel
+      })
+
+      return copy
+   },
+
+   loopPixels: function(area, pixels, run, direction) {
+      var direction = {
+         x: direction ? direction.x || 1 : 1,
+         y: direction ? direction.y || 1 : 1
+      }
+
+      var dirX = Math.sign(direction.x)
+      var dirY = Math.sign(direction.y)
+      var startX = dirX < 0 ? area.x : area.x + area.width
+      var startY = dirY < 0 ? area.y : area.y + area.height
+      var endX = dirX < 0 ? area.x + area.width : area.x
+      var endY = dirY < 0 ? area.y + area.height : area.y
+
+      for(var x = startX; (dirX < 0 ? x < endX : x > endX); x -= dirX) {
+         for(var y = startY; (dirY < 0 ? y < endY : y > endY); y -= dirY) {
             var pixelID = app.utility.pixelID(x, y)
+
             if(pixels[pixelID]) {
                var pixel = JSON.parse(JSON.stringify(pixels[pixelID]))
                run(pixelID, pixel)

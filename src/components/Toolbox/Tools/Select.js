@@ -1,16 +1,12 @@
 class ToolSelect {
    constructor() {
-      this.size = 1
-      this.color = '#FFF'
-
-
+      this.moving = {}
    }
 
    select() {
       app.global.color = 'rgba(0, 0, 0, 0)'
       app.script.setCursor({ selected: undefined, fill: false })
    }
-
 
    move(mouse) {
       app.script.setCursor({
@@ -20,6 +16,14 @@ class ToolSelect {
    }
 
    down(mouse) {
+      if(mouse.dragging) {
+         // just copy this beast
+         var selected = app.component.cursor.selected
+         this.moving = app.utility.copyArea(selected)
+
+         return
+      }
+
       app.script.setCursor({
          selected: {
             x: mouse.positionStart.x,
@@ -31,12 +35,26 @@ class ToolSelect {
    }
 
    stroke(mouse) {
+      if(mouse.dragging) {
+         var selected = app.component.cursor.selected
+         var move = mouse.positionDelta
+         console.log(mouse.positionDelta)
+         console.log('drag')
+         app.utility.moveArea(selected, move)
+         return
+      }
+
       app.script.setCursor({
          selected: this.getSelected(mouse)
       })
    }
 
    up(mouse) {
+      if(mouse.dragging) {
+
+         return
+      }
+
       if(this.mouseDidNotMove(mouse)) {
          return app.script.setCursor({ selected: undefined })
       }

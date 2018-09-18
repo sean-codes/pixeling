@@ -10,6 +10,7 @@ app.script = {
 
       app.script.keydown(modifiers, e.key)
    },
+   
    keydown: function(modifiers, key) {
       for(var keybind of app.keybinds) {
          // figure if the match
@@ -22,6 +23,7 @@ app.script = {
          }
       }
    },
+
    setColor: function(color) {
       app.global.color = color
       app.global.colorString = app.utility.hslaToString(color)
@@ -31,9 +33,11 @@ app.script = {
 
       app.component.toolbox.colorChange()
    },
+
    usePalletColor: function() {
       app.global.color = app.component.pallet.color
    },
+
    erasePixelAtPosition: function(position) {
       var pixelID = position.x + 'x' + position.y
       var pixel = app.image.pixels[pixelID]
@@ -41,6 +45,7 @@ app.script = {
       if(pixel) pixel.color = { h: 0, s: 0, l: 0, a: 0 }
       app.component.canvas.updateImage(app.image)
    },
+
    updatePixel: function(position) {
       var color = app.component.pallet.getColor()
       var pixelID = position.x + 'x' + position.y
@@ -55,6 +60,7 @@ app.script = {
       pixel.colorString = app.utility.hslaToString(pixel.color)
       app.component.canvas.updateImage(app.image)
    },
+
    setCursor: function(options) {
       app.component.cursor.update(options)
    }

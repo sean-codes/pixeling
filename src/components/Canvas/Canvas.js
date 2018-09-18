@@ -11,8 +11,6 @@ class Canvas {
       this.renderImage()
    }
 
-
-
    createCanvas() {
       var htmlBakeRecipe = [{
          tag: 'canvas',
@@ -25,7 +23,7 @@ class Canvas {
    }
 
    updateImage(image) {
-      this.image = image
+      this.image = JSON.parse(JSON.stringify(image))
       this.resetCanvas()
       this.renderImage()
    }
@@ -44,9 +42,9 @@ class Canvas {
    }
 
    resetCanvas() {
-      this.ctx.clearRect(0, 0, this.htmlCanvas.width, this.htmlCanvas.height)
       this.htmlCanvas.width = this.image.width*this.scale
       this.htmlCanvas.height = this.image.height*this.scale
+      this.ctx.clearRect(0, 0, this.htmlCanvas.width, this.htmlCanvas.height)
       this.drawCheckerBoard()
    }
 
