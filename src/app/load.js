@@ -17,6 +17,7 @@ app.imports = {
       './src/components/Toolbox/Tools/Eraser.js',
       './src/components/Toolbox/Tools/Select.js',
       // app
+      './src/app/keybinds.js',
       './src/app/utility.js',
       './src/app/global.js',
       './src/app/html.js',

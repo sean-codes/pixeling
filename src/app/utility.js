@@ -29,5 +29,23 @@ app.utility = {
 
    hslaToString: function(hsla) {
       return `hsla(${hsla.h}, ${hsla.s}%, ${hsla.l}%, ${hsla.a})`
+   },
+
+   loopPixels: function(dimension, pixels, run) {
+      var startX = dimension.x || 0
+      var startY = dimension.y || 0
+      for(var x = startX; x < startX+dimension.width; x++) {
+         for(var y = startY || 0; y < startY+dimension.height; y++) {
+            var pixelID = app.utility.pixelID(x, y)
+            if(pixels[pixelID]) {
+               var pixel = JSON.parse(JSON.stringify(pixels[pixelID]))
+               run(pixelID, pixel)
+            }
+         }
+      }
+   },
+
+   pixelID(x, y) {
+      return x + 'x' + y
    }
 }

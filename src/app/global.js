@@ -1,4 +1,5 @@
 // globals
 app.global = {
-   color: undefined
+   color: undefined,
+   clipboard: []
 }
