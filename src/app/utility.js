@@ -82,13 +82,13 @@ app.utility = {
 
       var dirX = Math.sign(direction.x)
       var dirY = Math.sign(direction.y)
-      var startX = dirX < 0 ? area.x : area.x + area.width
-      var startY = dirY < 0 ? area.y : area.y + area.height
+      var startX = dirX < 0 ? area.x : area.x + area.width-1
+      var startY = dirY < 0 ? area.y : area.y + area.height-1
       var endX = dirX < 0 ? area.x + area.width : area.x
       var endY = dirY < 0 ? area.y + area.height : area.y
 
-      for(var x = startX; (dirX < 0 ? x < endX : x > endX); x -= dirX) {
-         for(var y = startY; (dirY < 0 ? y < endY : y > endY); y -= dirY) {
+      for(var x = startX; (dirX < 0 ? x < endX : x >= endX); x -= dirX) {
+         for(var y = startY; (dirY < 0 ? y < endY : y >= endY); y -= dirY) {
             var pixelID = app.utility.pixelID(x, y)
 
             if(pixels[pixelID]) {
