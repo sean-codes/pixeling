@@ -5,6 +5,8 @@ app.command = {
          console.log('copy: selecting', selected)
          var copy = {
             dimensions: {
+               x: 0,
+               y: 0,
                width: selected.width,
                height: selected.height
             },
@@ -37,6 +39,9 @@ app.command = {
          app.image.pixels[pixelID] = pixel
       })
 
+      app.component.cursor.update({
+         selected: lastCopied.dimensions
+      })
       app.component.canvas.updateImage(app.image)
    }
 }

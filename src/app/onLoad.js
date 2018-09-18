@@ -19,9 +19,7 @@ app.onLoad = function() {
 
    app.component.toolbox = new Toolbox(app.html.toolbox)
 
-   app.component.cursor = new Cursor()
-   app.component.canvas = new Canvas({
-      image: app.image,
+   app.component.cursor = new Cursor({
       onDown: (mouse) => {
          app.component.toolbox.down(mouse)
       },
@@ -37,6 +35,10 @@ app.onLoad = function() {
             pos: `[ pos: ${mouse.positionCurrent.x}, ${mouse.positionCurrent.y} ]`
          })
       }
+   })
+   app.component.canvas = new Canvas({
+      image: app.image,
+
    })
 
    app.component.easel = new Easel(app.html.easel, {
