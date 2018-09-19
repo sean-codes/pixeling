@@ -1,5 +1,6 @@
 // globals
 app.global = {
    color: undefined,
-   clipboard: []
+   clipboard: [],
+   history: []
 }

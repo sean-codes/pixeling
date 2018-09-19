@@ -1,54 +1,35 @@
 class Toolbox {
-   constructor(html) {
+   constructor(html, options) {
       this.html = html
-
-      this.tools = [
-         {
-            name: 'select',
-            icon: 'select',
-            tool: new ToolSelect()
-         },
-         {
-            name: 'draw',
-            icon: 'draw',
-            tool: new ToolDraw(),
-            active: true
-         },
-         {
-            name: 'eraser',
-            icon: 'eraser',
-            tool: new ToolEraser()
-         }
-      ]
-
-      this.currentTool = this.tools[0].tool
+      this.tools = options.tools
+      this.currentTool = this.tools[0]
 
       this.render()
    }
 
    down(mouse) {
       this.currentTool.down
-         && this.currentTool.down(mouse)
+         && this.currentTool.overrides.down(mouse)
    }
 
    up(mouse) {
       this.currentTool.up
-         && this.currentTool.up(mouse)
+         && this.currentTool.overrides.up(mouse)
    }
 
    move(mouse) {
       this.currentTool.move
-         && this.currentTool.move(mouse)
+         && this.currentTool.overrides.move(mouse)
    }
 
    stroke(mouse) {
       this.currentTool.stroke
-         && this.currentTool.stroke(mouse)
+         && this.currentTool.overrides.stroke(mouse)
    }
 
    colorChange(mouse) {
-      this.currentTool.colorChange
-         && this.currentTool.colorChange(mouse)
+      this.currentTool.overrides.colorChange
+         && this.currentTool.overrides.colorChange(mouse)
    }
 
    toolClicked(e, element) {
@@ -62,8 +43,9 @@ class Toolbox {
          tool.element.classList.toggle('active', tool.active)
 
          if(tool.active) {
-            this.currentTool = tool.tool
-            this.currentTool.select && this.currentTool.select()
+            this.currentTool = tool
+            this.currentTool.overrides.select
+               && this.currentTool.overrides.select()
          }
       }
    }

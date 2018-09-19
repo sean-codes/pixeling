@@ -31,6 +31,29 @@ app.utility = {
       return `hsla(${hsla.h}, ${hsla.s}%, ${hsla.l}%, ${hsla.a})`
    },
 
+   historyCreate: function() {
+      return app.utility.clone({
+         tool: app.component.toolbox.tool.name,
+         selected: app.component.cursor.selected,
+         image: app.image,
+      })
+   },
+
+   historyPush: function() {
+      // add tool, select, image
+      app.global.history.push(app.utility.historyCreate())
+   },
+
+   historyReverse: function() {
+
+   },
+
+   historyLoad: function(history) {
+      app.component.toolbox.setTool(history.tool)
+      app.component.cursor.setSelected(history.selected)
+      app.component.canvas.updateImage(history.image)
+   },
+
    moveArea: function(area, move) {
       // i need to loop these in the right direction
       app.utility.loopPixels(area, app.image.pixels, (pixelID, pixel) => {
@@ -101,5 +124,9 @@ app.utility = {
 
    pixelID(x, y) {
       return x + 'x' + y
+   }
+
+   clone(object) {
+      return JSON.parse(JSON.stringify(object))
    }
 }

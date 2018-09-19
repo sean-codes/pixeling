@@ -17,7 +17,13 @@ app.onLoad = function() {
       }
    })
 
-   app.component.toolbox = new Toolbox(app.html.toolbox)
+   app.component.toolbox = new Toolbox(app.html.toolbox, {
+      tools: [
+         { name: 'draw', tool : new ToolDraw() },
+         { name: 'eraser', tool : new ToolEraser() },
+         { name: 'select', tool : new ToolSelect() }
+      ]
+   })
 
    app.component.cursor = new Cursor({
       onDown: (mouse) => {

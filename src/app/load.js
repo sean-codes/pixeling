@@ -12,10 +12,6 @@ app.imports = {
       './src/components/Pallet/Pallet.js',
       './src/components/Statusbar/Statusbar.js',
       './src/components/Toolbox/Toolbox.js',
-      // tools
-      './src/components/Toolbox/Tools/Draw.js',
-      './src/components/Toolbox/Tools/Eraser.js',
-      './src/components/Toolbox/Tools/Select.js',
       // app
       './src/app/keybinds.js',
       './src/app/utility.js',
@@ -25,6 +21,10 @@ app.imports = {
       './src/app/onLoad.js',
       './src/app/script.js',
       './src/app/bakeHTML.js',
+      // tools
+      './src/app/Tools/Draw.js',
+      './src/app/Tools/Eraser.js',
+      './src/app/Tools/Select.js',
    ],
    css: [
       './src/shared/icons.css',

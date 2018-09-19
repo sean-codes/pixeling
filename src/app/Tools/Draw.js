@@ -1,14 +1,16 @@
-class ToolEraser {
+class ToolDraw {
    constructor() {
       this.size = 1
+      this.color = '#FFF'
+      this.icon = 'draw'
    }
 
    select() {
-      app.script.setCursor({ fill: false, selected: false })
+      app.script.setCursor({ fill: true, selected: false })
    }
 
    down(mouse) {
-      app.script.erasePixelAtPosition(mouse.positionStart)
+      this.drawPixelAtPosition(mouse.positionStart)
    }
 
    move(mouse) {
@@ -17,7 +19,11 @@ class ToolEraser {
 
    stroke(mouse) {
       this.updateCursorPosition(mouse.positionCurrent)
-      app.script.erasePixelAtPosition(mouse.positionCurrent)
+      this.drawPixelAtPosition(mouse.positionCurrent)
+   }
+
+   drawPixelAtPosition(position) {
+      app.script.updatePixel(position)
    }
 
    updateCursorPosition(position) {
@@ -26,7 +32,7 @@ class ToolEraser {
          y: position.y,
          width: this.size,
          height: this.size,
-         fill: false
+         color: '#000'
       })
    }
 }

@@ -1,6 +1,7 @@
 class ToolSelect {
    constructor() {
       this.moving = {}
+      this.icon = 'select'
    }
 
    select() {
