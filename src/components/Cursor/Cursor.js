@@ -60,6 +60,11 @@ class Cursor {
          x: x - this.mouse.positionLast.x,
          y: y - this.mouse.positionLast.y
       }
+
+      this.mouse.positionTotalDelta = {
+         x: x - this.mouse.positionStart.x,
+         y: y - this.mouse.positionStart.y
+      }
       this.mouse.positionLast = { x, y }
       // i see you noticed the pixel skipping
       // within / around here
@@ -104,7 +109,7 @@ class Cursor {
    }
 
    renderCursor() {
-      var cursorScale = 10
+      var cursorScale = this.scale
       this.htmlCanvas.style.cursor = this.getCursor()
       this.htmlCanvas.width = app.image.width*cursorScale
       this.htmlCanvas.height = app.image.height*cursorScale
@@ -124,7 +129,7 @@ class Cursor {
 
    renderSelected() {
       if(!this.selected) return
-      var cursorScale = 10
+      var cursorScale = this.scale
       var x = Math.floor(this.selected.x*cursorScale)
       var y = Math.floor(this.selected.y*cursorScale)
       var width = Math.floor(this.selected.width*cursorScale)

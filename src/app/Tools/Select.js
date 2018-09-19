@@ -32,11 +32,20 @@ app.tools.select = {
 
    stroke(mouse) {
       if(mouse.dragging) {
+         console.log('select tool: dragging')
+         var notFirstMove = mouse.positionTotalDelta.x != mouse.positionDelta.x
+            || mouse.positionTotalDelta.y != mouse.positionDelta.y
+
+         if(notFirstMove) {
+            console.log('revert then move total')
+            app.history.undo()
+         }
+
+         app.history.push()
+
          var selected = app.component.cursor.selected
-         var move = mouse.positionDelta
-         console.log(mouse.positionDelta)
-         console.log('drag')
-         app.utility.moveArea(selected, move)
+         app.utility.moveArea(selected, mouse.positionTotalDelta)
+
          return
       }
 

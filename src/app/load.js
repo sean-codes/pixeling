@@ -15,11 +15,13 @@ app.imports = {
       // app
       './src/app/keybinds.js',
       './src/app/utility.js',
+      './src/app/clipboard.js',
       './src/app/global.js',
       './src/app/html.js',
       './src/app/command.js',
       './src/app/onLoad.js',
       './src/app/script.js',
+      './src/app/history.js',
       './src/app/bakeHTML.js',
       // tools
       './src/app/Tools/Draw.js',

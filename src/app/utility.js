@@ -31,31 +31,9 @@ app.utility = {
       return `hsla(${hsla.h}, ${hsla.s}%, ${hsla.l}%, ${hsla.a})`
    },
 
-   historyCreate: function() {
-      return app.utility.clone({
-         tool: app.component.toolbox.tool.name,
-         selected: app.component.cursor.selected,
-         image: app.image,
-      })
-   },
-
-   historyPush: function() {
-      // add tool, select, image
-      app.global.history.push(app.utility.historyCreate())
-   },
-
-   historyReverse: function() {
-
-   },
-
-   historyLoad: function(history) {
-      app.component.toolbox.setTool(history.tool)
-      app.component.cursor.setSelected(history.selected)
-      app.component.canvas.updateImage(history.image)
-   },
-
    moveArea: function(area, move) {
       // i need to loop these in the right direction
+      if(!move.x && !move.y) return
       app.utility.loopPixels(area, app.image.pixels, (pixelID, pixel) => {
          pixel.position.x += move.x
          pixel.position.y += move.y
@@ -74,27 +52,6 @@ app.utility = {
             height: app.component.cursor.selected.height
          }
       })
-   },
-
-   copyArea: function(area) {
-      var copy = {
-         dimensions: {
-            x: 0,
-            y: 0,
-            width: area.width,
-            height: area.height
-         },
-         pixels: {}
-      }
-
-      app.utility.loopPixels(area, app.image.pixels, (pixelID, pixel) => {
-         pixel.position.x -= area.x
-         pixel.position.y -= area.y
-         var newID = app.utility.pixelID(pixel.position.x, pixel.position.y)
-         copy.pixels[newID] = pixel
-      })
-
-      return copy
    },
 
    loopPixels: function(area, pixels, run, direction) {
