@@ -8,22 +8,22 @@ class Toolbox {
    }
 
    down(mouse) {
-      this.currentTool.down
+      this.currentTool.overrides.down
          && this.currentTool.overrides.down(mouse)
    }
 
    up(mouse) {
-      this.currentTool.up
+      this.currentTool.overrides.up
          && this.currentTool.overrides.up(mouse)
    }
 
    move(mouse) {
-      this.currentTool.move
+      this.currentTool.overrides.move
          && this.currentTool.overrides.move(mouse)
    }
 
    stroke(mouse) {
-      this.currentTool.stroke
+      this.currentTool.overrides.stroke
          && this.currentTool.overrides.stroke(mouse)
    }
 

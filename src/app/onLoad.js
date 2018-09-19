@@ -19,9 +19,9 @@ app.onLoad = function() {
 
    app.component.toolbox = new Toolbox(app.html.toolbox, {
       tools: [
-         { name: 'draw', tool : new ToolDraw() },
-         { name: 'eraser', tool : new ToolEraser() },
-         { name: 'select', tool : new ToolSelect() }
+         { name: 'draw', icon: 'draw', overrides : app.tools.draw },
+         { name: 'eraser', icon: 'eraser', overrides : app.tools.eraser  },
+         { name: 'select', icon: 'select', overrides : app.tools.select  }
       ]
    })
 

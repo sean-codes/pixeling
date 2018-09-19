@@ -1,20 +1,15 @@
-class ToolSelect {
-   constructor() {
-      this.moving = {}
-      this.icon = 'select'
-   }
-
+app.tools.select = {
    select() {
       app.global.color = 'rgba(0, 0, 0, 0)'
       app.script.setCursor({ selected: undefined, fill: false })
-   }
+   },
 
    move(mouse) {
       app.script.setCursor({
          x: mouse.positionCurrent.x,
          y: mouse.positionCurrent.y
       })
-   }
+   },
 
    down(mouse) {
       if(mouse.dragging) {
@@ -33,7 +28,7 @@ class ToolSelect {
             height: 1
          }
       })
-   }
+   },
 
    stroke(mouse) {
       if(mouse.dragging) {
@@ -48,7 +43,7 @@ class ToolSelect {
       app.script.setCursor({
          selected: this.getSelected(mouse)
       })
-   }
+   },
 
    up(mouse) {
       if(mouse.dragging) {
@@ -63,7 +58,7 @@ class ToolSelect {
       app.script.setCursor({
          selected: this.getSelected(mouse)
       })
-   }
+   },
 
    getSelected(mouse) {
       var moved = this.getMouseMoved(mouse)
@@ -76,12 +71,12 @@ class ToolSelect {
       if(moved.height < 0) y += moved.height
 
       return { x, y, width, height }
-   }
+   },
 
    mouseDidNotMove(mouse) {
       var moved = this.getMouseMoved(mouse)
       return (!moved.width && !moved.height)
-   }
+   },
 
    getMouseMoved(mouse) {
       return {
@@ -89,5 +84,4 @@ class ToolSelect {
          height: mouse.positionCurrent.y - mouse.positionStart.y
       }
    }
-
 }

@@ -124,7 +124,7 @@ app.utility = {
 
    pixelID(x, y) {
       return x + 'x' + y
-   }
+   },
 
    clone(object) {
       return JSON.parse(JSON.stringify(object))
