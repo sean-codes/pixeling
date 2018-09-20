@@ -25,13 +25,8 @@ app.script = {
    },
 
    setColor: function(color) {
-      app.global.color = color
-      app.global.colorString = app.utility.hslaToString(color)
-      app.component.statusbar.updateStatus({
-         color: `[ color: ${app.global.colorString} ]`
-      })
 
-      app.component.toolbox.colorChange()
+      
    },
 
    usePalletColor: function() {

@@ -6,6 +6,7 @@ class Pallet {
 
       this.mixer = options.mixer
       this.onChange = options.onChange
+      this.size = 1
 
       this.colors = [
          { h: 0, s: 0, l: 0, a: 1 },
@@ -29,12 +30,35 @@ class Pallet {
          { h: 350, s: 60, l: 60, a: 1 },
       ]
       this.selected = this.colors.length - 1
-
+      this.color = this.colors[this.selected]
       this.htmlCreate()
+   }
+
+   changeHappened() {
+      this.onChange({
+         size: this.size,
+         color: this.color
+      })
    }
 
    eventClickColor(e, element) {
       this.setActiveColorElement(element)
+   }
+
+   eventIncreaseBrushSize(e, element) {
+      this.size += 1
+      this.brushSizeChanged()
+   }
+
+   eventDecreaseBrushSize(e, element) {
+      this.size -= 1
+      this.brushSizeChanged()
+   }
+
+   brushSizeChanged() {
+      this.size = Math.min(10, Math.max(1, this.size))
+      this.html.brushSize.innerHTML = this.size
+      this.changeHappened()
    }
 
    setActiveColorElement(element) {
@@ -49,6 +73,7 @@ class Pallet {
    }
 
    setColor(color) {
+      this.color = color
       this.colors[this.selected] = color
       var stringColor = app.utility.hslaToString(color)
 
@@ -56,7 +81,7 @@ class Pallet {
       this.html.active.style.background = stringColor
       this.html.active.dataset.color = stringColor
       this.mixer.setColor(color)
-      this.onChange(color)
+      this.changeHappened()
    }
 
    getColor() {
@@ -65,6 +90,26 @@ class Pallet {
 
    htmlCreate() {
       var htmlColorsRecipe = [
+         {
+            classes: ['brush'],
+            children: [
+               {
+                  classes: ['control'],
+                  innerHTML: '<',
+                  events: {
+                     click: this.eventDecreaseBrushSize.bind(this)
+                  }
+               },
+               { classes: ['size'], innerHTML: '1' },
+               {
+                  classes: ['control'],
+                  innerHTML: '>',
+                  events: {
+                     click: this.eventIncreaseBrushSize.bind(this)
+                  }
+               }
+            ]
+         },
          {
             classes: ['colors'],
             children: this.colors.map((color, id) => {
@@ -92,8 +137,9 @@ class Pallet {
 
       var bakedHTML = app.bakeHTML(htmlColorsRecipe)
 
-      this.html.colors = bakedHTML.elements[0].children
-      this.html.color = bakedHTML.elements[1]
+      this.html.brushSize = bakedHTML.elements[0].children[1]
+      this.html.colors = bakedHTML.elements[1].children
+      this.html.color = bakedHTML.elements[2]
 
       this.setActiveColorElement(this.html.colors[this.selected])
 

@@ -61,11 +61,18 @@ app.onLoad = function() {
    app.component.colorMixer = new ColorMixer()
    app.component.pallet = new Pallet(app.html.pallet, {
       mixer: app.component.colorMixer,
-      onChange: app.script.setColor,
+      onChange: (info) => {
+         var colorString = app.utility.hslaToString(info.color)
+         app.component.statusbar.updateStatus({ color: `[ color: ${colorString} ]` })
+
+         app.component.cursor.update({
+            color: colorString,
+            size: info.size
+         })
+      },
    })
 
 
    app.component.toolbox.selectTool('draw')
-   app.global.color = app.component.pallet.getColor()
    document.body.addEventListener('keydown', app.script.parseKeyEvent)
 }

@@ -37,3 +37,28 @@
    height:40px;
    width:100%;
 }
+
+.pallet .brush {
+   height: 30px;
+   display:flex;
+   color:#FFF;
+   font-weight:600;
+   font-size:12px;
+   user-select:none;
+}
+
+.pallet .brush * {
+   width:30px;
+   height:25px;
+   line-height:25px;
+   text-align:center;
+}
+
+.pallet .brush .size {
+   pointer-events:none;
+}
+
+.pallet .brush .control:hover {
+   background:#333;
+   cursor:pointer;
+}
