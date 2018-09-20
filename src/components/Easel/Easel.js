@@ -62,10 +62,11 @@ class Easel {
 
       var isZoom = e.ctrlKey
       if(isZoom) {
-         this.canvasScale -= e.deltaY/this.canvasScaleDampen
-         this.canvasScale = Math.min(this.canvasScaleMax, Math.max(this.canvasScaleMin, this.canvasScale))
-         this.onScale(Math.round(this.canvasScale*100)/100)
-         this.cursor.updateScale(this.canvasScale)
+         var newScale = this.canvasScale - e.deltaY/this.canvasScaleDampen
+         var newScaleMinMax = Math.min(this.canvasScaleMax, Math.max(this.canvasScaleMin, newScale))
+         var newScaleRounded = Math.round(newScaleMinMax*100)/100
+         this.canvasScale = newScaleRounded
+         this.onScale(newScaleRounded)
       } else {
          this.canvasX -= e.deltaX / this.canvasMoveDampen
          this.canvasY -= e.deltaY / this.canvasMoveDampen

@@ -44,13 +44,14 @@ app.onLoad = function() {
    })
    app.component.canvas = new Canvas({
       image: app.image,
-
    })
 
    app.component.easel = new Easel(app.html.easel, {
       canvas: app.component.canvas,
       cursor: app.component.cursor,
       onScale: (scale) => {
+         app.component.cursor.updateScale(scale)
+         app.component.canvas.updateScale(scale)
          app.component.statusbar.updateStatus({
             scale: `[ scale: ${scale}x ]`
          })

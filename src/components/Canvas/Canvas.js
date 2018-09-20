@@ -3,7 +3,8 @@ class Canvas {
       this.createCanvas()
       this.image = options.image
 
-      this.scale = 10
+      this.initialScale = 10
+      this.scale = this.initialScale
       this.htmlCanvas.width = this.image.width*this.scale
       this.htmlCanvas.height = this.image.height*this.scale
 
@@ -11,15 +12,10 @@ class Canvas {
       this.renderImage()
    }
 
-   createCanvas() {
-      var htmlBakeRecipe = [{
-         tag: 'canvas',
-         classes: ['canvas']
-      }]
-
-      var bakedHTML = app.bakeHTML(htmlBakeRecipe)
-      this.htmlCanvas = bakedHTML.elements[0]
-      this.ctx = this.htmlCanvas.getContext('2d')
+   updateScale(scale) {
+      this.scale = this.initialScale * scale
+      this.resetCanvas()
+      this.renderImage()
    }
 
    updateImage(image) {
@@ -31,12 +27,12 @@ class Canvas {
    renderImage() {
       for(var pixelID in this.image.pixels) {
          var pixel = this.image.pixels[pixelID]
-         this.ctx.fillStyle = app.utility.hslaToString(pixel.color)
+         this.ctx.fillStyle = pixel.colorString
          this.ctx.fillRect(
-            pixel.position.x*this.scale,
-            pixel.position.y*this.scale,
-            this.scale,
-            this.scale
+            Math.floor(pixel.position.x*this.scale),
+            Math.floor(pixel.position.y*this.scale),
+            Math.ceil(this.scale),
+            Math.ceil(this.scale)
          )
       }
    }
@@ -66,5 +62,16 @@ class Canvas {
          }
          if(spacesY % 2 == 0) counter += 1
       }
+   }
+
+   createCanvas() {
+      var htmlBakeRecipe = [{
+         tag: 'canvas',
+         classes: ['canvas']
+      }]
+
+      var bakedHTML = app.bakeHTML(htmlBakeRecipe)
+      this.htmlCanvas = bakedHTML.elements[0]
+      this.ctx = this.htmlCanvas.getContext('2d')
    }
 }

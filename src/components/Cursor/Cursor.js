@@ -8,7 +8,8 @@ class Cursor {
       this.fill = true
       this.selected = undefined
 
-      this.scale = 10
+      this.initialScale = 10
+      this.scale = this.initialScale
       this.onDown = options.onDown || function(){}
       this.onMove = options.onMove || function(){}
       this.onStroke = options.onStroke || function(){}
@@ -104,7 +105,7 @@ class Cursor {
    }
 
    updateScale(scale) {
-      this.scale = scale
+      this.scale = this.initialScale * scale
       this.renderCursor()
    }
 
@@ -119,11 +120,21 @@ class Cursor {
 
       if(this.fill) {
          this.ctx.fillStyle = app.global.colorString
-         this.ctx.fillRect(x, y, cursorScale, cursorScale)
+         this.ctx.fillRect(
+            Math.floor(x),
+            Math.floor(y),
+            Math.ceil(cursorScale),
+            Math.ceil(cursorScale)
+         )
       }
 
       this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)'
-      this.ctx.strokeRect(x+0.5, y+0.5, cursorScale-1, cursorScale-1)
+      this.ctx.strokeRect(
+         Math.floor(x)-1,
+         Math.floor(y)-1,
+         Math.ceil(cursorScale+2),
+         Math.ceil(cursorScale+2)
+      )
       this.renderSelected()
    }
 
@@ -144,7 +155,12 @@ class Cursor {
             var pY = y + pixel.position.y * cursorScale
 
             this.ctx.fillStyle = pixel.colorString
-            this.ctx.fillRect(pX, pY, cursorScale, cursorScale)
+            this.ctx.fillRect(
+               Math.ceil(pX),
+               Math.ceil(pY),
+               Math.floor(cursorScale),
+               Math.floor(cursorScale)
+            )
          }
       }
 
