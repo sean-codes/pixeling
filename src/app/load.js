@@ -46,9 +46,11 @@ app.imports = {
 app.load = function(){
    for(var fileType in app.imports) {
       for(var file of app.imports[fileType]) {
+         var breakCache = "?v="+Math.random()
+
          var element = {
-            css: { tag: 'link', attr: { href: file, rel: 'stylesheet' } },
-            js: { tag: 'script', attr: { src: file} },
+            css: { tag: 'link', attr: { href: file+breakCache, rel: 'stylesheet' } },
+            js: { tag: 'script', attr: { src: file+breakCache } },
          }[fileType]
 
          var htmlImport = document.createElement(element.tag)

@@ -21,7 +21,11 @@
       </div>
    </div>
 
-   <script src="./src/app/load.js"></script>
+   <script>
+      var load = document.createElement('script')
+      load.src = "./src/app/load.js?v=" + Math.random()
+      document.body.appendChild(load)
+   </script>
 </body>
 
 </html>
