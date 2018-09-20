@@ -54,6 +54,14 @@ app.utility = {
       })
    },
 
+   clearPixels: function(area) {
+      app.utility.loopPixels(area, app.image.pixels, function(pixelID, pixel) {
+         delete app.image.pixels[pixelID]
+      })
+
+      app.component.canvas.updateImage(app.image)
+   },
+
    loopPixels: function(area, pixels, run, direction) {
       var direction = {
          x: direction ? direction.x || 1 : 1,

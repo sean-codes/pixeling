@@ -136,6 +136,18 @@ class Cursor {
       var height = Math.floor(this.selected.height*cursorScale)
       this.ctx.lineWidth = 4
 
+      if(this.selected.copy) {
+         for(var pixelID in this.selected.copy.pixels) {
+            var pixel = this.selected.copy.pixels[pixelID]
+
+            var pX = x + pixel.position.x * cursorScale
+            var pY = y + pixel.position.y * cursorScale
+
+            this.ctx.fillStyle = pixel.colorString
+            this.ctx.fillRect(pX, pY, cursorScale, cursorScale)
+         }
+      }
+
       this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)'
       this.ctx.strokeRect(x+this.ctx.lineWidth/2, y+this.ctx.lineWidth/2, width-this.ctx.lineWidth, height-this.ctx.lineWidth)
       this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)'

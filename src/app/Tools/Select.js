@@ -1,4 +1,6 @@
 app.tools.select = {
+   copy: {},
+
    select() {
       app.global.color = 'rgba(0, 0, 0, 0)'
       app.script.setCursor({ selected: undefined, fill: false })
@@ -13,11 +15,14 @@ app.tools.select = {
 
    down(mouse) {
       if(mouse.dragging) {
-         // just copy this beast
-         var selected = app.component.cursor.selected
-         this.moving = app.utility.copyArea(selected)
-
          return
+      }
+
+      if(app.component.cursor.selected) {
+         app.clipboard.pasteCopy(
+            app.component.cursor.selected.x,
+            app.component.cursor.selected.y,
+            app.component.cursor.selected.copy)
       }
 
       app.script.setCursor({
@@ -25,7 +30,8 @@ app.tools.select = {
             x: mouse.positionStart.x,
             y: mouse.positionStart.y,
             width: 1,
-            height: 1
+            height: 1,
+            copy: undefined
          }
       })
    },
@@ -33,19 +39,11 @@ app.tools.select = {
    stroke(mouse) {
       if(mouse.dragging) {
          console.log('select tool: dragging')
-         var notFirstMove = mouse.positionTotalDelta.x != mouse.positionDelta.x
-            || mouse.positionTotalDelta.y != mouse.positionDelta.y
 
-         if(notFirstMove) {
-            console.log('revert then move total')
-            app.history.undo()
-         }
+         app.component.cursor.selected.x += mouse.positionDelta.x
+         app.component.cursor.selected.y += mouse.positionDelta.y
 
-         app.history.push()
-
-         var selected = app.component.cursor.selected
-         app.utility.moveArea(selected, mouse.positionTotalDelta)
-
+         app.component.cursor.update()
          return
       }
 
@@ -64,9 +62,12 @@ app.tools.select = {
          return app.script.setCursor({ selected: undefined })
       }
 
-      app.script.setCursor({
-         selected: this.getSelected(mouse)
-      })
+      // save current image state
+      app.history.push()
+
+      var selected = this.getSelected(mouse)
+      app.script.setCursor({ selected })
+      app.utility.clearPixels(selected)
    },
 
    getSelected(mouse) {
@@ -75,11 +76,12 @@ app.tools.select = {
       var y = mouse.positionStart.y
       var width = Math.abs(moved.width) + 1
       var height = Math.abs(moved.height) + 1
-
       if(moved.width < 0) x += moved.width
       if(moved.height < 0) y += moved.height
 
-      return { x, y, width, height }
+      var copy = app.clipboard.getCopy({ x, y, width, height })
+
+      return { x, y, width, height, copy }
    },
 
    mouseDidNotMove(mouse) {
