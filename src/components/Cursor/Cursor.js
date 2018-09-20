@@ -5,8 +5,10 @@ class Cursor {
       this.width = 1
       this.height = 1
       this.scale = 1
+      this.size = 1
       this.fill = true
       this.selected = undefined
+      this.color = '#000'
 
       this.initialScale = 10
       this.scale = this.initialScale
@@ -119,12 +121,12 @@ class Cursor {
       var y = Math.floor(this.y*cursorScale)
 
       if(this.fill) {
-         this.ctx.fillStyle = app.global.colorString
+         this.ctx.fillStyle = this.color
          this.ctx.fillRect(
             Math.floor(x),
             Math.floor(y),
-            Math.ceil(cursorScale),
-            Math.ceil(cursorScale)
+            Math.ceil(cursorScale*this.size),
+            Math.ceil(cursorScale*this.size)
          )
       }
 
@@ -132,8 +134,8 @@ class Cursor {
       this.ctx.strokeRect(
          Math.floor(x)-1,
          Math.floor(y)-1,
-         Math.ceil(cursorScale+2),
-         Math.ceil(cursorScale+2)
+         Math.ceil(cursorScale*this.size+2),
+         Math.ceil(cursorScale*this.size+2)
       )
       this.renderSelected()
    }

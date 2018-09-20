@@ -37,11 +37,13 @@ app.bakeHTML = function(recipe) {
 
       // let does something interesting here
       for (let eventName in template.events || []) {
-         element.addEventListener(eventName, ((element) => {
-            return (e) => {
-               template.events[eventName](e, element)
-            }
-         })(element))
+         var eventCall = template.events[eventName];
+
+         (function(element, eventName, eventCall) {
+            element.addEventListener(eventName, (e) => {
+               eventCall(e, element)
+            })
+         })(element, eventName, eventCall)
       }
 
       bakedHTML.elements.push(element)

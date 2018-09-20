@@ -4,7 +4,7 @@ app.tools.eraser = {
    },
 
    down(mouse) {
-      app.script.erasePixelAtPosition(mouse.positionStart)
+      this.erase(mouse.positionStart)
    },
 
    move(mouse) {
@@ -13,7 +13,19 @@ app.tools.eraser = {
 
    stroke(mouse) {
       this.updateCursorPosition(mouse.positionCurrent)
-      app.script.erasePixelAtPosition(mouse.positionCurrent)
+      this.erase(mouse.positionCurrent)
+   },
+
+   erase(position) {
+      var size = app.component.cursor.size
+      for(var x = 0; x < size; x++) {
+         for(var y = 0; y < size; y++) {
+            app.script.erasePixelAtPosition({
+               x: position.x + x,
+               y: position.y + y
+            })
+         }
+      }
    },
 
    updateCursorPosition(position) {
