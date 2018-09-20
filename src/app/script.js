@@ -10,7 +10,7 @@ app.script = {
 
       app.script.keydown(modifiers, e.key)
    },
-   
+
    keydown: function(modifiers, key) {
       for(var keybind of app.keybinds) {
          // figure if the match
@@ -40,9 +40,8 @@ app.script = {
 
    erasePixelAtPosition: function(position) {
       var pixelID = position.x + 'x' + position.y
-      var pixel = app.image.pixels[pixelID]
+      delete app.image.pixels[pixelID]
 
-      if(pixel) pixel.color = { h: 0, s: 0, l: 0, a: 0 }
       app.component.canvas.updateImage(app.image)
    },
 
