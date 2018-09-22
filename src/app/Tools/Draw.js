@@ -1,7 +1,7 @@
 app.tools.draw = {
 
    select() {
-      app.script.setCursor({ fill: true, selected: false })
+      app.script.setCursor({ fill: true, selected: false, mode: 'stroke' })
    },
 
    down(mouse) {

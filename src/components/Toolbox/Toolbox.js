@@ -38,6 +38,9 @@ class Toolbox {
    }
 
    selectTool(toolName) {
+      this.currentTool.overrides.unSelect
+         && this.currentTool.overrides.unSelect()
+
       for(var tool of this.tools) {
          tool.active = tool.name == toolName ? true : false
          tool.element.classList.toggle('active', tool.active)

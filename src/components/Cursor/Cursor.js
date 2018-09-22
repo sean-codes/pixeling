@@ -9,6 +9,7 @@ class Cursor {
       this.fill = true
       this.selected = undefined
       this.color = '#000'
+      this.mode = 'stroke'
 
       this.initialScale = 10
       this.scale = this.initialScale
@@ -130,13 +131,37 @@ class Cursor {
          )
       }
 
-      this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)'
-      this.ctx.strokeRect(
-         Math.floor(x)-1,
-         Math.floor(y)-1,
-         Math.ceil(cursorScale*this.size+2),
-         Math.ceil(cursorScale*this.size+2)
-      )
+      if(this.mode == 'stroke') {
+         this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)'
+         this.ctx.strokeRect(
+            Math.floor(x)-1,
+            Math.floor(y)-1,
+            Math.ceil(cursorScale*this.size+2),
+            Math.ceil(cursorScale*this.size+2)
+         )
+      }
+
+      if(this.mode == 'select') {
+         this.ctx.lineWidth = 4
+         this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)'
+         this.ctx.strokeRect(
+            Math.floor(x)-1,
+            Math.floor(y)-1,
+            Math.ceil(cursorScale+2),
+            Math.ceil(cursorScale+2)
+         )
+
+         this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)'
+         this.ctx.setLineDash([8]);
+         this.ctx.strokeRect(
+            Math.floor(x)-1,
+            Math.floor(y)-1,
+            Math.ceil(cursorScale+2),
+            Math.ceil(cursorScale+2)
+         )
+
+         this.ctx.setLineDash([0]);
+      }
       this.renderSelected()
    }
 

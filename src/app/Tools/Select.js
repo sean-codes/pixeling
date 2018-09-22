@@ -3,7 +3,20 @@ app.tools.select = {
 
    select() {
       app.global.color = 'rgba(0, 0, 0, 0)'
-      app.script.setCursor({ selected: undefined, fill: false })
+      app.script.setCursor({
+         selected: undefined,
+         fill: false,
+         mode: 'select'
+      })
+   },
+
+   unSelect() {
+      if(app.component.cursor.selected) {
+         app.clipboard.pasteCopy(
+            app.component.cursor.selected.x,
+            app.component.cursor.selected.y,
+            app.component.cursor.selected.copy)
+      }
    },
 
    move(mouse) {
@@ -14,6 +27,9 @@ app.tools.select = {
    },
 
    down(mouse) {
+      app.script.setCursor({
+         mode: 'none'
+      })
       if(mouse.dragging) {
          return
       }
@@ -53,8 +69,12 @@ app.tools.select = {
    },
 
    up(mouse) {
-      if(mouse.dragging) {
+      app.script.setCursor({
+         mode: 'select',
+         ...mouse.positionEnd
+      })
 
+      if(mouse.dragging) {
          return
       }
 
