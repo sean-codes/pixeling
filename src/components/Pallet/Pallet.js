@@ -5,7 +5,8 @@ class Pallet {
       }
 
       this.mixer = options.mixer
-      this.onChange = options.onChange
+      this.onChangeColor = options.onChangeColor
+      this.onChangeSize = options.onChangeSize
       this.size = 1
 
       this.colors = [
@@ -34,13 +35,6 @@ class Pallet {
       this.htmlCreate()
    }
 
-   changeHappened() {
-      this.onChange({
-         size: this.size,
-         color: this.color
-      })
-   }
-
    eventClickColor(e, element) {
       this.setActiveColorElement(element)
    }
@@ -58,7 +52,7 @@ class Pallet {
    brushSizeChanged() {
       this.size = Math.min(10, Math.max(1, this.size))
       this.html.brushSize.innerHTML = this.size
-      this.changeHappened()
+      this.onChangeSize(this.size)
    }
 
    setActiveColorElement(element) {
@@ -75,17 +69,21 @@ class Pallet {
    setColor(color) {
       this.color = color
       this.colors[this.selected] = color
-      var stringColor = app.utility.hslaToString(color)
+      var stringColor = this.hslaToString(color)
 
       this.html.color.style.background = stringColor
       this.html.active.style.background = stringColor
       this.html.active.dataset.color = stringColor
       this.mixer.setColor(color)
-      this.changeHappened()
+      this.onChangeColor(this.color)
    }
 
    getColor() {
       return JSON.parse(JSON.stringify(this.colors[this.selected]))
+   }
+
+   hslaToString(hsla) {
+      return `hsla(${hsla.h}, ${hsla.s}%, ${hsla.l}%, ${hsla.a})`
    }
 
    htmlCreate() {
@@ -117,7 +115,7 @@ class Pallet {
                   classes: ['color'],
                   data: { colorID: id },
                   styles: {
-                     background: app.utility.hslaToString(this.colors[id])
+                     background: this.hslaToString(this.colors[id])
                   },
                   events: {
                      click: this.eventClickColor.bind(this)

@@ -2,8 +2,8 @@ class Toolbox {
    constructor(html, options) {
       this.html = html
       this.tools = options.tools
-      this.currentTool = this.tools[0]
-
+      this.currentTool = this.tools.find((tool) => tool.name == options.initialTool)
+      console.log(this.currentTool)
       this.render()
    }
 

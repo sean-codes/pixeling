@@ -1,7 +1,7 @@
 app.tools.draw = {
 
    select() {
-      app.script.setCursor({ fill: true, selected: false, mode: 'stroke' })
+      app.component.cursor.update({ fill: true, selected: false, mode: 'stroke' })
    },
 
    down(mouse) {
@@ -21,7 +21,7 @@ app.tools.draw = {
       var size = app.component.cursor.size
       for(var x = 0; x < size; x++) {
          for(var y = 0; y < size; y++) {
-            app.script.updatePixel({
+            app.image.updatePixel({
                x: position.x + x,
                y: position.y + y
             })
@@ -30,11 +30,6 @@ app.tools.draw = {
    },
 
    updateCursorPosition(position) {
-      app.script.setCursor({
-         x: position.x,
-         y: position.y,
-         width: this.size,
-         height: this.size
-      })
+      app.component.cursor.update(position)
    },
 }

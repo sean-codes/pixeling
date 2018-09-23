@@ -2,7 +2,7 @@ app.clipboard = {
    store: {},
    selection: {},
    copy: function(area) {
-      this.store = app.utility.clone(app.component.cursor.selected.copy)
+      this.store = app.clone(app.component.cursor.selected.copy)
    },
 
    cut: function(area) {
@@ -65,6 +65,6 @@ app.clipboard = {
          copy.pixels[newID] = pixel
       })
 
-      return app.utility.clone(copy)
+      return app.clone(copy)
    }
 }

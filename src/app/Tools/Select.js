@@ -1,7 +1,7 @@
 app.tools.select = {
    select() {
       app.global.color = 'rgba(0, 0, 0, 0)'
-      app.script.setCursor({ mode: 'select' })
+      app.component.cursor.update({ mode: 'select' })
    },
 
    unSelect() {
@@ -9,7 +9,7 @@ app.tools.select = {
    },
 
    move(mouse) {
-      app.script.setCursor({ ...mouse.positionCurrent })
+      app.component.cursor.update({ ...mouse.positionCurrent })
    },
 
    down(mouse) {
@@ -24,7 +24,7 @@ app.tools.select = {
             app.component.cursor.selected.copy)
       }
 
-      app.script.setCursor({
+      app.component.cursor.update({
          selected: {
             ...mouse.positionStart,
             copy: undefined
@@ -41,11 +41,11 @@ app.tools.select = {
          return
       }
 
-      app.script.setCursor({ selected: this.getSelected(mouse) })
+      app.component.cursor.update({ selected: this.getSelected(mouse) })
    },
 
    up(mouse) {
-      app.script.setCursor({...mouse.positionEnd, mode: 'select' })
+      app.component.cursor.update({...mouse.positionEnd, mode: 'select' })
 
       if(mouse.dragging) {
          return
@@ -63,7 +63,7 @@ app.tools.select = {
       app.history.push()
 
       var selected = this.getSelected(mouse)
-      app.script.setCursor({ selected })
+      app.component.cursor.update({ selected })
       app.utility.clearPixels(selected)
    },
 
@@ -76,7 +76,7 @@ app.tools.select = {
          )
       }
 
-      app.script.setCursor({ selected: undefined })
+      app.component.cursor.update({ selected: undefined })
    },
 
    getSelected(mouse) {

@@ -10,7 +10,7 @@ app.history = {
    },
 
    create: function() {
-      return app.utility.clone({
+      return app.clone({
          tool: app.component.toolbox.currentTool.name,
          selected: app.component.cursor.selected,
          image: app.image,
