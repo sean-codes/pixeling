@@ -42,6 +42,7 @@ app.onLoad = function() {
          })
       }
    })
+   
    app.component.canvas = new Canvas({
       image: app.image,
    })

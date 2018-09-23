@@ -1,35 +1,18 @@
 app.tools.select = {
-   copy: {},
-
    select() {
       app.global.color = 'rgba(0, 0, 0, 0)'
-      app.script.setCursor({
-         selected: undefined,
-         fill: false,
-         mode: 'select'
-      })
+      app.script.setCursor({ mode: 'select' })
    },
 
    unSelect() {
-      if(app.component.cursor.selected) {
-         app.clipboard.pasteCopy(
-            app.component.cursor.selected.x,
-            app.component.cursor.selected.y,
-            app.component.cursor.selected.copy)
-      }
+      this.unsetSelected()
    },
 
    move(mouse) {
-      app.script.setCursor({
-         x: mouse.positionCurrent.x,
-         y: mouse.positionCurrent.y
-      })
+      app.script.setCursor({ ...mouse.positionCurrent })
    },
 
    down(mouse) {
-      app.script.setCursor({
-         mode: 'none'
-      })
       if(mouse.dragging) {
          return
       }
@@ -43,10 +26,7 @@ app.tools.select = {
 
       app.script.setCursor({
          selected: {
-            x: mouse.positionStart.x,
-            y: mouse.positionStart.y,
-            width: 1,
-            height: 1,
+            ...mouse.positionStart,
             copy: undefined
          }
       })
@@ -54,8 +34,6 @@ app.tools.select = {
 
    stroke(mouse) {
       if(mouse.dragging) {
-         console.log('select tool: dragging')
-
          app.component.cursor.selected.x += mouse.positionDelta.x
          app.component.cursor.selected.y += mouse.positionDelta.y
 
@@ -63,31 +41,42 @@ app.tools.select = {
          return
       }
 
-      app.script.setCursor({
-         selected: this.getSelected(mouse)
-      })
+      app.script.setCursor({ selected: this.getSelected(mouse) })
    },
 
    up(mouse) {
-      app.script.setCursor({
-         mode: 'select',
-         ...mouse.positionEnd
-      })
+      app.script.setCursor({...mouse.positionEnd, mode: 'select' })
 
       if(mouse.dragging) {
          return
       }
 
       if(this.mouseDidNotMove(mouse)) {
-         return app.script.setCursor({ selected: undefined })
+         this.unsetSelected()
+         return
       }
 
-      // save current image state
+      this.setSelected(mouse)
+   },
+
+   setSelected(mouse) {
       app.history.push()
 
       var selected = this.getSelected(mouse)
       app.script.setCursor({ selected })
       app.utility.clearPixels(selected)
+   },
+
+   unsetSelected() {
+      if(app.component.cursor.selected) {
+         app.clipboard.pasteCopy(
+            app.component.cursor.selected.x,
+            app.component.cursor.selected.y,
+            app.component.cursor.selected.copy
+         )
+      }
+
+      app.script.setCursor({ selected: undefined })
    },
 
    getSelected(mouse) {

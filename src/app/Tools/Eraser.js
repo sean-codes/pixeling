@@ -1,6 +1,6 @@
 app.tools.eraser = {
    select() {
-      app.script.setCursor({ fill: false, selected: false })
+      app.script.setCursor({ mode: 'erase' })
    },
 
    down(mouse) {
@@ -33,8 +33,7 @@ app.tools.eraser = {
          x: position.x,
          y: position.y,
          width: this.size,
-         height: this.size,
-         fill: false
+         height: this.size
       })
    }
 }

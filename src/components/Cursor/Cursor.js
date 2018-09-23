@@ -6,7 +6,6 @@ class Cursor {
       this.height = 1
       this.scale = 1
       this.size = 1
-      this.fill = true
       this.selected = undefined
       this.color = '#000'
       this.mode = 'stroke'
@@ -26,8 +25,8 @@ class Cursor {
          PositionEnd: { x: 0, y: 0 }
       }
 
-      this.createCursorCanvas()
-      this.renderCursor()
+      this.createHTML()
+      this.update()
    }
 
    eventMousedown(e, element) {
@@ -86,7 +85,7 @@ class Cursor {
    }
 
    getCursor() {
-      if(this.canMoveSelected()) return 'move'
+      if(this.mode == 'select' && this.canMoveSelected()) return 'move'
       return 'default'
    }
 
@@ -100,105 +99,115 @@ class Cursor {
    }
 
    update(options) {
-      for(var option in options) {
-         this[option] = options[option]
-      }
+      for(var option in options) this[option] = options[option]
 
-      this.renderCursor()
+      this.render()
    }
 
    updateScale(scale) {
       this.scale = this.initialScale * scale
+      this.render()
+   }
+
+   render() {
+      this.updateHTML()
       this.renderCursor()
    }
 
    renderCursor() {
+      var cursorDimensions = {
+         x: this.x, y: this.y,
+         width: this.size,
+         height: this.size
+      }
+
+      this.mode == 'erase' && this.renderCursorModeErase(cursorDimensions)
+      this.mode == 'stroke' && this.renderCursorModeStroke(cursorDimensions)
+      this.mode == 'select' && this.renderCursorModeSelect(cursorDimensions)
+      this.mode == 'move' && this.renderCursorModeMove(cursorDimensions)
+   }
+
+   renderCursorModeErase(dimensions) {
+      this.drawRectangleStroke(dimensions, '#FFF')
+   }
+
+   renderCursorModeStroke(dimensions) {
+      this.drawRectangleFilled(dimensions, this.color)
+      this.drawRectangleStroke(dimensions, 'rgba(255, 255, 255, 0.85)')
+   }
+
+   renderCursorModeSelect(dimensions) {
+      // override dimensions to use 1px
+      var cursorDimensions1px = { ...dimensions, width:1, height: 1 }
+      !this.canMoveSelected() && this.drawRectangleDashed(cursorDimensions1px)
+
+      if(this.selected) {
+         this.selected.copy && this.drawSelectedPixels()
+         this.drawRectangleDashed(this.selected)
+      }
+   }
+
+   drawSelectedPixels() {
+      for(var pixelID in this.selected.copy.pixels) {
+         var pixel = this.selected.copy.pixels[pixelID]
+         var pixelDimensions = {
+            x: this.selected.x + pixel.position.x,
+            y: this.selected.y + pixel.position.y,
+            width: 1,
+            height: 1
+         }
+
+         this.drawRectangleFilled(pixelDimensions, pixel.colorString)
+      }
+   }
+
+   drawRectangleFilled(dimensions, color) {
+      var { x, y, width, height } = this.scaleDimensions(dimensions)
+
+      this.ctx.fillStyle = color
+      this.ctx.fillRect(x, y, width, height)
+   }
+
+   drawRectangleStroke(dimensions, color) {
+      var { x, y, width, height } = this.scaleDimensions(dimensions)
+
+      this.ctx.strokeStyle = color
+      this.ctx.strokeRect(x-1, y-1, width+2, height+2)
+   }
+
+   drawRectangleDashed(dimensions) {
+      var { x, y, width, height } = this.scaleDimensions(dimensions)
+
+      var lineWidth = 4
+      this.ctx.lineWidth = lineWidth
+      this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)'
+      this.ctx.strokeRect(x+lineWidth/2, y+lineWidth/2, width-lineWidth, height-lineWidth)
+      this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)'
+      this.ctx.setLineDash([9]);
+      this.ctx.strokeRect(x+lineWidth/2, y+lineWidth/2, width-lineWidth, height-lineWidth)
+      this.ctx.setLineDash([0])
+      this.ctx.lineWidth = 1
+   }
+
+   scaleDimensions(dimensions) {
+      var { x, y, width, height } = dimensions
+
+      return {
+         x: Math.floor(x*this.scale),
+         y: Math.floor(y*this.scale),
+         width: Math.ceil(width*this.scale),
+         height: Math.ceil(height*this.scale)
+      }
+   }
+
+   updateHTML() {
       var cursorScale = this.scale
       this.htmlCanvas.style.cursor = this.getCursor()
       this.htmlCanvas.width = app.image.width*cursorScale
       this.htmlCanvas.height = app.image.height*cursorScale
-
-      var x = Math.floor(this.x*cursorScale)
-      var y = Math.floor(this.y*cursorScale)
-
-      if(this.fill) {
-         this.ctx.fillStyle = this.color
-         this.ctx.fillRect(
-            Math.floor(x),
-            Math.floor(y),
-            Math.ceil(cursorScale*this.size),
-            Math.ceil(cursorScale*this.size)
-         )
-      }
-
-      if(this.mode == 'stroke') {
-         this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)'
-         this.ctx.strokeRect(
-            Math.floor(x)-1,
-            Math.floor(y)-1,
-            Math.ceil(cursorScale*this.size+2),
-            Math.ceil(cursorScale*this.size+2)
-         )
-      }
-
-      if(this.mode == 'select') {
-         this.ctx.lineWidth = 4
-         this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)'
-         this.ctx.strokeRect(
-            Math.floor(x)-1,
-            Math.floor(y)-1,
-            Math.ceil(cursorScale+2),
-            Math.ceil(cursorScale+2)
-         )
-
-         this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)'
-         this.ctx.setLineDash([8]);
-         this.ctx.strokeRect(
-            Math.floor(x)-1,
-            Math.floor(y)-1,
-            Math.ceil(cursorScale+2),
-            Math.ceil(cursorScale+2)
-         )
-
-         this.ctx.setLineDash([0]);
-      }
-      this.renderSelected()
    }
 
-   renderSelected() {
-      if(!this.selected) return
-      var cursorScale = this.scale
-      var x = Math.floor(this.selected.x*cursorScale)
-      var y = Math.floor(this.selected.y*cursorScale)
-      var width = Math.floor(this.selected.width*cursorScale)
-      var height = Math.floor(this.selected.height*cursorScale)
-      this.ctx.lineWidth = 4
-
-      if(this.selected.copy) {
-         for(var pixelID in this.selected.copy.pixels) {
-            var pixel = this.selected.copy.pixels[pixelID]
-
-            var pX = x + pixel.position.x * cursorScale
-            var pY = y + pixel.position.y * cursorScale
-
-            this.ctx.fillStyle = pixel.colorString
-            this.ctx.fillRect(
-               Math.ceil(pX),
-               Math.ceil(pY),
-               Math.floor(cursorScale),
-               Math.floor(cursorScale)
-            )
-         }
-      }
-
-      this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)'
-      this.ctx.strokeRect(x+this.ctx.lineWidth/2, y+this.ctx.lineWidth/2, width-this.ctx.lineWidth, height-this.ctx.lineWidth)
-      this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)'
-      this.ctx.setLineDash([9]);
-      this.ctx.strokeRect(x+this.ctx.lineWidth/2, y+this.ctx.lineWidth/2, width-this.ctx.lineWidth, height-this.ctx.lineWidth)
-   }
-
-   createCursorCanvas() {
+   createHTML() {
       this.htmlCanvas = app.bakeHTML([
          {
             tag: 'canvas',
