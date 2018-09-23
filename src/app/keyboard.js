@@ -8,6 +8,24 @@ app.keybinds = [
       modifiers: ['meta'],
       key: 'v',
       command: 'paste'
+   },
+   {
+      modifiers: [],
+      key: 'e',
+      command: 'selectTool',
+      info: { tool: 'eraser' }
+   },
+   {
+      modifiers: [],
+      key: 'd',
+      command: 'selectTool',
+      info: { tool: 'eraser' }
+   },
+   {
+      modifiers: [],
+      key: 's',
+      command: 'selectTool',
+      info: { tool: 'select' }
    }
 ]
 
@@ -36,7 +54,7 @@ app.keyboard = {
          var match = keybindString == keydownString && key == keybind.key // lol weak :]
 
          if(match) {
-            app.command[keybind.command]()
+            app.command[keybind.command](keybind.info)
          }
       }
    }

@@ -7,7 +7,7 @@ app.clipboard = {
 
    cut: function(area) {
       this.store = this.getCopy(area)
-      app.utility.clearPixels(area)
+      app.image.clearPixels(area)
    },
 
    paste: function(x=0, y=0) {
@@ -37,8 +37,8 @@ app.clipboard = {
       }
 
       console.log('paste: pasting', copy)
-      app.utility.loopPixels(copy.dimensions, copy.pixels, (pixelID, pixel) => {
-         var newPixelID = app.utility.pixelID(pixel.position.x + x, pixel.position.y + y)
+      app.image.loopPixels(copy.dimensions, copy.pixels, (pixelID, pixel) => {
+         var newPixelID = app.image.pixelID(pixel.position.x + x, pixel.position.y + y)
          pixel.position.x += x
          pixel.position.y += y
          app.image.pixels[newPixelID] = pixel
@@ -58,10 +58,10 @@ app.clipboard = {
          pixels: {}
       }
 
-      app.utility.loopPixels(area, app.image.pixels, (pixelID, pixel) => {
+      app.image.loopPixels(area, app.image.pixels, (pixelID, pixel) => {
          pixel.position.x -= area.x
          pixel.position.y -= area.y
-         var newID = app.utility.pixelID(pixel.position.x, pixel.position.y)
+         var newID = app.image.pixelID(pixel.position.x, pixel.position.y)
          copy.pixels[newID] = pixel
       })
 

@@ -8,5 +8,9 @@ app.command = {
    },
    paste: function() {
       app.clipboard.paste()
+   },
+   selectTool: function(info) {
+      console.log('command: select tool', info)
+      app.component.toolbox.selectTool(info.tool)
    }
 }

@@ -26,7 +26,7 @@ app.image = {
    },
 
    clearPixels: function(area) {
-      app.utility.loopPixels(area, app.image.pixels, function(pixelID, pixel) {
+      app.image.loopPixels(area, app.image.pixels, function(pixelID, pixel) {
          delete app.image.pixels[pixelID]
       })
 

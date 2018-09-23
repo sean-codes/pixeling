@@ -64,7 +64,7 @@ app.tools.select = {
 
       var selected = this.getSelected(mouse)
       app.component.cursor.update({ selected })
-      app.utility.clearPixels(selected)
+      app.image.clearPixels(selected)
    },
 
    unsetSelected() {
