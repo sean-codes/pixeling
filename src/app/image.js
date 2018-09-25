@@ -3,18 +3,38 @@ app.image = {
    height: 32,
    pixels: {},
 
-   updatePixel: function(position) {
-      var color = app.component.pallet.getColor()
-      var pixelID = position.x + 'x' + position.y
-      var pixel = app.image.pixels[pixelID]
+   create: function(width, height) {
+      var pixels = []
 
-      if(pixel) {
-         pixel.color = app.image.addHSLColor(pixel.color, color)
-      } else {
-         pixel = { position, color }
-         app.image.pixels[pixelID] = pixel
+      for(var x = 0; x < width; x++) {
+         pixels[x] = []
+         for(var y = 0; y < height; y++) {
+            pixels[x][y] = this.createPixel(x, y)
+         }
       }
+
+      app.image.width = width
+      app.image.height = height
+      app.image.pixels = pixels
+   },
+
+   createPixel: function(x, y) {
+      var hslaTransparent = { h: 0, s: 0, l: 0, a: 0 }
+      return {
+         x, y,
+         color: hslaTransparent,
+         colorString: this.hslaToString(hslaTransparent)
+      }
+   },
+
+   updatePixel: function(pos) {
+      var color = app.component.pallet.getColor()
+      var pixel = app.image.pixels[pos.x][pos.y]
+
+
+      pixel.color = app.image.addHSLColor(pixel.color, color)
       pixel.colorString = app.image.hslaToString(pixel.color)
+
       app.component.canvas.updateImage(app.image)
    },
 
@@ -48,12 +68,7 @@ app.image = {
 
       for(var x = startX; (dirX < 0 ? x < endX : x >= endX); x -= dirX) {
          for(var y = startY; (dirY < 0 ? y < endY : y >= endY); y -= dirY) {
-            var pixelID = app.image.pixelID(x, y)
-
-            if(pixels[pixelID]) {
-               var pixel = JSON.parse(JSON.stringify(pixels[pixelID]))
-               run(pixelID, pixel)
-            }
+            run(pixels[x][y])
          }
       }
    },

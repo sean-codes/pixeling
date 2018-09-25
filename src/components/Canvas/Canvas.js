@@ -9,32 +9,34 @@ class Canvas {
       this.htmlCanvas.height = this.image.height*this.scale
 
       this.resetCanvas()
-      this.renderImage()
+
+      console.log(options.image)
    }
 
    updateScale(scale) {
       this.scale = this.initialScale * scale
       this.resetCanvas()
-      this.renderImage()
+      this.drawImage()
    }
 
    updateImage(image) {
-      this.image = JSON.parse(JSON.stringify(image))
+      this.image = image
       this.resetCanvas()
-      this.renderImage()
+      this.drawImage()
    }
 
-   renderImage() {
-      for(var pixelID in this.image.pixels) {
-         var pixel = this.image.pixels[pixelID]
+   drawImage() {
+
+      var dimensions = { x: 0, y: 0, width: this.image.width, height: this.image.height }
+      this.image.loopPixels(dimensions, this.image.pixels, (pixel) => {
          this.ctx.fillStyle = pixel.colorString
          this.ctx.fillRect(
-            Math.floor(pixel.position.x*this.scale),
-            Math.floor(pixel.position.y*this.scale),
+            Math.floor(pixel.x*this.scale),
+            Math.floor(pixel.y*this.scale),
             Math.ceil(this.scale),
             Math.ceil(this.scale)
          )
-      }
+      })
    }
 
    resetCanvas() {

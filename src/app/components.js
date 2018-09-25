@@ -37,9 +37,7 @@ app.initComponents = function() {
       }
    })
 
-   app.component.canvas = new Canvas({
-      image: app.image,
-   })
+   app.component.canvas = new Canvas({ image: app.image })
 
    app.component.easel = new Easel(app.html.easel, {
       canvas: app.component.canvas,
