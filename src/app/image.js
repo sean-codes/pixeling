@@ -95,7 +95,7 @@ app.image = {
       var dR = (((max-r) / 6) + (d/2)) / d
       var dG = (((max-g) / 6) + (d/2)) / d
       var dB = (((max-b) / 6) + (d/2)) / d
-      
+
       h = r==max ? dB-dG : g==max ? (1/3)+dR-dB : (2/3)+dG-dR
       h = h<0 ? h+1 : h>1 ? h-1 : h
       return { h: h*360, s: s*100, l: l*100, a }
