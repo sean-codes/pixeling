@@ -2,6 +2,7 @@ app.image = {
    width: 48,
    height: 32,
    pixels: {},
+   ctx: document.createElement('canvas').getContext('2d'),
    transparentColor: function() {
       return { h: 0, s: 0, l: 0, a: 0 }
    },
@@ -68,21 +69,36 @@ app.image = {
    },
 
    addHSLColor: function(original, target) {
-         var percent = target.a
+      // could not really figure this one out
+      // will cheat for now :]
+      this.ctx.clearRect(0, 0, 1, 1)
+      this.ctx.fillStyle = this.hslaToString(original)
+      this.ctx.fillRect(0, 0, 1, 1)
 
-         // saturation = amout of hue to use. ( im making this up :] )
-         var totalAlpha = target.a + original.a
-         var targetSaturationPercent = target.a / totalAlpha
-         var hueDifference = target.h - original.h
+      this.ctx.fillStyle = this.hslaToString(target)
+      this.ctx.fillRect(0, 0, 1, 1)
 
-         // only add the saturation amount of target to color
-         // if you had a color with 0 saturation the original hue would stay!
-         var h = original.h + hueDifference * targetSaturationPercent
-         var s = Math.ceil(original.s + (target.s - original.s) * percent)
-         var l = Math.ceil(original.l + (target.l - original.l) * percent)
-         var a = Math.min(1, original.a + target.a)
+      return this.rgbaToHsla(...this.ctx.getImageData(0, 0, 1, 1).data)
+   },
 
-         return { h, s, l, a }
+   rgbaToHsla: function(r, g, b, a) {
+      // help me <3
+      r /= 255, g /= 255, b /= 255, a /= 255
+
+      var min = Math.min(r, g, b), max = Math.max(r, g, b)
+      var h=0, s=0, l, d = max-min
+
+      l = (min+max) / 2
+      if(!d) return { h, s, l: l*100, a }
+
+      s = l < 0.5 ? d / (max+min) : d / (2-max-min)
+      var dR = (((max-r) / 6) + (d/2)) / d
+      var dG = (((max-g) / 6) + (d/2)) / d
+      var dB = (((max-b) / 6) + (d/2)) / d
+      
+      h = r==max ? dB-dG : g==max ? (1/3)+dR-dB : (2/3)+dG-dR
+      h = h<0 ? h+1 : h>1 ? h-1 : h
+      return { h: h*360, s: s*100, l: l*100, a }
    },
 
    hslaToString: function(hsla) {
