@@ -31,17 +31,25 @@ app.clipboard = {
 
    pasteCopy(x, y, copy) {
 
-      console.log('paste: attempting', x, y)
+      console.log('paste: attempting', x, y, copy)
       if(!copy) {
          return console.log('paste: nothing has been copied')
       }
 
-      console.log('paste: pasting', copy)
-      app.image.loopPixels(copy.dimensions, copy.pixels, (pixelID, pixel) => {
-         var newPixelID = app.image.pixelID(pixel.position.x + x, pixel.position.y + y)
-         pixel.position.x += x
-         pixel.position.y += y
-         app.image.pixels[newPixelID] = pixel
+      for(var cx = 0; cx < copy.dimensions.width; cx++) {
+         for(var cy = 0; cy < copy.dimensions.height; cy++) {
+            var pasteX = cx + x
+            var pasteY = cy + y
+            copy.pixels[cx][cy].x = pasteX
+            copy.pixels[cx][cy].y = pasteY
+            if(app.image.pixels[pasteX] && app.image.pixels[pasteX][pasteY]) {
+               app.image.pixels[pasteX][pasteY] = app.clone(copy.pixels[cx][cy])
+            }
+         }
+      }
+      app.image.loopPixels(copy.dimensions, copy.pixels, (pixel) => {
+
+         app.image.pixels[pixel.x][pixel.y] = pixel
       })
 
       app.component.canvas.updateImage(app.image)
@@ -55,15 +63,15 @@ app.clipboard = {
             width: area.width,
             height: area.height
          },
-         pixels: {}
+         pixels: []
       }
 
-      app.image.loopPixels(area, app.image.pixels, (pixelID, pixel) => {
-         pixel.position.x -= area.x
-         pixel.position.y -= area.y
-         var newID = app.image.pixelID(pixel.position.x, pixel.position.y)
-         copy.pixels[newID] = pixel
-      })
+      for(var x = 0; x < area.width; x++) {
+         copy.pixels[x] = []
+         for(var y = 0; y < area.height; y++) {
+            copy.pixels[x][y] = app.image.pixels[area.x+x][area.y+y]
+         }
+      }
 
       return app.clone(copy)
    }

@@ -148,16 +148,20 @@ class Cursor {
    }
 
    drawSelectedPixels() {
-      for(var pixelID in this.selected.copy.pixels) {
-         var pixel = this.selected.copy.pixels[pixelID]
-         var pixelDimensions = {
-            x: this.selected.x + pixel.position.x,
-            y: this.selected.y + pixel.position.y,
-            width: 1,
-            height: 1
-         }
+      var copy = this.selected.copy
 
-         this.drawRectangleFilled(pixelDimensions, pixel.colorString)
+      for(var x = 0; x < copy.dimensions.width; x++) {
+         for(var y = 0; y < copy.dimensions.height; y++) {
+            var pixel = copy.pixels[x][y]
+            var pixelDimensions = {
+               x: this.selected.x + x,
+               y: this.selected.y + y,
+               width: 1,
+               height: 1
+            }
+
+            this.drawRectangleFilled(pixelDimensions, pixel.colorString)
+         }
       }
    }
 
