@@ -2,7 +2,9 @@ app.image = {
    width: 48,
    height: 32,
    pixels: {},
-
+   transparentColor: function() {
+      return { h: 0, s: 0, l: 0, a: 0 }
+   },
    create: function(width, height) {
       var pixels = []
 
@@ -19,35 +21,27 @@ app.image = {
    },
 
    createPixel: function(x, y) {
-      var hslaTransparent = { h: 0, s: 0, l: 0, a: 0 }
       return {
          x, y,
-         color: hslaTransparent,
-         colorString: this.hslaToString(hslaTransparent)
+         color: this.transparentColor(),
+         colorString: this.hslaToString(this.transparentColor())
       }
    },
 
-   updatePixel: function(pos) {
+   drawPixels: function(area) {
       var color = app.component.pallet.getColor()
-      var pixel = app.image.pixels[pos.x][pos.y]
 
-
-      pixel.color = app.image.addHSLColor(pixel.color, color)
-      pixel.colorString = app.image.hslaToString(pixel.color)
-
-      app.component.canvas.updateImage(app.image)
-   },
-
-   erasePixel: function(position) {
-      var pixelID = position.x + 'x' + position.y
-      delete app.image.pixels[pixelID]
+      this.loopPixels(area, app.image.pixels, (pixel) => {
+         pixel.color = app.image.addHSLColor(pixel.color, color)
+         pixel.colorString = app.image.hslaToString(pixel.color)
+      })
 
       app.component.canvas.updateImage(app.image)
    },
 
    clearPixels: function(area) {
-      app.image.loopPixels(area, app.image.pixels, function(pixelID, pixel) {
-         delete app.image.pixels[pixelID]
+      this.loopPixels(area, app.image.pixels, (pixel) => {
+         app.image.pixels[pixel.x][pixel.y] = this.createPixel(pixel.x, pixel.y)
       })
 
       app.component.canvas.updateImage(app.image)
@@ -68,7 +62,7 @@ app.image = {
 
       for(var x = startX; (dirX < 0 ? x < endX : x >= endX); x -= dirX) {
          for(var y = startY; (dirY < 0 ? y < endY : y >= endY); y -= dirY) {
-            run(pixels[x][y])
+            pixels[x] && pixels[x][y] && run(pixels[x][y])
          }
       }
    },
@@ -77,8 +71,8 @@ app.image = {
          var percent = target.a
 
          // saturation = amout of hue to use. ( im making this up :] )
-         var totalSaturation = target.s + original.s
-         var targetSaturationPercent = target.s / totalSaturation
+         var totalAlpha = target.a + original.a
+         var targetSaturationPercent = target.a / totalAlpha
          var hueDifference = target.h - original.h
 
          // only add the saturation amount of target to color

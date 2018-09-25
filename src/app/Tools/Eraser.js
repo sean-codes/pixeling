@@ -17,14 +17,11 @@ app.tools.eraser = {
    },
 
    erase(position) {
-      var size = app.component.cursor.size
-      for(var x = 0; x < size; x++) {
-         for(var y = 0; y < size; y++) {
-            app.image.erasePixel({
-               x: position.x + x,
-               y: position.y + y
-            })
-         }
-      }
+      app.image.clearPixels({
+         x: position.x,
+         y: position.y,
+         width: app.component.cursor.size,
+         height: app.component.cursor.size
+      })
    }
 }
