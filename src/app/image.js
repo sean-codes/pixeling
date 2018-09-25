@@ -81,14 +81,22 @@ app.image = {
       return this.rgbaToHsla(...this.ctx.getImageData(0, 0, 1, 1).data)
    },
 
+   hslaToRgba: function(h, s, l, a) {
+      this.ctx.clearRect(0, 0, 1, 1)
+      this.ctx.fillStyle = this.hslaToString({ h, s, l, a})
+      this.ctx.fillRect(0, 0, 1, 1)
+
+      var [r, g, b, a] = this.ctx.getImageData(0, 0, 1, 1).data
+      return {r, g, b, a}
+   },
+
    rgbaToHsla: function(r, g, b, a) {
       // help me <3
       r /= 255, g /= 255, b /= 255, a /= 255
 
       var min = Math.min(r, g, b), max = Math.max(r, g, b)
-      var h=0, s=0, l, d = max-min
+      var h=0, s=0, l = (min+max) / 2, d = max-min
 
-      l = (min+max) / 2
       if(!d) return { h, s, l: l*100, a }
 
       s = l < 0.5 ? d / (max+min) : d / (2-max-min)

@@ -48,8 +48,8 @@ class Cursor {
    }
 
    eventMousemove(e, element) {
-      var x = Math.floor(e.offsetX / this.scale)
-      var y = Math.floor(e.offsetY / this.scale)
+      var x = Math.floor(e.offsetX / this.scale) - Math.floor(this.size/2)
+      var y = Math.floor(e.offsetY / this.scale) - Math.floor(this.size/2)
 
       var samePosition =
          this.mouse.positionCurrent.x == x &&
