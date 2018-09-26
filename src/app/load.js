@@ -45,9 +45,11 @@ app.imports = {
 }
 
 // here we go again
+app.loading = 0
 app.load = function(){
    for(var fileType in app.imports) {
       for(var file of app.imports[fileType]) {
+         app.loading += 1
          var breakCache = "?v="+Math.random()
 
          var element = {
@@ -60,6 +62,9 @@ app.load = function(){
             htmlImport.setAttribute(attr, element.attr[attr])
 
          document.head.appendChild(htmlImport)
+         htmlImport.onload = () => {
+            app.loading -= 1
+         }
       }
    }
 
@@ -67,7 +72,7 @@ app.load = function(){
 }
 
 app.isLoaded = function() {
-   if(document.readyState == 'complete') {
+   if(!app.loading) {
       return app.onLoad()
    }
 
