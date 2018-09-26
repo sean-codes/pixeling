@@ -30,13 +30,13 @@ app.image = {
    },
 
    drawPixels: function(area) {
-      var color = app.component.pallet.getColor()
+      var color = app.ui.pallet.getColor()
 
       this.loopPixels(area, app.image.pixels, (pixel) => {
          app.image.drawPixel(pixel.x, pixel.y, color)
       })
 
-      app.component.canvas.updateImage(app.image)
+      app.ui.canvas.updateImage(app.image)
    },
 
    drawPixel: function(x, y, color) {
@@ -50,7 +50,7 @@ app.image = {
          app.image.pixels[pixel.x][pixel.y] = this.createPixel(pixel.x, pixel.y)
       })
 
-      app.component.canvas.updateImage(app.image)
+      app.ui.canvas.updateImage(app.image)
    },
 
    loopPixels: function(area, pixels, run, direction) {
@@ -111,7 +111,12 @@ app.image = {
 
       h = r==max ? dB-dG : g==max ? (1/3)+dR-dB : (2/3)+dG-dR
       h = h<0 ? h+1 : h>1 ? h-1 : h
-      return { h: h*360, s: s*100, l: l*100, a }
+      return {
+         h: Math.round(h*360*10)/10,
+         s: Math.round(s*100),
+         l: Math.round(l*100),
+         a: Math.round(a*100)/100
+      }
    },
 
    hslaToString: function(hsla) {

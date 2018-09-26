@@ -3,5 +3,5 @@ app.onLoad = function() {
    app.keyboard.listen()
 
    app.image.create(48, 32)
-   app.component.canvas.updateImage(app.image)
+   app.ui.canvas.updateImage(app.image)
 }

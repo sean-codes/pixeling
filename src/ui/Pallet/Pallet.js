@@ -1,12 +1,9 @@
 class Pallet {
-   constructor(html, options) {
-      this.html = {
-         container: html
-      }
-
+   constructor(options) {
       this.mixer = options.mixer
       this.onChangeColor = options.onChangeColor
       this.onChangeSize = options.onChangeSize
+      this.tempSize = 1
       this.size = 1
 
       this.colors = [
@@ -39,8 +36,13 @@ class Pallet {
       this.setActiveColorElement(element)
    }
 
+   eventBrushSizeScroll(e, element) {
+      this.tempSize += e.deltaY/10
+      this.brushSizeChanged()
+   }
+
    eventIncreaseBrushSize(e, element) {
-      this.size += 1
+      this.tempSize += 1
       this.brushSizeChanged()
    }
 
@@ -50,13 +52,14 @@ class Pallet {
    }
 
    brushSizeChanged() {
-      this.size = Math.min(10, Math.max(1, this.size))
-      this.html.brushSize.innerHTML = this.size
+      this.tempSize = Math.min(20, Math.max(1, this.tempSize))
+      this.size = Math.round(this.tempSize)
+      this.htmlBrushSize.innerHTML = Math.round(this.size)
       this.onChangeSize(this.size)
    }
 
    setActiveColorElement(element) {
-      for(var colorElement of this.html.colors) {
+      for(var colorElement of this.htmlColors) {
          colorElement.classList.remove('active')
       }
 
@@ -71,7 +74,7 @@ class Pallet {
       this.colors[this.selected] = color
       var stringColor = this.hslaToString(color)
 
-      this.html.color.style.background = stringColor
+      this.htmlColor.style.background = stringColor
       this.html.active.style.background = stringColor
       this.html.active.dataset.color = stringColor
       this.mixer.setColor(color)
@@ -89,64 +92,71 @@ class Pallet {
    htmlCreate() {
       var htmlColorsRecipe = [
          {
-            classes: ['brush'],
+            classes: ['pallet', 'container'],
             children: [
                {
-                  classes: ['control'],
-                  innerHTML: '<',
+                  classes: ['brush'],
                   events: {
-                     click: this.eventDecreaseBrushSize.bind(this)
-                  }
+                     wheel: this.eventBrushSizeScroll.bind(this)
+                  },
+                  children: [
+                     {
+                        classes: ['control'],
+                        innerHTML: '<',
+                        events: {
+                           click: this.eventDecreaseBrushSize.bind(this)
+                        }
+                     },
+                     { classes: ['size'], innerHTML: '1' },
+                     {
+                        classes: ['control'],
+                        innerHTML: '>',
+                        events: {
+                           click: this.eventIncreaseBrushSize.bind(this)
+                        }
+                     }
+                  ]
                },
-               { classes: ['size'], innerHTML: '1' },
                {
-                  classes: ['control'],
-                  innerHTML: '>',
-                  events: {
-                     click: this.eventIncreaseBrushSize.bind(this)
-                  }
+                  classes: ['colors'],
+                  children: this.colors.map((color, id) => {
+                     return {
+                        classes: ['color'],
+                        data: { colorID: id },
+                        styles: {
+                           background: this.hslaToString(this.colors[id])
+                        },
+                        events: {
+                           click: this.eventClickColor.bind(this)
+                        }
+                     }
+                  })
+               },
+               {
+                  tag: 'div',
+                  classes: ['mixer'],
+                  styles: {
+                     background: this.color
+                  },
+                  append: [ this.mixer.html.chooser ]
                }
             ]
-         },
-         {
-            classes: ['colors'],
-            children: this.colors.map((color, id) => {
-               return {
-                  classes: ['color'],
-                  data: { colorID: id },
-                  styles: {
-                     background: this.hslaToString(this.colors[id])
-                  },
-                  events: {
-                     click: this.eventClickColor.bind(this)
-                  }
-               }
-            })
-         },
-         {
-            tag: 'div',
-            classes: ['mixer'],
-            styles: {
-               background: this.color
-            },
-            append: [ this.mixer.html.chooser ]
          }
       ]
 
       var bakedHTML = app.bakeHTML(htmlColorsRecipe)
 
-      this.html.brushSize = bakedHTML.elements[0].children[1]
-      this.html.colors = bakedHTML.elements[1].children
-      this.html.color = bakedHTML.elements[2]
+      this.html = bakedHTML.first()
+      this.htmlBrushSize = this.html.children[0].children[1]
+      this.htmlColors = this.html.children[1].children
+      this.htmlColor = this.html.children[2]
 
-      this.setActiveColorElement(this.html.colors[this.selected])
+      this.setActiveColorElement(this.htmlColors[this.selected])
 
       // link up mixer
-      this.mixer.setLabel(this.html.color)
+      this.mixer.setLabel(this.htmlColor)
       this.mixer.onChange = (color) => {
          this.setColor(color)
       }
-
-      bakedHTML.appendTo(this.html.container)
    }
 }

@@ -1,26 +1,22 @@
 <!doctype html>
 <html>
-<body>
-   <div class="layout">
-      <div class="row">
-         <div class="appbar">pixel art editor</div>
-      </div>
-      <div class="row flex">
-         <div class="column">
-            <div class="pallet"></div>
-         </div>
-         <div class="column fill">
-            <div class="easel"></div>
-         </div>
-         <div class="column">
-            <div class="toolbox"></div>
-         </div>
-      </div>
-      <div class="row">
-         <div class="statusbar"></div>
-      </div>
-   </div>
+<head>
+   <style>
+      /* reset */
+      html, body {
+         padding: 0;
+         margin: 0;
+         height: 100%;
+         font-family: monospace, sans-serif;
+         overflow: hidden;
+      }
 
+      html, body, body * {
+         box-sizing: border-box;
+      }
+   </style>
+</head>
+<body>
    <script>
       var load = document.createElement('script')
       load.src = "./src/app/load.js?v=" + Math.random()

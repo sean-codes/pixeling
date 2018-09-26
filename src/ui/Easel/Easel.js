@@ -1,12 +1,11 @@
 class Easel {
-   constructor(html, options) {
-      this.html = html
+   constructor(options) {
 
       this.canvas = options.canvas
       this.cursor = options.cursor
 
-      this.htmlCanvas = this.canvas.htmlCanvas
-      this.htmlCursor = this.cursor.htmlCanvas
+      this.htmlCanvas = this.canvas.html
+      this.htmlCursor = this.cursor.html
       this.onScale = options.onScale || function(){}
 
       this.mouse = {
@@ -98,6 +97,7 @@ class Easel {
       var x = this.canvasX
       var y = this.canvasY
       var scale = this.canvasScale
+
       this.htmlCanvas.style.transform = `
         translateX(${x}px)
         translateY(${y}px)
@@ -118,6 +118,7 @@ class Easel {
 
       x = Math.max(0, Math.min(x, this.htmlScroll.clientWidth))
       y = Math.max(0, Math.min(y, this.htmlScroll.clientHeight))
+      console.log(this.htmlIndicatorHorizontal, x, y)
       this.htmlIndicatorHorizontal.style.left = x + 'px'
       this.htmlIndicatorHorizontalTop.style.left = x + 'px'
       this.htmlIndicatorVertical.style.top = y + 'px'
@@ -146,11 +147,12 @@ class Easel {
       ]
 
       var bakedHTML = app.bakeHTML(htmlBakeRecipe)
-      this.htmlScroll = bakedHTML.elements[0]
-      this.htmlIndicatorHorizontal = bakedHTML.elements[0].children[0]
-      this.htmlIndicatorHorizontalTop = bakedHTML.elements[0].children[1]
-      this.htmlIndicatorVertical = bakedHTML.elements[0].children[2]
-      this.htmlIndicatorVerticalLeft = bakedHTML.elements[0].children[3]
-      bakedHTML.appendTo(this.html)
+      this.html = bakedHTML.first()
+
+      this.htmlScroll = this.html
+      this.htmlIndicatorHorizontal = this.html.children[0]
+      this.htmlIndicatorHorizontalTop = this.html.children[1]
+      this.htmlIndicatorVertical = this.html.children[2]
+      this.htmlIndicatorVerticalLeft = this.html.children[3]
    }
 }

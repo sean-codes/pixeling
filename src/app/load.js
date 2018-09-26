@@ -3,20 +3,21 @@ var app = {}
 
 app.imports = {
    js: [
-      // components
-      './src/components/Appbar/Appbar.js',
-      './src/components/Canvas/Canvas.js',
-      './src/components/ColorMixer/ColorMixer.js',
-      './src/components/Cursor/Cursor.js',
-      './src/components/Easel/Easel.js',
-      './src/components/Pallet/Pallet.js',
-      './src/components/Statusbar/Statusbar.js',
-      './src/components/Toolbox/Toolbox.js',
+      // ui
+      './src/ui/Appbar/Appbar.js',
+      './src/ui/Canvas/Canvas.js',
+      './src/ui/ColorMixer/ColorMixer.js',
+      './src/ui/Cursor/Cursor.js',
+      './src/ui/Easel/Easel.js',
+      './src/ui/Layout/Layout.js',
+      './src/ui/Pallet/Pallet.js',
+      './src/ui/Statusbar/Statusbar.js',
+      './src/ui/Toolbox/Toolbox.js',
       // app
       './src/app/bakeHTML.js',
       './src/app/clipboard.js',
       './src/app/command.js',
-      './src/app/components.js',
+      './src/app/ui.js',
       './src/app/global.js',
       './src/app/history.js',
       './src/app/html.js',
@@ -32,15 +33,15 @@ app.imports = {
    ],
    css: [
       './src/shared/icons.css',
-      './src/shared/layout.css',
-      './src/components/Appbar/Appbar.css',
-      './src/components/Canvas/Canvas.css',
-      './src/components/ColorMixer/ColorMixer.css',
-      './src/components/Cursor/Cursor.css',
-      './src/components/Easel/Easel.css',
-      './src/components/Pallet/Pallet.css',
-      './src/components/Statusbar/Statusbar.css',
-      './src/components/Toolbox/Toolbox.css'
+      './src/ui/Appbar/Appbar.css',
+      './src/ui/Canvas/Canvas.css',
+      './src/ui/ColorMixer/ColorMixer.css',
+      './src/ui/Cursor/Cursor.css',
+      './src/ui/Easel/Easel.css',
+      './src/ui/Layout/Layout.css',
+      './src/ui/Pallet/Pallet.css',
+      './src/ui/Statusbar/Statusbar.css',
+      './src/ui/Toolbox/Toolbox.css'
    ]
 }
 

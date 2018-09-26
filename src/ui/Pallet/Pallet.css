@@ -1,4 +1,4 @@
-.pallet {
+.pallet.container {
    background: #151a1a;
    width: 100px;
    padding: 0 5px;
@@ -11,11 +11,11 @@
    z-index:1000;
 }
 
-.pallet #colorPicker {
+.pallet.container #colorPicker {
    display:none;
 }
 
-.pallet .colors {
+.pallet.container .colors {
    display:flex;
    flex-wrap: wrap;
    align-content: flex-start;
@@ -23,22 +23,22 @@
    flex:1;
 }
 
-.pallet .colors .color {
+.pallet.container .colors .color {
    width: 30px;
    height: 30px;
 }
 
-.pallet .colors .color.active {
+.pallet.container .colors .color.active {
    border:3px dashed hsl(188, 75%, 50%);
 }
 
-.pallet .mixer {
+.pallet.container .mixer {
    position:relative;
    height:40px;
    width:100%;
 }
 
-.pallet .brush {
+.pallet.container .brush {
    height: 30px;
    display:flex;
    color:#FFF;
@@ -47,18 +47,18 @@
    user-select:none;
 }
 
-.pallet .brush * {
+.pallet.container .brush * {
    width:30px;
    height:25px;
    line-height:25px;
    text-align:center;
 }
 
-.pallet .brush .size {
+.pallet.container .brush .size {
    pointer-events:none;
 }
 
-.pallet .brush .control:hover {
+.pallet.container .brush .control:hover {
    background:#333;
    cursor:pointer;
 }

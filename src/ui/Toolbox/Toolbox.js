@@ -1,9 +1,8 @@
 class Toolbox {
-   constructor(html, options) {
-      this.html = html
+   constructor(options) {
       this.tools = options.tools
       this.currentTool = this.tools.find((tool) => tool.name == options.initialTool)
-      console.log(this.currentTool)
+      console.log(this.tools)
       this.render()
    }
 
@@ -54,23 +53,23 @@ class Toolbox {
    }
 
    render() {
-      var htmlRecipe = []
-      for(let tool of this.tools) {
-         htmlRecipe.push({
-            classes: ['tool'].concat(tool.active ? ['active'] : []),
-            data: { name: tool.name },
-            innerHTML: `<div class="icon ${tool.icon}"></div>`,
-            events: {
-               click: this.toolClicked.bind(this)
-            }
-         })
-      }
+      var bakedHTML = app.bakeHTML([
+         {
+            children: this.tools.map((tool) => ({
+               classes: ['tool'].concat(tool.active ? ['active'] : []),
+               data: { name: tool.name },
+               innerHTML: `<div class="icon ${tool.icon}"></div>`,
+               events: {
+                  click: this.toolClicked.bind(this)
+               }
+            }))
+         }
+      ])
 
-      var htmlTools = app.bakeHTML(htmlRecipe)
-      for(var toolID in htmlTools.elements) {
-         this.tools[toolID].element = htmlTools.elements[toolID]
-      }
 
-      htmlTools.appendTo(this.html)
+      this.html = bakedHTML.first()
+      for(var toolID = 0; toolID < this.html.children.length; toolID++) {
+         this.tools[toolID].element = this.html.children[toolID]   
+      }
    }
 }

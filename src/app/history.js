@@ -3,16 +3,16 @@ app.history = {
    point: 0,
 
    load: function(history) {
-      app.component.toolbox.selectTool(history.tool)
-      app.component.cursor.update({ selected: history.selected })
+      app.ui.toolbox.selectTool(history.tool)
+      app.ui.cursor.update({ selected: history.selected })
       app.image = history.image
-      app.component.canvas.updateImage(history.image)
+      app.ui.canvas.updateImage(history.image)
    },
 
    create: function() {
       return app.clone({
-         tool: app.component.toolbox.currentTool.name,
-         selected: app.component.cursor.selected,
+         tool: app.ui.toolbox.currentTool.name,
+         selected: app.ui.cursor.selected,
          image: app.image,
       })
    },

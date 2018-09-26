@@ -5,8 +5,8 @@ class Canvas {
 
       this.initialScale = 10
       this.scale = this.initialScale
-      this.htmlCanvas.width = this.image.width*this.scale
-      this.htmlCanvas.height = this.image.height*this.scale
+      this.html.width = this.image.width*this.scale
+      this.html.height = this.image.height*this.scale
 
       this.resetCanvas()
 
@@ -40,9 +40,9 @@ class Canvas {
    }
 
    resetCanvas() {
-      this.htmlCanvas.width = this.image.width*this.scale
-      this.htmlCanvas.height = this.image.height*this.scale
-      this.ctx.clearRect(0, 0, this.htmlCanvas.width, this.htmlCanvas.height)
+      this.html.width = this.image.width*this.scale
+      this.html.height = this.image.height*this.scale
+      this.ctx.clearRect(0, 0, this.html.width, this.html.height)
       this.drawCheckerBoard()
    }
 
@@ -73,7 +73,7 @@ class Canvas {
       }]
 
       var bakedHTML = app.bakeHTML(htmlBakeRecipe)
-      this.htmlCanvas = bakedHTML.elements[0]
-      this.ctx = this.htmlCanvas.getContext('2d')
+      this.html = bakedHTML.elements[0]
+      this.ctx = this.html.getContext('2d')
    }
 }

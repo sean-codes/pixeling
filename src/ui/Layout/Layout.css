@@ -1,15 +1,3 @@
-html, body {
-   padding: 0;
-   margin: 0;
-   height: 100%;
-   font-family: monospace, sans-serif;
-   overflow: hidden;
-}
-
-html, body, body * {
-   box-sizing: border-box;
-}
-
 .layout {
    display: flex;
    flex-direction: column;
@@ -27,4 +15,8 @@ html, body, body * {
 
 .layout .column.fill {
    flex: 1;
+}
+
+.layout .column .pallet {
+   height:100%;
 }

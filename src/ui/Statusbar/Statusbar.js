@@ -1,7 +1,5 @@
 class Statusbar {
-   constructor(html, options) {
-      this.html = html
-
+   constructor(options) {
       this.setupStatusArray(options.status)
       this.createStatusElements(options.status)
    }
@@ -30,18 +28,23 @@ class Statusbar {
    }
 
    createStatusElements() {
-      var batchCookingRecipe = this.status.map((status) => {
-         return {
-            classes: ['status'],
-            innerHTML: status.innerHTML
+      var batchCookingRecipe = [
+         {
+            classes: ['statusbar'],
+            children: this.status.map((status) => {
+               return {
+                  classes: ['status'],
+                  innerHTML: status.innerHTML
+               }
+            })
          }
-      })
+      ]
 
       var bakedHTML = app.bakeHTML(batchCookingRecipe)
-      bakedHTML.appendTo(this.html)
+      this.html = bakedHTML.first()
 
-      for(var elementID in bakedHTML.elements) {
-         this.status[elementID].element = bakedHTML.elements[elementID]
+      for(var id = 0; id < this.html.children.length; id++) {
+         this.status[id].element = this.html.children[id]
       }
    }
 }

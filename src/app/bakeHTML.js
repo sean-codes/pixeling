@@ -8,6 +8,14 @@ app.bakeHTML = function(recipe) {
       },
       first: function() {
          return this.elements[0]
+      },
+      find: function(search) {
+         for(var element of this.elements) {
+            var foundElement = element.querySelector(search)
+            if(foundElement) {
+               return foundElement
+            }
+         }
       }
    }
 

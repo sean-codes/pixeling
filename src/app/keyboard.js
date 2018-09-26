@@ -11,13 +11,13 @@ app.keybinds = [
    },
    {
       modifiers: [],
-      key: 'e',
+      key: 'd',
       command: 'selectTool',
-      info: { tool: 'eraser' }
+      info: { tool: 'draw' }
    },
    {
       modifiers: [],
-      key: 'd',
+      key: 'e',
       command: 'selectTool',
       info: { tool: 'eraser' }
    },
@@ -26,6 +26,12 @@ app.keybinds = [
       key: 's',
       command: 'selectTool',
       info: { tool: 'select' }
+   },
+   {
+      modifiers: [],
+      key: 'r',
+      command: 'selectTool',
+      info: { tool: 'read' }
    }
 ]
 

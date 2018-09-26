@@ -2,7 +2,7 @@ app.clipboard = {
    store: {},
    selection: {},
    copy: function(area) {
-      this.store = app.clone(app.component.cursor.selected.copy)
+      this.store = app.clone(app.ui.cursor.selected.copy)
    },
 
    cut: function(area) {
@@ -13,11 +13,11 @@ app.clipboard = {
    paste: function(x=0, y=0) {
       //this.pasteCopy(x, y, this.store)
 
-      if(app.component.cursor.selected) {
+      if(app.ui.cursor.selected) {
          this.pasteCopy(
-            app.component.cursor.selected.x,
-            app.component.cursor.selected.y,
-            app.component.cursor.selected.copy)
+            app.ui.cursor.selected.x,
+            app.ui.cursor.selected.y,
+            app.ui.cursor.selected.copy)
       }
       var copy = this.store
 
@@ -26,7 +26,7 @@ app.clipboard = {
          copy
       }
 
-      app.component.cursor.update({ selected })
+      app.ui.cursor.update({ selected })
    },
 
    pasteCopy(x, y, copy) {
@@ -49,7 +49,7 @@ app.clipboard = {
          }
       }
 
-      app.component.canvas.updateImage(app.image)
+      app.ui.canvas.updateImage(app.image)
    },
 
    getCopy(area) {

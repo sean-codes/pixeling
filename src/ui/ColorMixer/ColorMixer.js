@@ -82,17 +82,17 @@ class ColorMixer {
       for(var name in this.hsla) {
          var part = this.hsla[name]
          var htmlCursor = this.html[name].querySelector('.cursor')
-         var htmlCanvas = this.html[name].querySelector('canvas')
+         var html = this.html[name].querySelector('canvas')
 
          // update curor
          htmlCursor.style.left = part.value / part.max * 100 + '%'
 
          // update colors
-         var ctx = htmlCanvas.getContext('2d')
-         htmlCanvas.width = part.max/part.step
-         htmlCanvas.height = 100 // max height 100
+         var ctx = html.getContext('2d')
+         html.width = part.max/part.step
+         html.height = 100 // max height 100
 
-         ctx.clearRect(0, 0, htmlCanvas.width, htmlCanvas.height)
+         ctx.clearRect(0, 0, html.width, html.height)
          for(var x = 0; x < part.max; x += part.step) {
             ctx.fillStyle = `hsla(
                ${name == 'hue' ? x : this.hsla.hue.value},
@@ -102,8 +102,8 @@ class ColorMixer {
             )`
 
             var percent = x / part.max
-            var xPosition = percent * htmlCanvas.width
-            ctx.fillRect(xPosition, 0, 1, htmlCanvas.height)
+            var xPosition = percent * html.width
+            ctx.fillRect(xPosition, 0, 1, html.height)
          }
       }
    }

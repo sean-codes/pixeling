@@ -1,6 +1,6 @@
 app.tools.eraser = {
    select() {
-      app.component.cursor.update({ mode: 'erase' })
+      app.ui.cursor.update({ mode: 'erase' })
    },
 
    down(mouse) {
@@ -8,11 +8,11 @@ app.tools.eraser = {
    },
 
    move(mouse) {
-      app.component.cursor.update(mouse.positionCurrent)
+      app.ui.cursor.update(mouse.positionCurrent)
    },
 
    stroke(mouse) {
-      app.component.cursor.update(mouse.positionCurrent)
+      app.ui.cursor.update(mouse.positionCurrent)
       this.erase(mouse.positionCurrent)
    },
 
@@ -20,8 +20,8 @@ app.tools.eraser = {
       app.image.clearPixels({
          x: position.x,
          y: position.y,
-         width: app.component.cursor.size,
-         height: app.component.cursor.size
+         width: app.ui.cursor.size,
+         height: app.ui.cursor.size
       })
    }
 }

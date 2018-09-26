@@ -1,7 +1,7 @@
 app.tools.draw = {
 
    select() {
-      app.component.cursor.update({ fill: true, selected: false, mode: 'stroke' })
+      app.ui.cursor.update({ fill: true, selected: false, mode: 'stroke' })
    },
 
    down(mouse) {
@@ -9,11 +9,11 @@ app.tools.draw = {
    },
 
    move(mouse) {
-      app.component.cursor.update(mouse.positionCurrent)
+      app.ui.cursor.update(mouse.positionCurrent)
    },
 
    stroke(mouse) {
-      app.component.cursor.update(mouse.positionCurrent)
+      app.ui.cursor.update(mouse.positionCurrent)
       this.draw(mouse.positionCurrent)
    },
 
@@ -21,8 +21,8 @@ app.tools.draw = {
       app.image.drawPixels({
          x: position.x,
          y: position.y,
-         width: app.component.cursor.size,
-         height: app.component.cursor.size
+         width: app.ui.cursor.size,
+         height: app.ui.cursor.size
       })
    }
 }

@@ -1,7 +1,7 @@
 app.tools.select = {
    select() {
       app.global.color = 'rgba(0, 0, 0, 0)'
-      app.component.cursor.update({ mode: 'select' })
+      app.ui.cursor.update({ mode: 'select', size: 1 })
    },
 
    unSelect() {
@@ -9,7 +9,7 @@ app.tools.select = {
    },
 
    move(mouse) {
-      app.component.cursor.update({ ...mouse.positionCurrent })
+      app.ui.cursor.update({ ...mouse.positionCurrent })
    },
 
    down(mouse) {
@@ -17,14 +17,14 @@ app.tools.select = {
          return
       }
 
-      if(app.component.cursor.selected) {
+      if(app.ui.cursor.selected) {
          app.clipboard.pasteCopy(
-            app.component.cursor.selected.x,
-            app.component.cursor.selected.y,
-            app.component.cursor.selected.copy)
+            app.ui.cursor.selected.x,
+            app.ui.cursor.selected.y,
+            app.ui.cursor.selected.copy)
       }
 
-      app.component.cursor.update({
+      app.ui.cursor.update({
          selected: {
             ...mouse.positionStart,
             copy: undefined
@@ -34,18 +34,18 @@ app.tools.select = {
 
    stroke(mouse) {
       if(mouse.dragging) {
-         app.component.cursor.selected.x += mouse.positionDelta.x
-         app.component.cursor.selected.y += mouse.positionDelta.y
+         app.ui.cursor.selected.x += mouse.positionDelta.x
+         app.ui.cursor.selected.y += mouse.positionDelta.y
 
-         app.component.cursor.update()
+         app.ui.cursor.update()
          return
       }
 
-      app.component.cursor.update({ selected: this.getSelected(mouse) })
+      app.ui.cursor.update({ selected: this.getSelected(mouse) })
    },
 
    up(mouse) {
-      app.component.cursor.update({...mouse.positionEnd, mode: 'select' })
+      app.ui.cursor.update({...mouse.positionEnd, mode: 'select' })
 
       if(mouse.dragging) {
          return
@@ -63,20 +63,20 @@ app.tools.select = {
       app.history.push()
 
       var selected = this.getSelected(mouse)
-      app.component.cursor.update({ selected })
+      app.ui.cursor.update({ selected })
       app.image.clearPixels(selected)
    },
 
    unsetSelected() {
-      if(app.component.cursor.selected) {
+      if(app.ui.cursor.selected) {
          app.clipboard.pasteCopy(
-            app.component.cursor.selected.x,
-            app.component.cursor.selected.y,
-            app.component.cursor.selected.copy
+            app.ui.cursor.selected.x,
+            app.ui.cursor.selected.y,
+            app.ui.cursor.selected.copy
          )
       }
 
-      app.component.cursor.update({ selected: undefined })
+      app.ui.cursor.update({ selected: undefined })
    },
 
    getSelected(mouse) {

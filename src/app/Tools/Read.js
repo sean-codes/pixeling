@@ -1,7 +1,7 @@
 app.tools.read = {
 
    select() {
-      app.component.cursor.update({ selected: false, mode: 'read' })
+      app.ui.cursor.update({ selected: false, mode: 'read' })
    },
 
    down(mouse) {
@@ -12,16 +12,16 @@ app.tools.read = {
       var color = pixel.color
 
       if(color.h || color.s || color.l || color.a) {
-         app.component.pallet.setColor(color)
+         app.ui.pallet.setColor(color)
       }
    },
 
    move(mouse) {
-      app.component.cursor.update(mouse.positionCurrent)
+      app.ui.cursor.update(mouse.positionCurrent)
    },
 
    stroke(mouse) {
-      app.component.cursor.update(mouse.positionCurrent)
+      app.ui.cursor.update(mouse.positionCurrent)
    },
 
    choose(position) {

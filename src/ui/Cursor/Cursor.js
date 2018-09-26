@@ -35,21 +35,15 @@ class Cursor {
 
       this.mouse.down = true
       this.mouse.dragging = this.canMoveSelected()
-      this.mouse.positionStart = {
-         x: Math.floor(e.offsetX / this.scale),
-         y: Math.floor(e.offsetY / this.scale)
-      }
 
-      this.mouse.positionLast = {
-         x: Math.floor(e.offsetX / this.scale),
-         y: Math.floor(e.offsetY / this.scale)
-      }
+      this.mouse.positionStart = this.getMouseEventPosition(e)
+      this.mouse.positionLast = this.getMouseEventPosition(e)
+
       this.onDown(this.mouse)
    }
 
    eventMousemove(e, element) {
-      var x = Math.floor(e.offsetX / this.scale) - Math.floor(this.size/2)
-      var y = Math.floor(e.offsetY / this.scale) - Math.floor(this.size/2)
+      var { x, y } = this.getMouseEventPosition(e)
 
       var samePosition =
          this.mouse.positionCurrent.x == x &&
@@ -68,6 +62,7 @@ class Cursor {
          x: x - this.mouse.positionStart.x,
          y: y - this.mouse.positionStart.y
       }
+
       this.mouse.positionLast = { x, y }
       // i see you noticed the pixel skipping
       // within / around here
@@ -82,6 +77,16 @@ class Cursor {
       this.mouse.down = false
       this.mouse.positionEnd  = { x: e.offsetX, y: e.offsetY }
       this.onUp(this.mouse)
+   }
+
+   getMouseEventPosition(e) {
+      var x = Math.floor(e.offsetX / this.scale) - Math.floor(this.size/2)
+      var y = Math.floor(e.offsetY / this.scale) - Math.floor(this.size/2)
+
+      x = Math.max(0, Math.min(this.html.width, x))
+      y = Math.max(0, Math.min(this.html.height, y))
+
+      return { x, y }
    }
 
    getCursor() {
@@ -234,13 +239,13 @@ class Cursor {
 
    updateHTML() {
       var cursorScale = this.scale
-      this.htmlCanvas.style.cursor = this.getCursor()
-      this.htmlCanvas.width = app.image.width*cursorScale
-      this.htmlCanvas.height = app.image.height*cursorScale
+      this.html.style.cursor = this.getCursor()
+      this.html.width = app.image.width*cursorScale
+      this.html.height = app.image.height*cursorScale
    }
 
    createHTML() {
-      this.htmlCanvas = app.bakeHTML([
+      this.html = app.bakeHTML([
          {
             tag: 'canvas',
             classes: ['cursor'],
@@ -253,6 +258,6 @@ class Cursor {
          }
       ]).first()
 
-      this.ctx = this.htmlCanvas.getContext('2d')
+      this.ctx = this.html.getContext('2d')
    }
 }
