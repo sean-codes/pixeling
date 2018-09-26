@@ -43,14 +43,11 @@ app.clipboard = {
             copy.pixels[cx][cy].x = pasteX
             copy.pixels[cx][cy].y = pasteY
             if(app.image.pixels[pasteX] && app.image.pixels[pasteX][pasteY]) {
-               app.image.pixels[pasteX][pasteY] = app.clone(copy.pixels[cx][cy])
+               var copyPixel = copy.pixels[cx][cy]
+               app.image.drawPixel(pasteX, pasteY, copyPixel.color)
             }
          }
       }
-      app.image.loopPixels(copy.dimensions, copy.pixels, (pixel) => {
-
-         app.image.pixels[pixel.x][pixel.y] = pixel
-      })
 
       app.component.canvas.updateImage(app.image)
    },

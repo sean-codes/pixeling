@@ -33,11 +33,16 @@ app.image = {
       var color = app.component.pallet.getColor()
 
       this.loopPixels(area, app.image.pixels, (pixel) => {
-         pixel.color = app.image.addHSLColor(pixel.color, color)
-         pixel.colorString = app.image.hslaToString(pixel.color)
+         app.image.drawPixel(pixel.x, pixel.y, color)
       })
 
       app.component.canvas.updateImage(app.image)
+   },
+
+   drawPixel: function(x, y, color) {
+      var pixel = app.image.pixels[x][y]
+      pixel.color = app.image.addHSLColor(pixel.color, color)
+      pixel.colorString = app.image.hslaToString(pixel.color)
    },
 
    clearPixels: function(area) {
