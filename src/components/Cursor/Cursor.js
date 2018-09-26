@@ -125,6 +125,11 @@ class Cursor {
       this.mode == 'stroke' && this.renderCursorModeStroke(cursorDimensions)
       this.mode == 'select' && this.renderCursorModeSelect(cursorDimensions)
       this.mode == 'move' && this.renderCursorModeMove(cursorDimensions)
+      this.mode == 'read' && this.renderCursorModeRead(cursorDimensions)
+   }
+
+   renderCursorModeRead(dimensions) {
+      this.drawCrosshair(dimensions, '#FFF')
    }
 
    renderCursorModeErase(dimensions) {
@@ -177,6 +182,29 @@ class Cursor {
 
       this.ctx.strokeStyle = color
       this.ctx.strokeRect(x-1, y-1, width+2, height+2)
+   }
+
+   drawCrosshair(dimensions, color) {
+      var { x, y, width, height } = this.scaleDimensions(dimensions)
+
+      this.ctx.strokeStyle = color
+      this.ctx.lineWidth = 3
+      this.ctx.moveTo(x, y + height/2)
+      this.ctx.lineTo(x-width/2, y+height/2)
+      this.ctx.stroke()
+
+      this.ctx.moveTo(x+width, y + height/2)
+      this.ctx.lineTo(x+width+width/2, y+height/2)
+      this.ctx.stroke()
+
+      this.ctx.moveTo(x+width/2, y)
+      this.ctx.lineTo(x+width/2, y-height/2)
+      this.ctx.stroke()
+
+      this.ctx.moveTo(x+width/2, y+height)
+      this.ctx.lineTo(x+width/2, y+height+height/2)
+      this.ctx.stroke()
+      //this.ctx.strokeRect(x-1, y-1, width+2, height+2)
    }
 
    drawRectangleDashed(dimensions) {
