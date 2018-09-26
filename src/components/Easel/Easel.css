@@ -12,12 +12,13 @@
 }
 
 .easel .scroll .indicator {
+   pointer-events:none;
    position:absolute;
    border:8px solid transparent;
    z-index:100;
 }
 
-.easel  .indicator.horizontal {
+.easel .indicator.horizontal {
    bottom:0;
    border-bottom-color:rgba(255, 255, 255, 0.5);
    transform:translateX(-50%);
