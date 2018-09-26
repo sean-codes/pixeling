@@ -11,7 +11,6 @@ class Easel {
 
       this.mouse = {
          moving: false,
-         down: false,
          pos: {
             x: 0,
             y: 0
@@ -30,11 +29,14 @@ class Easel {
    }
 
    eventMousedown(e, element) {
-      var isLeftButton = e.button == 1
+      var isLeftButton = e.button == 0
       var isMiddleButton = e.button == 1
 
-      if(isMiddleButton) this.mouse.moving = true
-      if(isLeftButton) this.mouse.down = true
+      var canMoveEasel = isMiddleButton
+      if(canMoveEasel) {
+         this.mouse.moving = true
+         e.stopPropagation()
+      }
    }
 
    eventMouseup(e, element) {
