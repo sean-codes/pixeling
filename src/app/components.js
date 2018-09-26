@@ -16,6 +16,7 @@ app.initComponents = function() {
          { name: 'select', icon: 'select', overrides : app.tools.select  },
          { name: 'draw', icon: 'draw', overrides : app.tools.draw },
          { name: 'eraser', icon: 'eraser', overrides : app.tools.eraser  },
+         { name: 'read', icon: 'read', overrides : app.tools.read  },
       ],
    })
 

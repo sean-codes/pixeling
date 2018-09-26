@@ -28,6 +28,7 @@ app.imports = {
       './src/app/Tools/Draw.js',
       './src/app/Tools/Eraser.js',
       './src/app/Tools/Select.js',
+      './src/app/Tools/Read.js',
    ],
    css: [
       './src/shared/icons.css',
