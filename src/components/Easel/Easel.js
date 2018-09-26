@@ -56,6 +56,7 @@ class Easel {
          this.canvasY -= deltaY
 
          this.transformCanvasAndCursor()
+         this.transformIndicators()
       }
    }
 
@@ -75,6 +76,7 @@ class Easel {
       }
 
       this.transformCanvasAndCursor()
+      this.transformIndicators()
    }
 
    centerCanvas() {
@@ -89,6 +91,7 @@ class Easel {
       this.cursorY = (scrollRect.height / 2) - (cursorRect.height / 2)
 
       this.transformCanvasAndCursor()
+      this.transformIndicators()
    }
 
    transformCanvasAndCursor() {
@@ -108,22 +111,46 @@ class Easel {
       `
    }
 
+   transformIndicators() {
+      console.log('indicators')
+      var x = this.canvasX + this.htmlCanvas.width/2
+      var y = this.canvasY + this.htmlCanvas.height/2
+
+      x = Math.max(0, Math.min(x, this.htmlScroll.clientWidth))
+      y = Math.max(0, Math.min(y, this.htmlScroll.clientHeight))
+      this.htmlIndicatorHorizontal.style.left = x + 'px'
+      this.htmlIndicatorHorizontalTop.style.left = x + 'px'
+      this.htmlIndicatorVertical.style.top = y + 'px'
+      this.htmlIndicatorVerticalLeft.style.top = y + 'px'
+   }
+
    bakeHTML() {
-      var htmlBakeRecipe = [{
-         classes: ['scroll'],
-         events: {
-            mousemove: this.eventMousemove.bind(this),
-            mousedown: this.eventMousedown.bind(this),
-            mouseup: this.eventMouseup.bind(this),
-            mouseleave: this.eventMouseup.bind(this),
-            mousewheel: this.eventScroll.bind(this)
-         },
-         append: [this.htmlCanvas, this.htmlCursor]
-      }]
+      var htmlBakeRecipe = [
+         {
+            classes: ['scroll'],
+            events: {
+               mousemove: this.eventMousemove.bind(this),
+               mousedown: this.eventMousedown.bind(this),
+               mouseup: this.eventMouseup.bind(this),
+               mouseleave: this.eventMouseup.bind(this),
+               mousewheel: this.eventScroll.bind(this)
+            },
+            append: [this.htmlCanvas, this.htmlCursor],
+            children: [
+               { classes: ['indicator', 'horizontal'] },
+               { classes: ['indicator', 'horizontal', 'top'] },
+               { classes: ['indicator', 'vertical'] },
+               { classes: ['indicator', 'vertical', 'left'] },
+            ]
+         }
+      ]
 
       var bakedHTML = app.bakeHTML(htmlBakeRecipe)
       this.htmlScroll = bakedHTML.elements[0]
-
+      this.htmlIndicatorHorizontal = bakedHTML.elements[0].children[0]
+      this.htmlIndicatorHorizontalTop = bakedHTML.elements[0].children[1]
+      this.htmlIndicatorVertical = bakedHTML.elements[0].children[2]
+      this.htmlIndicatorVerticalLeft = bakedHTML.elements[0].children[3]
       bakedHTML.appendTo(this.html)
    }
 }
