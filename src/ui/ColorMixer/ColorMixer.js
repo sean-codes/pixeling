@@ -12,7 +12,7 @@ class ColorMixer {
          alpha: { value: 1, end: '', min: 0, max: 1, step: 0.01 }
       }
 
-      this.htmlCreate()
+      this.createHTML()
       this.updateCanvasColors()
    }
 
@@ -36,6 +36,9 @@ class ColorMixer {
    }
 
    moveSlider(e, element) {
+      console.log(e)
+      var canvas = bakedHTML.element
+      var cursor = bakedHTML.element
       var elementWidth = element.getBoundingClientRect().width
       var percent = e.offsetX / elementWidth
       var name = element.dataset.name
@@ -81,18 +84,20 @@ class ColorMixer {
    updateCanvasColors() {
       for(var name in this.hsla) {
          var part = this.hsla[name]
-         var htmlCursor = this.html[name].querySelector('.cursor')
-         var html = this.html[name].querySelector('canvas')
+         var bakedOptionElement = this.bakedHTML.find('option_'+name)
+         var htmlCursor = bakedOptionElement.ele('cursor')
+         var htmlCanvas = bakedOptionElement.ele('canvas')
+
 
          // update curor
          htmlCursor.style.left = part.value / part.max * 100 + '%'
 
          // update colors
-         var ctx = html.getContext('2d')
-         html.width = part.max/part.step
-         html.height = 100 // max height 100
+         var ctx = htmlCanvas.getContext('2d')
+         htmlCanvas.width = part.max/part.step
+         htmlCanvas.height = 100 // max height 100
 
-         ctx.clearRect(0, 0, html.width, html.height)
+         ctx.clearRect(0, 0, htmlCanvas.width, htmlCanvas.height)
          for(var x = 0; x < part.max; x += part.step) {
             ctx.fillStyle = `hsla(
                ${name == 'hue' ? x : this.hsla.hue.value},
@@ -102,77 +107,52 @@ class ColorMixer {
             )`
 
             var percent = x / part.max
-            var xPosition = percent * html.width
-            ctx.fillRect(xPosition, 0, 1, html.height)
+            var xPosition = percent * htmlCanvas.width
+            ctx.fillRect(xPosition, 0, 1, htmlCanvas.height)
          }
       }
    }
 
    // worse than jquery :]
-   htmlCreate() {
-      this.html = {}
+   createHTML() {
+      this.bakedHTML = this.bakeHTMLMixer()
+      var bakedHTMLHue = this.bakeHTMLOption('hue')
+      var bakedHTMLSaturation = this.bakeHTMLOption('saturation')
+      var bakedHTMLLightness = this.bakeHTMLOption('lightness')
+      var bakedHTMLAlpha = this.bakeHTMLOption('alpha')
 
-      this.html.chooser = this.htmlCreateChooser()
-      this.html.hue = this.htmlCreateOption('hue')
-      this.html.saturation = this.htmlCreateOption('saturation')
-      this.html.lightness = this.htmlCreateOption('lightness')
-      this.html.alpha = this.htmlCreateOption('alpha')
-
-      this.html.chooser.appendChild(this.html.hue)
-      this.html.chooser.appendChild(this.html.saturation)
-      this.html.chooser.appendChild(this.html.lightness)
-      this.html.chooser.appendChild(this.html.alpha)
-
-      if(this.container) {
-         this.html.container = this.container
-         this.html.container.appendChild(this.html.chooser)
-      }
-
-      if(this.label) {
-         this.setLabel(this.label)
-      }
+      this.bakedHTML.append(bakedHTMLHue)
+      this.bakedHTML.append(bakedHTMLSaturation)
+      this.bakedHTML.append(bakedHTMLLightness)
+      this.bakedHTML.append(bakedHTMLAlpha)
    }
 
-   htmlCreateChooser() {
-      var htmlChooser = document.createElement('div')
-      htmlChooser.classList.add('colorMixer')
-      //htmlChooser.classList.add('hide')
-
-      // prevent closing
-      htmlChooser.addEventListener('click', (e) => {
-         e.stopPropagation()
+   bakeHTMLMixer() {
+      return app.bakeHTML({
+         classes: ['colorMixer'],
+         events: {
+            click: (e) => { e.stopPropagation() }
+         }
       })
-
-      return htmlChooser
    }
 
-   htmlCreateOption(name) {
-      var html = {
-         container: document.createElement('div'),
-         name: document.createElement('div'),
-         canvasContainer: document.createElement('div'),
-         canvas: document.createElement('canvas'),
-         cursor: document.createElement('div')
-      }
-      // setup
-      html.container.classList.add('option')
-      html.name.classList.add('name')
-      html.name.innerHTML = name[0]
-      html.canvas.dataset.name = name
-      html.canvasContainer.classList.add('canvas')
-      html.cursor.classList.add('cursor')
-
-      var that = this
-      html.canvas.addEventListener('mousemove', function(e) {
-         if(e.buttons) that.moveSlider(e, this)
+   bakeHTMLOption(name) {
+      return app.bakeHTML({
+         name: 'option_'+name,
+         classes: ['option'],
+         ingredients: [
+            {
+               tag: 'canvas',
+               name: 'canvas',
+               data: { name },
+               events: {
+                  mousemove: this.moveSlider.bind(this)
+               }
+            },
+            {
+               name: 'cursor'
+            }
+         ]
       })
-
-      // append
-      html.canvasContainer.appendChild(html.canvas)
-      html.canvasContainer.appendChild(html.cursor)
-      html.container.appendChild(html.name)
-      html.container.appendChild(html.canvasContainer)
-
-      return html.container
    }
 }

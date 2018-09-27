@@ -1,6 +1,10 @@
 class Canvas {
    constructor(options) {
       this.createCanvas()
+      this.canvas = this.html.find('canvas')
+      console.log(this.canvas)
+      this.ctx = this.canvas.getContext('2d')
+
       this.image = options.image
 
       this.initialScale = 10
@@ -9,8 +13,6 @@ class Canvas {
       this.html.height = this.image.height*this.scale
 
       this.resetCanvas()
-
-      console.log(options.image)
    }
 
    updateScale(scale) {
@@ -68,12 +70,11 @@ class Canvas {
 
    createCanvas() {
       var htmlBakeRecipe = [{
+         name: 'canvas',
          tag: 'canvas',
          classes: ['canvas']
       }]
 
-      var bakedHTML = app.bakeHTML(htmlBakeRecipe)
-      this.html = bakedHTML.elements[0]
-      this.ctx = this.html.getContext('2d')
+      this.html = app.bakeHTML(htmlBakeRecipe)
    }
 }

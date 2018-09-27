@@ -17,6 +17,6 @@
    flex: 1;
 }
 
-.layout .column .pallet {
-   height:100%;
+.layout .column {
+   height: 100%;
 }

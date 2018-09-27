@@ -3,6 +3,20 @@
    background: #151a1a;
    height: 60px;
    line-height: 60px;
-   padding: 0 10px;
    color: #FFF;
+   display:flex;
+}
+
+.appbar .menubtn {
+   width:80px;
+   text-align:center;
+}
+
+.appbar .menubtn:hover {
+   background: rgba(255, 255, 255, 0.1);
+   cursor: pointer;
+}
+.appbar .title {
+   flex: 1;
+   padding:0 10px;
 }

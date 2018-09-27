@@ -4,10 +4,28 @@ class Appbar {
       this.makeHTML()
    }
 
-   makeHTML() {
-      var htmlRecipe = [ { innerHTML: this.title } ]
-      var bakedHTML = app.bakeHTML(htmlRecipe)
+   openMenu() {
+      console.log('open menu')
+   }
 
-      this.html = bakedHTML.first()
+   makeHTML() {
+      var htmlRecipe = {
+         classes: ['appbar'],
+         ingredients: [
+            {
+               classes: ['menubtn'],
+               innerHTML: 'menu',
+               events: {
+                  click: this.openMenu.bind(this)
+               }
+            },
+            {
+               classes: ['title'],
+               innerHTML: this.title
+            }
+         ]
+      }
+
+      this.bakedHTML = app.bakeHTML(htmlRecipe)
    }
 }

@@ -28,23 +28,15 @@ class Statusbar {
    }
 
    createStatusElements() {
-      var batchCookingRecipe = [
-         {
-            classes: ['statusbar'],
-            children: this.status.map((status) => {
-               return {
-                  classes: ['status'],
-                  innerHTML: status.innerHTML
-               }
-            })
-         }
-      ]
-
-      var bakedHTML = app.bakeHTML(batchCookingRecipe)
-      this.html = bakedHTML.first()
-
-      for(var id = 0; id < this.html.children.length; id++) {
-         this.status[id].element = this.html.children[id]
+      var htmlRecipe = {
+         classes: ['statusbar'],
+         ingredients: this.status.map((status) => ({
+            name: 'status_'+status.name,
+            classes: ['status'],
+            innerHTML: status.innerHTML
+         }))
       }
+
+      this.bakedHTML = app.bakeHTML(htmlRecipe)
    }
 }

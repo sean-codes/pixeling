@@ -1,72 +1,55 @@
 class Layout {
-   constructor(container) {
-      this.html = {
-         container: container
-      }
+   constructor(htmlContainer) {
+      this.htmlContainer = htmlContainer
       this.createHTMLContainers()
    }
 
-   appendUI(htmlUI, containerName) {
-      //this.html.
-      console.log(htmlUI, containerName)
-      this.html[containerName].appendChild(htmlUI)
+   appendUI(bakedUIHTML, containerName) {
+      var container = this.bakedHTML.find('layout_' + containerName)
+      container.append(bakedUIHTML)
    }
 
    createHTMLContainers() {
       // think im going to regret this manuever...
-      this.baked = {}
-      this.baked.layout = app.bakeHTML([
-         {
-            classes: [ 'layout' ]
-         }
-      ])
+      this.bakedHTML = app.bakeHTML({
+         classes: [ 'layout' ]
+      })
 
-      this.baked.appbarRow = app.bakeHTML([
-         {
-            classes: [ 'row' ],
-            children: [ { classes: [ 'appbar'] }]
-         }
-      ])
+      var bakedHTMLAppbar = app.bakeHTML({
+         name: 'layout_appbar',
+         classes: [ 'row' ]
+      })
 
-      this.baked.centerRow = app.bakeHTML([
-         {
-            classes: [ 'row', 'flex' ],
-            children: [
-               {
-                  classes: [ 'column' ],
-                  children: [ { classes: ['pallet'] }]
-               },
-               {
-                  classes: [ 'column', 'fill' ],
-                  children: [ { classes: ['easel'] }]
-               },
-               {
-                  classes: [ 'column' ],
-                  children: [ { classes: ['toolbox'] }]
-               }
-            ]
-         }
-      ])
+      var bakedHTMLCenter = app.bakeHTML({
+         classes: [ 'row', 'flex' ],
+         ingredients: [
+            {
+               name: 'layout_pallet',
+               classes: [ 'column' ]
+            },
+            {
+               name: 'layout_easel',
+               classes: [ 'column', 'fill' ]
+            },
+            {
+               name: 'layout_toolbox',
+               classes: [ 'column' ]
+            }
+         ]
+      })
 
-      this.baked.statusbarRow = app.bakeHTML([
-         {
-            classes: [ 'row' ],
-            children: [ { classes: [ 'statusbar'] }]
-         }
-      ])
+      var bakedHTMLStatusbar = app.bakeHTML({
+         name: 'layout_statusbar',
+         classes: [ 'row' ]
+      })
 
-      this.html.layout = this.baked.layout.first()
-      this.html.appbar = this.baked.appbarRow.find('.appbar')
-      this.html.pallet = this.baked.centerRow.find('.pallet')
-      this.html.easel = this.baked.centerRow.find('.easel')
-      this.html.toolbox = this.baked.centerRow.find('.toolbox')
-      this.html.statusbar = this.baked.statusbarRow.find('.statusbar')
-      console.log(this.html)
       // append
-      this.baked.layout.appendTo(this.html.container)
-      this.baked.appbarRow.appendTo(this.html.layout)
-      this.baked.centerRow.appendTo(this.html.layout)
-      this.baked.statusbarRow.appendTo(this.html.layout)
+      this.bakedHTML.append(bakedHTMLAppbar)
+      this.bakedHTML.append(bakedHTMLCenter)
+      this.bakedHTML.append(bakedHTMLStatusbar)
+
+      //append to contianer
+      this.bakedHTML.appendTo(this.htmlContainer)
    }
 }
 
