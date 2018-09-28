@@ -35,15 +35,25 @@ class ColorMixer {
       })
    }
 
-   moveSlider(e, element) {
-      console.log(e)
-      var canvas = bakedHTML.element
-      var cursor = bakedHTML.element
-      var elementWidth = element.getBoundingClientRect().width
-      var percent = e.offsetX / elementWidth
-      var name = element.dataset.name
+   eventMousedownOption(e, bakedHTML) {
+      bakedHTML.data('moving', 'true')
+   }
 
-      var htmlCursor = this.html[name].querySelector('.cursor')
+   eventMouseoutOption(e, bakedHTML) {
+      bakedHTML.data('moving', 'false')
+   }
+
+   eventMousemoveOption(e, bakedHTML) {
+
+      if(bakedHTML.data('moving') == 'false') return
+
+      var htmlCanvas = bakedHTML.ele('canvas')
+
+      var elementWidth = htmlCanvas.clientWidth
+      var percent = e.offsetX / elementWidth
+      var name = bakedHTML.data('name')
+
+      var htmlCursor = bakedHTML.ele('cursor')
       htmlCursor.style.left = percent*100 + '%'
 
       var colorPart = this.hsla[name]
@@ -88,7 +98,6 @@ class ColorMixer {
          var htmlCursor = bakedOptionElement.ele('cursor')
          var htmlCanvas = bakedOptionElement.ele('canvas')
 
-
          // update curor
          htmlCursor.style.left = part.value / part.max * 100 + '%'
 
@@ -98,6 +107,7 @@ class ColorMixer {
          htmlCanvas.height = 100 // max height 100
 
          ctx.clearRect(0, 0, htmlCanvas.width, htmlCanvas.height)
+
          for(var x = 0; x < part.max; x += part.step) {
             ctx.fillStyle = `hsla(
                ${name == 'hue' ? x : this.hsla.hue.value},
@@ -140,19 +150,24 @@ class ColorMixer {
       return app.bakeHTML({
          name: 'option_'+name,
          classes: ['option'],
+         data: { name, moving: false },
          ingredients: [
             {
                tag: 'canvas',
                name: 'canvas',
-               data: { name },
-               events: {
-                  mousemove: this.moveSlider.bind(this)
-               }
             },
             {
-               name: 'cursor'
+               name: 'cursor',
+               classes: ['cursor']
             }
-         ]
+         ],
+         events: {
+            mousemove: this.eventMousemoveOption.bind(this),
+            mousedown: this.eventMousedownOption.bind(this),
+            mouseup: this.eventMouseoutOption.bind(this),
+            mouseout: this.eventMouseoutOption.bind(this),
+            mouseleave: this.eventMouseoutOption.bind(this),
+         }
       })
    }
 }

@@ -33,6 +33,12 @@ app.bakeHTML = function(recipe) {
       ele: function(name) {
          var found = this.find(name)
          if(found) return found.element
+      },
+      data: function(name, value) {
+         if(value != null) {
+            this.element.dataset[name] = value
+         }
+         return this.element.dataset[name]
       }
    }
 
@@ -43,6 +49,7 @@ app.bakeHTML = function(recipe) {
       bakedHTML.element.style[style] = recipe.styles[style]
 
    for (var data in recipe.data || {}){
+      bakedHTML.data[data] = recipe.data[data]
       bakedHTML.element.dataset[data] = recipe.data[data]
    }
 
@@ -67,11 +74,11 @@ app.bakeHTML = function(recipe) {
    for (let eventName in recipe.events || []) {
       var eventCall = recipe.events[eventName];
 
-      (function(element, eventName, eventCall) {
+      (function(element, testBakedHTML, eventName, eventCall) {
          element.addEventListener(eventName, (e) => {
-            eventCall(e, element)
+            eventCall(e, testBakedHTML)
          })
-      })(bakedHTML.element, eventName, eventCall)
+      })(bakedHTML.element, bakedHTML, eventName, eventCall)
    }
 
    return bakedHTML

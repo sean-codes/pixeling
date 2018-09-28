@@ -24,7 +24,6 @@ app.initComponents = function() {
       ],
    })
 
-   app.ui.colorMixer = new ColorMixer()
    app.ui.pallet = new Pallet({
       mixer: app.ui.colorMixer,
       onChangeColor: (color) => {

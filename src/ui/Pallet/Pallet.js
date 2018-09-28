@@ -1,6 +1,5 @@
 class Pallet {
    constructor(options) {
-      this.mixer = options.mixer
       this.onChangeColor = options.onChangeColor
       this.onChangeSize = options.onChangeSize
       this.tempSize = 1
@@ -30,31 +29,33 @@ class Pallet {
       this.selected = this.colors.length - 1
       this.color = this.colors[this.selected]
       this.htmlCreate()
-      this.setActiveColor(0)
 
+      // set up mixer
+      this.mixer = new ColorMixer()
       this.bakedHTML.append(this.mixer.bakedHTML)
-      // link up mixer
-      // this.mixer.setLabel(this.htmlColor)
-      // this.mixer.onChange = (color) => {
-      //    this.setColor(color)
-      // }
+      this.mixer.onChange = (color) => {
+         this.setColor(color)
+      }
+
+      // set initial color
+      this.setActiveColor(0)
    }
 
-   eventClickColor(e, element) {
-      this.setActiveColor(element.dataset.id)
+   eventClickColor(e, bakedHTML) {
+      this.setActiveColor(bakedHTML.element.dataset.id)
    }
 
-   eventBrushSizeScroll(e, element) {
+   eventBrushSizeScroll(e, bakedHTML) {
       this.tempSize += e.deltaY/10
       this.brushSizeChanged()
    }
 
-   eventIncreaseBrushSize(e, element) {
+   eventIncreaseBrushSize(e, bakedHTML) {
       this.tempSize += 1
       this.brushSizeChanged()
    }
 
-   eventDecreaseBrushSize(e, element) {
+   eventDecreaseBrushSize(e, bakedHTML) {
       this.size -= 1
       this.brushSizeChanged()
    }
@@ -88,7 +89,7 @@ class Pallet {
       mixerElement.style.background = stringColor
       colorElement.style.background = stringColor
 
-      //this.mixer.setColor(color)
+      this.mixer.setColor(color)
       this.onChangeColor(this.color)
    }
 
