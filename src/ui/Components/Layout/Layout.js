@@ -1,8 +1,7 @@
 class Layout extends Base {
-   constructor(htmlContainer) {
+   constructor() {
       super()
-      this.htmlContainer = htmlContainer
-      this.createHTMLContainers()
+      this.bakeHTML()
    }
 
    appendUI(bakedUIHTML, containerName) {
@@ -10,20 +9,19 @@ class Layout extends Base {
       container.append(bakedUIHTML)
    }
 
-   createHTMLContainers() {
-      // think im going to regret this manuever...
-      this.bakedHTML = this.bakeHTML({
-         classes: [ 'layout' ]
-      })
-
-      var bakedHTMLAppbar = this.bakeHTML({
+   recipe() {
+      var recipeAppbar = {
          name: 'layout_appbar',
          classes: [ 'row' ]
-      })
+      }
 
-      var bakedHTMLCenter = this.bakeHTML({
+      var recipeCenter = {
          classes: [ 'row', 'flex' ],
          ingredients: [
+            {
+               name: 'layout_menu',
+               classes: [ 'column' ]
+            },
             {
                name: 'layout_pallet',
                classes: [ 'column' ]
@@ -37,19 +35,21 @@ class Layout extends Base {
                classes: [ 'column' ]
             }
          ]
-      })
+      }
 
-      var bakedHTMLStatusbar = this.bakeHTML({
+      var recipeStatusbar = {
          name: 'layout_statusbar',
          classes: [ 'row' ]
-      })
+      }
 
-      // append
-      this.bakedHTML.append(bakedHTMLAppbar)
-      this.bakedHTML.append(bakedHTMLCenter)
-      this.bakedHTML.append(bakedHTMLStatusbar)
-
-      //append to contianer
-      this.bakedHTML.appendTo(this.htmlContainer)
+      return {
+         name: 'layout',
+         classes: [ 'layout' ],
+         ingredients: [
+            recipeAppbar,
+            recipeCenter,
+            recipeStatusbar
+         ]
+      }
    }
 }

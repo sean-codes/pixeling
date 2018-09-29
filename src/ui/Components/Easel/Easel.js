@@ -1,23 +1,23 @@
 class Easel extends Base  {
    constructor(options) {
       super()
-
       this.uiCanvas = options.canvas
       this.uiCursor = options.cursor
-      this.onScale = options.onScale || function(){}
 
-      this.moving = false
+      this.bakeHTML()
+
+      this.onScale = options.onScale || function(){}
 
       this.centerX = 0
       this.centerY = 0
+
+      this.moving = false
       this.moveDampen = 2
 
       this.scale = 1
       this.scaleMin = 0.1
       this.scaleMax = 20
       this.scaleDampen = 100
-
-      this.createHTML()
 
       this.bakedHTML.append(this.uiCanvas.bakedHTML)
       this.bakedHTML.append(this.uiCursor.bakedHTML)
@@ -118,8 +118,8 @@ class Easel extends Base  {
       htmlIndicatorVerticalRIght.style.top = y + 'px'
    }
 
-   createHTML() {
-      var htmlBakeRecipe = {
+   recipe() {
+      return {
          name: 'easel',
          classes: ['easel'],
          events: {
@@ -137,7 +137,5 @@ class Easel extends Base  {
             { name: 'indicatorVL', classes: ['indicator', 'vertical', 'left'] },
          ]
       }
-
-      this.bakedHTML = this.bakeHTML(htmlBakeRecipe)
    }
 }

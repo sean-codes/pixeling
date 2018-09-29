@@ -2,7 +2,7 @@ class Appbar extends Base {
    constructor(options = {}) {
       super()
       this.title = options.title || 'pixeling'
-      this.makeHTML()
+      this.bakeHTML()
       this.onOpen = options.onOpen || function() {}
    }
 
@@ -10,8 +10,8 @@ class Appbar extends Base {
       this.onOpen()
    }
 
-   makeHTML() {
-      var htmlRecipe = {
+   recipe() {
+      return {
          classes: ['appbar'],
          ingredients: [
             {
@@ -26,7 +26,5 @@ class Appbar extends Base {
             }
          ]
       }
-
-      this.bakedHTML = this.bakeHTML(htmlRecipe)
    }
 }

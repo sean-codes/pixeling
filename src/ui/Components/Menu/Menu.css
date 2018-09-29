@@ -1,0 +1,36 @@
+.ui.menu {
+   height:100%;
+   background:#333;
+   color:#FFF;
+   transition: all 0.2s;
+   max-width:125px;
+   width:125px;
+}
+
+.ui.menu .menuitem {
+   height:40px;
+   line-height:40px;
+   padding:0px 30px;
+   font-size:13px;
+   text-align:center;
+   opacity:1;
+   transition:all 0.2s;
+   --transition-delay: 0.1s;
+   transition-delay:var(--transition-delay);
+}
+
+.ui.menu .menuitem:hover {
+   background:rgba(0, 0, 0, 0.25);
+   cursor:pointer;
+}
+
+.ui.menu.hide {
+   max-width:0px;
+   overflow:hidden;
+   pointer-events:none;
+}
+
+.ui.menu.hide .menuitem {
+   transition-delay:0s;
+   opacity:0;
+}

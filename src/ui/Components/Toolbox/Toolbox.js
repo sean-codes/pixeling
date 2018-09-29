@@ -3,7 +3,7 @@ class Toolbox extends Base  {
       super()
       this.tools = options.tools
       this.currentTool = this.tools.find((tool) => tool.name == options.initialTool)
-      this.createHTML()
+      this.bakeHTML()
    }
 
    down(mouse) {
@@ -54,18 +54,20 @@ class Toolbox extends Base  {
       }
    }
 
-   createHTML() {
-      this.bakedHTML = this.bakeHTML({
+   recipe() {
+      var toolRecipes = this.tools.map((tool) => ({
+         name: 'tool_'+tool.name,
+         data: { name: tool.name },
+         classes: ['tool'],
+         ingredients: [{ classes: ['icon', tool.icon] }],
+         events: {
+            click: this.toolClicked.bind(this)
+         }
+      }))
+
+      return {
          classes: ['toolbox'],
-         ingredients: this.tools.map((tool) => ({
-            name: 'tool_'+tool.name,
-            data: { name: tool.name },
-            classes: ['tool'],
-            ingredients: [{ classes: ['icon', tool.icon] }],
-            events: {
-               click: this.toolClicked.bind(this)
-            }
-         }))
-      })
+         ingredients: toolRecipes
+      }
    }
 }

@@ -2,7 +2,7 @@ class Statusbar extends Base  {
    constructor(options) {
       super()
       this.setupStatusArray(options.status)
-      this.createStatusElements(options.status)
+      this.bakeHTML()
    }
 
    setupStatusArray(status) {
@@ -24,16 +24,16 @@ class Statusbar extends Base  {
       }
    }
 
-   createStatusElements() {
-      var htmlRecipe = {
-         classes: ['statusbar'],
-         ingredients: this.status.map((status) => ({
-            name: 'status_'+status.name,
-            classes: ['status'],
-            innerHTML: status.innerHTML
-         }))
-      }
+   recipe() {
+      var statusRecipes = this.status.map((status) => ({
+         name: 'status_'+status.name,
+         classes: ['status'],
+         innerHTML: status.innerHTML
+      }))
 
-      this.bakedHTML = this.bakeHTML(htmlRecipe)
+      return {
+         classes: ['statusbar'],
+         ingredients: statusRecipes
+      }
    }
 }

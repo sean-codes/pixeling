@@ -1,17 +1,19 @@
 class Canvas extends Base  {
    constructor(options) {
       super()
-      this.createCanvas()
-      this.canvas = this.bakedHTML.ele('canvas')
-      this.ctx = this.canvas.getContext('2d')
 
       this.image = options.image
-
       this.initialScale = 10
       this.scale = this.initialScale
+
+
+      this.bakeHTML()
+
+      this.canvas = this.bakedHTML.ele('canvas')
       this.canvas.width = this.image.width*this.scale
       this.canvas.height = this.image.height*this.scale
 
+      this.ctx = this.canvas.getContext('2d')
       this.resetCanvas()
    }
 
@@ -28,7 +30,6 @@ class Canvas extends Base  {
    }
 
    drawImage() {
-
       var dimensions = { x: 0, y: 0, width: this.image.width, height: this.image.height }
       this.image.loopPixels(dimensions, this.image.pixels, (pixel) => {
          this.ctx.fillStyle = pixel.colorString
@@ -68,11 +69,11 @@ class Canvas extends Base  {
       }
    }
 
-   createCanvas() {
-      this.bakedHTML = this.bakeHTML({
+   recipe() {
+      return {
          name: 'canvas',
          tag: 'canvas',
          classes: ['canvas']
-      })
+      }
    }
 }

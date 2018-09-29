@@ -29,7 +29,7 @@ class Pallet extends Base{
       ]
       this.selected = this.colors.length - 1
       this.color = this.colors[this.selected]
-      this.htmlCreate()
+      this.bakeHTML()
 
       // set up mixer
       this.mixer = new ColorMixer()
@@ -108,12 +108,8 @@ class Pallet extends Base{
       return `hsla(${hsla.h}, ${hsla.s}%, ${hsla.l}%, ${hsla.a})`
    }
 
-   htmlCreate() {
-      this.bakedHTML = this.bakeHTML({
-         classes: ['pallet', 'container']
-      })
-
-      var bakedHTMLBrush = this.bakeHTML({
+   recipe() {
+      var recipeBrushSize = {
          classes: ['brush'],
          events: {
             wheel: this.eventBrushSizeScroll.bind(this)
@@ -135,9 +131,9 @@ class Pallet extends Base{
                }
             }
          ]
-      })
+      }
 
-      var bakedHTMLColors = this.bakeHTML({
+      var recipeColors = {
          classes: ['colors'],
          ingredients: this.colors.map((color, id) => ({
             classes: ['color'],
@@ -150,9 +146,9 @@ class Pallet extends Base{
                click: this.eventClickColor.bind(this)
             }
          }))
-      })
+      }
 
-      var bakedMixer = this.bakeHTML({
+      var recipeMixer = {
          name: 'mixer',
          classes: ['mixer'],
          styles: {
@@ -161,11 +157,15 @@ class Pallet extends Base{
          events: {
             click: this.eventClickColorMixer.bind(this)
          }
-      })
+      }
 
-      // this.mixer.html.chooser
-      this.bakedHTML.append(bakedHTMLBrush)
-      this.bakedHTML.append(bakedHTMLColors)
-      this.bakedHTML.append(bakedMixer)
+      return {
+         classes: ['pallet', 'container'],
+         ingredients: [
+            recipeBrushSize,
+            recipeColors,
+            recipeMixer
+         ]
+      }
    }
 }
