@@ -48,38 +48,46 @@ app.imports = {
 }
 
 // here we go again
-app.loading = 0
+app.importing = []
+app.importStartTime = Date.now()
+
 app.load = function(){
+   console.groupCollapsed('importing...')
    for(var fileType in app.imports) {
       for(var file of app.imports[fileType]) {
-         app.loading += 1
-         var breakCache = "?v="+Math.random()
+         var breakCache = "?v="+Math.round(Math.random()*1000000000000000000)
 
          var element = {
             css: { tag: 'link', attr: { href: file+breakCache, rel: 'stylesheet' } },
             js: { tag: 'script', attr: { src: file+breakCache } },
          }[fileType]
 
-         var htmlImport = document.createElement(element.tag)
-         for(var attr in element.attr)
-            htmlImport.setAttribute(attr, element.attr[attr])
-
-         document.head.appendChild(htmlImport)
-         htmlImport.onload = () => {
-            app.loading -= 1
-         }
+         app.importing.push({ ...element })
       }
    }
+   app.loadNext()
+}
 
-   setTimeout(app.isLoaded, 1)
+app.loadNext = function() {
+   if(!app.importing.length) return app.isLoaded()
+
+   var importing = app.importing.shift()
+   console.log(importing.attr.href ? importing.attr.href : importing.attr.src)
+
+   var htmlImporting = document.createElement(importing.tag)
+   for(var attr in importing.attr) htmlImporting.setAttribute(attr, importing.attr[attr])
+
+   document.head.appendChild(htmlImporting)
+
+   htmlImporting.onload = () => {
+      setTimeout(app.loadNext, 1) // trying to figure out github issue
+   }
 }
 
 app.isLoaded = function() {
-   if(!app.loading) {
-      return app.onLoad()
-   }
-
-   setTimeout(app.isLoaded, 100)
+   console.groupEnd()
+   console.log('importing complete: ' + (Date.now() - app.importStartTime) + 'ms')
+   app.onLoad()
 }
 
 app.load()
