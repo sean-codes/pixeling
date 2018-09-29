@@ -1,5 +1,6 @@
-class Toolbox {
+class Toolbox extends Base  {
    constructor(options) {
+      super()
       this.tools = options.tools
       this.currentTool = this.tools.find((tool) => tool.name == options.initialTool)
       this.createHTML()
@@ -30,8 +31,8 @@ class Toolbox {
          && this.currentTool.overrides.colorChange(mouse)
    }
 
-   toolClicked(e, element) {
-      var toolName = element.dataset.name
+   toolClicked(e, bakedHTML) {
+      var toolName = bakedHTML.data('name')
       this.selectTool(toolName)
    }
 
@@ -41,6 +42,7 @@ class Toolbox {
 
       for(var tool of this.tools) {
          tool.active = tool.name == toolName ? true : false
+
          var toolElement = this.bakedHTML.ele('tool_'+tool.name)
          toolElement.classList.toggle('active', tool.active)
 
@@ -53,7 +55,7 @@ class Toolbox {
    }
 
    createHTML() {
-      this.bakedHTML = app.bakeHTML({
+      this.bakedHTML = this.bakeHTML({
          classes: ['toolbox'],
          ingredients: this.tools.map((tool) => ({
             name: 'tool_'+tool.name,

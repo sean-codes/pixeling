@@ -1,5 +1,6 @@
-class Layout {
+class Layout extends Base {
    constructor(htmlContainer) {
+      super()
       this.htmlContainer = htmlContainer
       this.createHTMLContainers()
    }
@@ -11,16 +12,16 @@ class Layout {
 
    createHTMLContainers() {
       // think im going to regret this manuever...
-      this.bakedHTML = app.bakeHTML({
+      this.bakedHTML = this.bakeHTML({
          classes: [ 'layout' ]
       })
 
-      var bakedHTMLAppbar = app.bakeHTML({
+      var bakedHTMLAppbar = this.bakeHTML({
          name: 'layout_appbar',
          classes: [ 'row' ]
       })
 
-      var bakedHTMLCenter = app.bakeHTML({
+      var bakedHTMLCenter = this.bakeHTML({
          classes: [ 'row', 'flex' ],
          ingredients: [
             {
@@ -38,7 +39,7 @@ class Layout {
          ]
       })
 
-      var bakedHTMLStatusbar = app.bakeHTML({
+      var bakedHTMLStatusbar = this.bakeHTML({
          name: 'layout_statusbar',
          classes: [ 'row' ]
       })
@@ -52,25 +53,3 @@ class Layout {
       this.bakedHTML.appendTo(this.htmlContainer)
    }
 }
-
-/*
-<div class="layout">
-   <div class="row">
-      <div class="appbar">pixel art editor</div>
-   </div>
-   <div class="row flex">
-      <div class="column">
-         <div class="pallet"></div>
-      </div>
-      <div class="column fill">
-         <div class="easel"></div>
-      </div>
-      <div class="column">
-         <div class="toolbox"></div>
-      </div>
-   </div>
-   <div class="row">
-      <div class="statusbar"></div>
-   </div>
-</div>
-*/

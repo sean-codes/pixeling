@@ -37,44 +37,52 @@ app.initComponents = function() {
       }
    })
 
+   app.ui.canvas = new Canvas({ image: app.image })
+   app.ui.cursor = new Cursor({
+      onDown: (mouse) => {
+         app.ui.toolbox.down(mouse)
+      },
+      onUp: (mouse) => {
+         app.ui.toolbox.up(mouse)
+      },
+      onStroke: (mouse) => {
+         app.ui.toolbox.stroke(mouse)
+      },
+      onMove: (mouse) => {
+         app.ui.toolbox.move(mouse)
+         app.ui.statusbar.updateStatus({
+            pos: `[ pos: ${mouse.positionCurrent.x}, ${mouse.positionCurrent.y} ]`
+         })
+      }
+   })
+
+   app.ui.easel = new Easel({
+      canvas: app.ui.canvas,
+      cursor: app.ui.cursor,
+      onScale: (scale) => {
+         app.ui.cursor.updateScale(scale)
+         app.ui.canvas.updateScale(scale)
+         app.ui.statusbar.updateStatus({
+            scale: `[ scale: ${scale}x ]`
+         })
+      }
+   })
+
    app.ui.layout.appendUI(app.ui.appbar.bakedHTML, 'appbar')
    app.ui.layout.appendUI(app.ui.statusbar.bakedHTML, 'statusbar')
    app.ui.layout.appendUI(app.ui.toolbox.bakedHTML, 'toolbox')
    app.ui.layout.appendUI(app.ui.pallet.bakedHTML, 'pallet')
+   app.ui.layout.appendUI(app.ui.easel.bakedHTML, 'easel')
+
+   app.ui.easel.centerCanvas()
    return
    //
    //
-   // app.ui.cursor = new Cursor({
-   //    onDown: (mouse) => {
-   //       app.ui.toolbox.down(mouse)
-   //    },
-   //    onUp: (mouse) => {
-   //       app.ui.toolbox.up(mouse)
-   //    },
-   //    onStroke: (mouse) => {
-   //       app.ui.toolbox.stroke(mouse)
-   //    },
-   //    onMove: (mouse) => {
-   //       app.ui.toolbox.move(mouse)
-   //       app.ui.statusbar.updateStatus({
-   //          pos: `[ pos: ${mouse.positionCurrent.x}, ${mouse.positionCurrent.y} ]`
-   //       })
-   //    }
-   // })
+
    //
-   // app.ui.canvas = new Canvas({ image: app.image })
    //
-   // app.ui.easel = new Easel({
-   //    canvas: app.ui.canvas,
-   //    cursor: app.ui.cursor,
-   //    onScale: (scale) => {
-   //       app.ui.cursor.updateScale(scale)
-   //       app.ui.canvas.updateScale(scale)
-   //       app.ui.statusbar.updateStatus({
-   //          scale: `[ scale: ${scale}x ]`
-   //       })
-   //    }
-   // })
+   //
+
    //
 
    //

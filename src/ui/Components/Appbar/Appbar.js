@@ -1,5 +1,6 @@
-class Appbar {
+class Appbar extends Base {
    constructor(options = {}) {
+      super()
       this.title = options.title || 'pixel art editor'
       this.makeHTML()
    }
@@ -26,6 +27,6 @@ class Appbar {
          ]
       }
 
-      this.bakedHTML = app.bakeHTML(htmlRecipe)
+      this.bakedHTML = this.bakeHTML(htmlRecipe)
    }
 }

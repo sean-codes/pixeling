@@ -1,16 +1,16 @@
-class Canvas {
+class Canvas extends Base  {
    constructor(options) {
+      super()
       this.createCanvas()
-      this.canvas = this.html.find('canvas')
-      console.log(this.canvas)
+      this.canvas = this.bakedHTML.ele('canvas')
       this.ctx = this.canvas.getContext('2d')
 
       this.image = options.image
 
       this.initialScale = 10
       this.scale = this.initialScale
-      this.html.width = this.image.width*this.scale
-      this.html.height = this.image.height*this.scale
+      this.canvas.width = this.image.width*this.scale
+      this.canvas.height = this.image.height*this.scale
 
       this.resetCanvas()
    }
@@ -42,9 +42,9 @@ class Canvas {
    }
 
    resetCanvas() {
-      this.html.width = this.image.width*this.scale
-      this.html.height = this.image.height*this.scale
-      this.ctx.clearRect(0, 0, this.html.width, this.html.height)
+      this.canvas.width = this.image.width*this.scale
+      this.canvas.height = this.image.height*this.scale
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
       this.drawCheckerBoard()
    }
 
@@ -69,12 +69,10 @@ class Canvas {
    }
 
    createCanvas() {
-      var htmlBakeRecipe = [{
+      this.bakedHTML = this.bakeHTML({
          name: 'canvas',
          tag: 'canvas',
          classes: ['canvas']
-      }]
-
-      this.html = app.bakeHTML(htmlBakeRecipe)
+      })
    }
 }

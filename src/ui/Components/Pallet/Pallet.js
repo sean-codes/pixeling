@@ -1,5 +1,6 @@
-class Pallet {
+class Pallet extends Base{
    constructor(options) {
+      super()
       this.onChangeColor = options.onChangeColor
       this.onChangeSize = options.onChangeSize
       this.tempSize = 1
@@ -41,12 +42,16 @@ class Pallet {
       this.setActiveColor(0)
    }
 
+   eventClickColorMixer(e, bakedHTML) {
+      this.mixer.toggle()
+   }
+
    eventClickColor(e, bakedHTML) {
       this.setActiveColor(bakedHTML.element.dataset.id)
    }
 
    eventBrushSizeScroll(e, bakedHTML) {
-      this.tempSize += e.deltaY/10
+      this.tempSize += Math.sign(e.deltaY) * Math.min(1, Math.abs(e.deltaY))
       this.brushSizeChanged()
    }
 
@@ -56,14 +61,16 @@ class Pallet {
    }
 
    eventDecreaseBrushSize(e, bakedHTML) {
-      this.size -= 1
+      this.tempSize -= 1
       this.brushSizeChanged()
    }
 
    brushSizeChanged() {
       this.tempSize = Math.min(20, Math.max(1, this.tempSize))
       this.size = Math.round(this.tempSize)
-      this.htmlBrushSize.innerHTML = Math.round(this.size)
+
+      var htmlBrushSize = this.bakedHTML.ele('brushsize')
+      htmlBrushSize.innerHTML = this.size
       this.onChangeSize(this.size)
    }
 
@@ -102,11 +109,11 @@ class Pallet {
    }
 
    htmlCreate() {
-      this.bakedHTML = app.bakeHTML({
+      this.bakedHTML = this.bakeHTML({
          classes: ['pallet', 'container']
       })
 
-      var bakedHTMLBrush = app.bakeHTML({
+      var bakedHTMLBrush = this.bakeHTML({
          classes: ['brush'],
          events: {
             wheel: this.eventBrushSizeScroll.bind(this)
@@ -119,7 +126,7 @@ class Pallet {
                   click: this.eventDecreaseBrushSize.bind(this)
                }
             },
-            { classes: ['size'], innerHTML: '1' },
+            { classes: ['size'], name: 'brushsize', innerHTML: '1' },
             {
                classes: ['control'],
                innerHTML: '>',
@@ -130,7 +137,7 @@ class Pallet {
          ]
       })
 
-      var bakedHTMLColors = app.bakeHTML({
+      var bakedHTMLColors = this.bakeHTML({
          classes: ['colors'],
          ingredients: this.colors.map((color, id) => ({
             classes: ['color'],
@@ -145,11 +152,14 @@ class Pallet {
          }))
       })
 
-      var bakedMixer = app.bakeHTML({
+      var bakedMixer = this.bakeHTML({
          name: 'mixer',
          classes: ['mixer'],
          styles: {
             background: this.color
+         },
+         events: {
+            click: this.eventClickColorMixer.bind(this)
          }
       })
 

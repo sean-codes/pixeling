@@ -4,17 +4,17 @@ var app = {}
 app.imports = {
    js: [
       // ui
-      './src/ui/Appbar/Appbar.js',
-      './src/ui/Canvas/Canvas.js',
-      './src/ui/ColorMixer/ColorMixer.js',
-      './src/ui/Cursor/Cursor.js',
-      './src/ui/Easel/Easel.js',
-      './src/ui/Layout/Layout.js',
-      './src/ui/Pallet/Pallet.js',
-      './src/ui/Statusbar/Statusbar.js',
-      './src/ui/Toolbox/Toolbox.js',
+      './src/ui/Base.js',
+      './src/ui/Components/Appbar/Appbar.js',
+      './src/ui/Components/Canvas/Canvas.js',
+      './src/ui/Components/ColorMixer/ColorMixer.js',
+      './src/ui/Components/Cursor/Cursor.js',
+      './src/ui/Components/Easel/Easel.js',
+      './src/ui/Components/Layout/Layout.js',
+      './src/ui/Components/Pallet/Pallet.js',
+      './src/ui/Components/Statusbar/Statusbar.js',
+      './src/ui/Components/Toolbox/Toolbox.js',
       // app
-      './src/app/bakeHTML.js',
       './src/app/clipboard.js',
       './src/app/command.js',
       './src/app/ui.js',
@@ -32,16 +32,16 @@ app.imports = {
       './src/app/Tools/Read.js',
    ],
    css: [
-      './src/shared/icons.css',
-      './src/ui/Appbar/Appbar.css',
-      './src/ui/Canvas/Canvas.css',
-      './src/ui/ColorMixer/ColorMixer.css',
-      './src/ui/Cursor/Cursor.css',
-      './src/ui/Easel/Easel.css',
-      './src/ui/Layout/Layout.css',
-      './src/ui/Pallet/Pallet.css',
-      './src/ui/Statusbar/Statusbar.css',
-      './src/ui/Toolbox/Toolbox.css'
+      './src/ui/Components/Appbar/Appbar.css',
+      './src/ui/Components/Canvas/Canvas.css',
+      './src/ui/Components/ColorMixer/ColorMixer.css',
+      './src/ui/Components/Cursor/Cursor.css',
+      './src/ui/Components/Easel/Easel.css',
+      './src/ui/Components/Layout/Layout.css',
+      './src/ui/Components/Pallet/Pallet.css',
+      './src/ui/Components/Statusbar/Statusbar.css',
+      './src/ui/Components/Toolbox/Toolbox.css',
+      './src/ui/Components/Toolbox/ToolboxIcons.css'
    ]
 }
 

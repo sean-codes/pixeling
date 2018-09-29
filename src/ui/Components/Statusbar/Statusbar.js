@@ -1,5 +1,6 @@
-class Statusbar {
+class Statusbar extends Base  {
    constructor(options) {
+      super()
       this.setupStatusArray(options.status)
       this.createStatusElements(options.status)
    }
@@ -18,12 +19,8 @@ class Statusbar {
 
    updateStatus(newStatusObject) {
       for(var statusName in newStatusObject) {
-         for(var status of this.status) {
-            if(status.name == statusName) {
-               status.element.innerHTML = newStatusObject[statusName]
-               break
-            }
-         }
+         var statusElement = this.bakedHTML.ele('status_'+statusName)
+         statusElement.innerHTML = newStatusObject[statusName]
       }
    }
 
@@ -37,6 +34,6 @@ class Statusbar {
          }))
       }
 
-      this.bakedHTML = app.bakeHTML(htmlRecipe)
+      this.bakedHTML = this.bakeHTML(htmlRecipe)
    }
 }

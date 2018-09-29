@@ -1,5 +1,6 @@
-class ColorMixer {
+class ColorMixer extends Base  {
    constructor(options = {}) {
+      super()
       this.label = options.label
       this.container = options.container
 
@@ -16,17 +17,9 @@ class ColorMixer {
       this.updateCanvasColors()
    }
 
-   toggleChooser() {
-      this.html.chooser.classList.toggle('hide')
-   }
-
-   show() {
-      this.html.chooser.classList.toggle('hide', false)
-   }
-
-   hide() {
-      this.html.chooser.classList.toggle('hide', true)
-   }
+   show() { this.bakedHTML.element.classList.add('hide') }
+   hide() { this.bakedHTML.element.classList.remove('hide') }
+   toggle() { this.bakedHTML.element.classList.toggle('hide') }
 
    setLabel(element) {
       this.label = element
@@ -138,7 +131,7 @@ class ColorMixer {
    }
 
    bakeHTMLMixer() {
-      return app.bakeHTML({
+      return this.bakeHTML({
          classes: ['colorMixer'],
          events: {
             click: (e) => { e.stopPropagation() }
@@ -147,18 +140,27 @@ class ColorMixer {
    }
 
    bakeHTMLOption(name) {
-      return app.bakeHTML({
+      return this.bakeHTML({
          name: 'option_'+name,
          classes: ['option'],
          data: { name, moving: false },
          ingredients: [
             {
-               tag: 'canvas',
-               name: 'canvas',
+               classes: ['label'],
+               innerHTML: name[0]
             },
             {
-               name: 'cursor',
-               classes: ['cursor']
+               classes: ['slider'],
+               ingredients: [
+                  {
+                     tag: 'canvas',
+                     name: 'canvas'
+                  },
+                  {
+                     name: 'cursor',
+                     classes: ['cursor']
+                  }
+               ]
             }
          ],
          events: {
