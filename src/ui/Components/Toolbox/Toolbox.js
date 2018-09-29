@@ -1,9 +1,9 @@
-class Toolbox {
+class Toolbox extends Base  {
    constructor(options) {
+      super()
       this.tools = options.tools
       this.currentTool = this.tools.find((tool) => tool.name == options.initialTool)
-      console.log(this.tools)
-      this.render()
+      this.createHTML()
    }
 
    down(mouse) {
@@ -31,8 +31,8 @@ class Toolbox {
          && this.currentTool.overrides.colorChange(mouse)
    }
 
-   toolClicked(e, element) {
-      var toolName = element.dataset.name
+   toolClicked(e, bakedHTML) {
+      var toolName = bakedHTML.data('name')
       this.selectTool(toolName)
    }
 
@@ -42,7 +42,9 @@ class Toolbox {
 
       for(var tool of this.tools) {
          tool.active = tool.name == toolName ? true : false
-         tool.element.classList.toggle('active', tool.active)
+
+         var toolElement = this.bakedHTML.ele('tool_'+tool.name)
+         toolElement.classList.toggle('active', tool.active)
 
          if(tool.active) {
             this.currentTool = tool
@@ -52,24 +54,18 @@ class Toolbox {
       }
    }
 
-   render() {
-      var bakedHTML = app.bakeHTML([
-         {
-            children: this.tools.map((tool) => ({
-               classes: ['tool'].concat(tool.active ? ['active'] : []),
-               data: { name: tool.name },
-               innerHTML: `<div class="icon ${tool.icon}"></div>`,
-               events: {
-                  click: this.toolClicked.bind(this)
-               }
-            }))
-         }
-      ])
-
-
-      this.html = bakedHTML.first()
-      for(var toolID = 0; toolID < this.html.children.length; toolID++) {
-         this.tools[toolID].element = this.html.children[toolID]   
-      }
+   createHTML() {
+      this.bakedHTML = this.bakeHTML({
+         classes: ['toolbox'],
+         ingredients: this.tools.map((tool) => ({
+            name: 'tool_'+tool.name,
+            data: { name: tool.name },
+            classes: ['tool'],
+            ingredients: [{ classes: ['icon', tool.icon] }],
+            events: {
+               click: this.toolClicked.bind(this)
+            }
+         }))
+      })
    }
 }

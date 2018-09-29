@@ -1,9 +1,13 @@
-app.initComponents = function() {
-   // set components
+app.initializeUI = function() {
    app.ui = {}
    app.ui.layout = new Layout(document.body)
 
-   app.ui.appbar = new Appbar()
+   app.ui.appbar = new Appbar({
+      onOpen: () => {
+         console.log('open menu')
+      }
+   })
+
    app.ui.statusbar = new Statusbar({
       status: {
          color: '[ hsla() ]',
@@ -22,6 +26,7 @@ app.initComponents = function() {
       ],
    })
 
+   app.ui.canvas = new Canvas({ image: app.image })
    app.ui.cursor = new Cursor({
       onDown: (mouse) => {
          app.ui.toolbox.down(mouse)
@@ -40,8 +45,6 @@ app.initComponents = function() {
       }
    })
 
-   app.ui.canvas = new Canvas({ image: app.image })
-
    app.ui.easel = new Easel({
       canvas: app.ui.canvas,
       cursor: app.ui.cursor,
@@ -54,7 +57,6 @@ app.initComponents = function() {
       }
    })
 
-   app.ui.colorMixer = new ColorMixer()
    app.ui.pallet = new Pallet({
       mixer: app.ui.colorMixer,
       onChangeColor: (color) => {
@@ -68,12 +70,9 @@ app.initComponents = function() {
       }
    })
 
-
-   app.ui.layout.appendUI(app.ui.appbar.html, 'appbar')
-   app.ui.layout.appendUI(app.ui.pallet.html, 'pallet')
-   app.ui.layout.appendUI(app.ui.easel.html, 'easel')
-   app.ui.layout.appendUI(app.ui.toolbox.html, 'toolbox')
-   app.ui.layout.appendUI(app.ui.statusbar.html, 'statusbar')
-
-   app.ui.easel.centerCanvas()
+   app.ui.layout.appendUI(app.ui.appbar.bakedHTML, 'appbar')
+   app.ui.layout.appendUI(app.ui.statusbar.bakedHTML, 'statusbar')
+   app.ui.layout.appendUI(app.ui.toolbox.bakedHTML, 'toolbox')
+   app.ui.layout.appendUI(app.ui.pallet.bakedHTML, 'pallet')
+   app.ui.layout.appendUI(app.ui.easel.bakedHTML, 'easel')
 }

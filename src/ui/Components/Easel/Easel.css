@@ -3,15 +3,13 @@
    width: 100%;
    background: #444;
    user-select: none;
+   overflow:hidden;
+   position:relative;
 }
 
-.easel .scroll {
-   position: relative;
-   height: 100%;
-   overflow: hidden;
-}
 
-.easel .scroll .indicator {
+
+.easel .indicator {
    pointer-events:none;
    position:absolute;
    border:8px solid transparent;
@@ -24,25 +22,25 @@
    transform:translateX(-50%);
 }
 
-.easel .scroll .indicator.vertical {
+.easel .indicator.vertical {
    right:0;
    border-right-color:rgba(255, 255, 255, 0.5);
    transform:translateY(-50%);
 }
 
-.easel  .indicator.horizontal.top {
+.easel .indicator.horizontal.top {
    top:0;
    border-top-color:rgba(255, 255, 255, 0.5);
    transform:translateX(-50%);
 }
 
-.easel .scroll .indicator.vertical.left {
+.easel .indicator.vertical.left {
    left:0;
    border-left-color:rgba(255, 255, 255, 0.5);
    transform:translateY(-50%);
 }
 
-.easel .scroll canvas {
+.easel canvas {
    position: absolute;
 
    /* Legal fallback */

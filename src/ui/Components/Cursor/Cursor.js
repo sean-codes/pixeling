@@ -1,5 +1,6 @@
-class Cursor {
+class Cursor extends Base  {
    constructor(options) {
+      super()
       this.x = 0
       this.y = 0
       this.width = 1
@@ -80,11 +81,13 @@ class Cursor {
    }
 
    getMouseEventPosition(e) {
+      var canvasElement = this.bakedHTML.ele('canvas')
+
       var x = Math.floor(e.offsetX / this.scale) - Math.floor(this.size/2)
       var y = Math.floor(e.offsetY / this.scale) - Math.floor(this.size/2)
 
-      x = Math.max(0, Math.min(this.html.width, x))
-      y = Math.max(0, Math.min(this.html.height, y))
+      x = Math.max(0, Math.min(canvasElement.width, x))
+      y = Math.max(0, Math.min(canvasElement.height, y))
 
       return { x, y }
    }
@@ -239,25 +242,25 @@ class Cursor {
 
    updateHTML() {
       var cursorScale = this.scale
-      this.html.style.cursor = this.getCursor()
-      this.html.width = app.image.width*cursorScale
-      this.html.height = app.image.height*cursorScale
+      this.canvas.style.cursor = this.getCursor()
+      this.canvas.width = app.image.width*cursorScale
+      this.canvas.height = app.image.height*cursorScale
    }
 
    createHTML() {
-      this.html = app.bakeHTML([
-         {
-            tag: 'canvas',
-            classes: ['cursor'],
-            events: {
-               mousedown: this.eventMousedown.bind(this),
-               mousemove: this.eventMousemove.bind(this),
-               mouseleave: this.eventMouseup.bind(this),
-               mouseup: this.eventMouseup.bind(this),
-            }
+      this.bakedHTML = this.bakeHTML({
+         tag: 'canvas',
+         name: 'canvas',
+         classes: ['cursor'],
+         events: {
+            mousedown: this.eventMousedown.bind(this),
+            mousemove: this.eventMousemove.bind(this),
+            mouseleave: this.eventMouseup.bind(this),
+            mouseup: this.eventMouseup.bind(this),
          }
-      ]).first()
+      })
 
-      this.ctx = this.html.getContext('2d')
+      this.canvas = this.bakedHTML.ele('canvas')
+      this.ctx = this.canvas.getContext('2d')
    }
 }
