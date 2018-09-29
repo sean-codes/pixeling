@@ -1,12 +1,13 @@
 class Appbar extends Base {
    constructor(options = {}) {
       super()
-      this.title = options.title || 'pixel art editor'
+      this.title = options.title || 'pixeling'
       this.makeHTML()
+      this.onOpen = options.onOpen || function() {}
    }
 
    openMenu() {
-      console.log('open menu')
+      this.onOpen()
    }
 
    makeHTML() {
@@ -15,7 +16,6 @@ class Appbar extends Base {
          ingredients: [
             {
                classes: ['menubtn'],
-               innerHTML: 'menu',
                events: {
                   click: this.openMenu.bind(this)
                }

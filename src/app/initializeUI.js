@@ -1,10 +1,12 @@
-app.initComponents = function() {
-   // set components
-
+app.initializeUI = function() {
    app.ui = {}
    app.ui.layout = new Layout(document.body)
 
-   app.ui.appbar = new Appbar()
+   app.ui.appbar = new Appbar({
+      onOpen: () => {
+         console.log('open menu')
+      }
+   })
 
    app.ui.statusbar = new Statusbar({
       status: {
@@ -22,19 +24,6 @@ app.initComponents = function() {
          { name: 'eraser', icon: 'eraser', overrides : app.tools.eraser  },
          { name: 'read', icon: 'read', overrides : app.tools.read  },
       ],
-   })
-
-   app.ui.pallet = new Pallet({
-      mixer: app.ui.colorMixer,
-      onChangeColor: (color) => {
-         // var colorString = app.image.hslaToString(color)
-         // app.ui.statusbar.updateStatus({ color: `[ color: ${colorString} ]` })
-         // app.ui.cursor.update({ color: colorString })
-         // app.ui.toolbox.selectTool('draw')
-      },
-      onChangeSize: (size) => {
-         // app.ui.cursor.update({ size })
-      }
    })
 
    app.ui.canvas = new Canvas({ image: app.image })
@@ -68,33 +57,22 @@ app.initComponents = function() {
       }
    })
 
+   app.ui.pallet = new Pallet({
+      mixer: app.ui.colorMixer,
+      onChangeColor: (color) => {
+         var colorString = app.image.hslaToString(color)
+         app.ui.statusbar.updateStatus({ color: `[ color: ${colorString} ]` })
+         app.ui.cursor.update({ color: colorString })
+         app.ui.toolbox.selectTool('draw')
+      },
+      onChangeSize: (size) => {
+         app.ui.cursor.update({ size })
+      }
+   })
+
    app.ui.layout.appendUI(app.ui.appbar.bakedHTML, 'appbar')
    app.ui.layout.appendUI(app.ui.statusbar.bakedHTML, 'statusbar')
    app.ui.layout.appendUI(app.ui.toolbox.bakedHTML, 'toolbox')
    app.ui.layout.appendUI(app.ui.pallet.bakedHTML, 'pallet')
    app.ui.layout.appendUI(app.ui.easel.bakedHTML, 'easel')
-
-   app.ui.easel.centerCanvas()
-   return
-   //
-   //
-
-   //
-   //
-   //
-
-   //
-
-   //
-   //
-   // app.ui.layout.appendUI(app.ui.appbar.html, 'appbar')
-   // app.ui.layout.appendUI(app.ui.pallet.html, 'pallet')
-   // app.ui.layout.appendUI(app.ui.easel.html, 'easel')
-   // app.ui.layout.appendUI(app.ui.toolbox.html, 'toolbox')
-   // app.ui.layout.appendUI(app.ui.statusbar.html, 'statusbar')
-   //
-   // app.ui.easel.centerCanvas()
-
-   app.image.create(48, 32)
-   app.ui.canvas.updateImage(app.image)
 }

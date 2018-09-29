@@ -24,7 +24,6 @@ class Easel extends Base  {
    }
 
    eventMousedown(e, element) {
-      console.log('wtf')
       var isMiddleButton = e.button == 1
 
       if(isMiddleButton) {
@@ -37,7 +36,6 @@ class Easel extends Base  {
    }
 
    eventMousemove(e, element) {
-      console.log(e.movementX, e.movementY)
       if (this.moving) {
          this.centerX += e.movementX
          this.centerY += e.movementY

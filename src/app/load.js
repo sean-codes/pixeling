@@ -17,7 +17,7 @@ app.imports = {
       // app
       './src/app/clipboard.js',
       './src/app/command.js',
-      './src/app/ui.js',
+      './src/app/initializeUI.js',
       './src/app/global.js',
       './src/app/history.js',
       './src/app/html.js',
