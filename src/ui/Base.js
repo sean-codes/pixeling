@@ -41,6 +41,10 @@ class Base {
          },
          data: function(name, value) {
             if(value != null) this.element.dataset[name] = value
+
+            var returnValue = this.element.dataset[name]
+            if(returnValue == 'false' || returnValue == 'undefined') return false
+            if(returnValue == 'true') return true
             return this.element.dataset[name]
          }
       }

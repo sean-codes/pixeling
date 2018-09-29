@@ -1,12 +1,72 @@
 .ui.menu {
+   position:relative;
    height:100%;
    background:#333;
    color:#FFF;
+   width:150px;
+   overflow:hidden;
+   user-select:none;
    transition: all 0.2s;
-   max-width:125px;
-   width:125px;
+   transition-delay: 0s;
+   animation:overflow 0.4s;
 }
 
+.ui.menu.hide {
+   width:0px;
+}
+
+.ui.menu .group {
+   position:absolute;
+   top:0; left:0;
+   width:150px;
+   height:100%;
+   transition:0.2s;
+   transform:translateX(100%);
+   opacity:0;
+   overflow:hidden;
+   ccanimation: overflow 0.2s forwards;
+}
+
+.ui.menu .group.current {
+   transition-delay:0.1s;
+   transform:translateX(0);
+   overflow:auto;
+   opacity:1;
+}
+
+.ui.menu .group.from_forward { transform:translateX(-100%); }
+.ui.menu .group.from_backward { transform:translateX(100%); }
+
+.ui.menu .group .item {
+   position:relative;
+   cursor:pointer;
+   padding:10px;
+}
+
+.ui.menu .group .item:hover {
+   background:rgba(0, 0, 0, 0.2);
+}
+
+.ui.menu .group .item:after,
+.ui.menu .group .item:before {
+   content: '';
+   position:absolute;
+   border:6px solid transparent;
+   transform:translateY(-50%);
+   top:50%;
+   transition:all 0.2s;
+}
+
+.ui.menu .group .item.to_forward:after {
+   right:10px;
+   border-left-color: #FFF;
+}
+
+.ui.menu .group .item.to_backward:before {
+   right:20px;
+   border-right-color: #FFF;
+}
+/*
 .ui.menu .menuitem {
    height:40px;
    line-height:40px;
@@ -34,3 +94,5 @@
    transition-delay:0s;
    opacity:0;
 }
+
+*/

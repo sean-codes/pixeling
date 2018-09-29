@@ -2,7 +2,13 @@ app.initializeUI = function() {
    app.ui = {}
    app.ui.layout = new Layout(document.body)
 
-   app.ui.menu = new Menu({})
+   app.ui.menu = new Menu({
+      onClick: (label) => {
+         console.log('menu clicked: ' + label)
+         app.ui.menu.navigate('home')
+         app.ui.menu.toggle()
+      }
+   })
 
    app.ui.appbar = new Appbar({
       onOpen: () => {
