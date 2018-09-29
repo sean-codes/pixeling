@@ -13,7 +13,7 @@ class ColorMixer extends Base  {
          alpha: { value: 1, end: '', min: 0, max: 1, step: 0.01 }
       }
 
-      this.createHTML()
+      this.bakeHTML()
       this.updateCanvasColors()
    }
 
@@ -117,30 +117,18 @@ class ColorMixer extends Base  {
    }
 
    // worse than jquery :]
-   createHTML() {
-      this.bakedHTML = this.bakeHTMLMixer()
-      var bakedHTMLHue = this.bakeHTMLOption('hue')
-      var bakedHTMLSaturation = this.bakeHTMLOption('saturation')
-      var bakedHTMLLightness = this.bakeHTMLOption('lightness')
-      var bakedHTMLAlpha = this.bakeHTMLOption('alpha')
+   recipe() {
+      var colorParts = ['hue', 'saturation', 'lightness', 'alpha']
+      var optionRecipes = colorParts.map((name) => this.optionRecipe(name))
 
-      this.bakedHTML.append(bakedHTMLHue)
-      this.bakedHTML.append(bakedHTMLSaturation)
-      this.bakedHTML.append(bakedHTMLLightness)
-      this.bakedHTML.append(bakedHTMLAlpha)
+      return {
+         classes: [ 'colorMixer' ],
+         ingredients: optionRecipes
+      }
    }
 
-   bakeHTMLMixer() {
-      return this.bakeHTML({
-         classes: ['colorMixer'],
-         events: {
-            click: (e) => { e.stopPropagation() }
-         }
-      })
-   }
-
-   bakeHTMLOption(name) {
-      return this.bakeHTML({
+   optionRecipe(name) {
+      return {
          name: 'option_'+name,
          classes: ['option'],
          data: { name, moving: false },
@@ -170,6 +158,6 @@ class ColorMixer extends Base  {
             mouseout: this.eventMouseoutOption.bind(this),
             mouseleave: this.eventMouseoutOption.bind(this),
          }
-      })
+      }
    }
 }

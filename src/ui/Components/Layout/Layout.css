@@ -18,5 +18,6 @@
 }
 
 .layout .column {
+   overflow:hidden;
    height: 100%;
 }

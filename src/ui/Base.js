@@ -1,13 +1,20 @@
 // base ui component
 class Base {
 
-   constructor() {
-      // default bakedHTML
-      this.bakedHTML = this.bakeHTML({})
+   constructor(bakeHTML) {
+      this.bakedHTML = {}
+   }
+
+   recipe() {
+      return {}
+   }
+
+   bakeHTML() {
+      this.bakedHTML = this.bake(this.recipe())
    }
 
    // this is a truly evil creation
-   bakeHTML(recipe) {
+   bake(recipe) {
       var bakedHTML = {
          name: recipe.name,
          element: document.createElement(recipe.tag || 'div'),
@@ -34,6 +41,10 @@ class Base {
          },
          data: function(name, value) {
             if(value != null) this.element.dataset[name] = value
+
+            var returnValue = this.element.dataset[name]
+            if(returnValue == 'false' || returnValue == 'undefined') return false
+            if(returnValue == 'true') return true
             return this.element.dataset[name]
          }
       }
@@ -57,7 +68,7 @@ class Base {
 
       if (recipe.ingredients) {
          for(var ingredient of recipe.ingredients) {
-            var bakedIngredient = this.bakeHTML(ingredient)
+            var bakedIngredient = this.bake(ingredient)
             bakedHTML.append(bakedIngredient)
          }
       }

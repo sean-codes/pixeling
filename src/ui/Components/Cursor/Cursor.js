@@ -1,6 +1,13 @@
 class Cursor extends Base  {
+
+
    constructor(options) {
       super()
+      this.bakeHTML()
+      
+      this.canvas = this.bakedHTML.ele('canvas')
+      this.ctx = this.canvas.getContext('2d')
+
       this.x = 0
       this.y = 0
       this.width = 1
@@ -26,7 +33,6 @@ class Cursor extends Base  {
          PositionEnd: { x: 0, y: 0 }
       }
 
-      this.createHTML()
       this.update()
    }
 
@@ -247,8 +253,8 @@ class Cursor extends Base  {
       this.canvas.height = app.image.height*cursorScale
    }
 
-   createHTML() {
-      this.bakedHTML = this.bakeHTML({
+   recipe() {
+      return {
          tag: 'canvas',
          name: 'canvas',
          classes: ['cursor'],
@@ -258,9 +264,6 @@ class Cursor extends Base  {
             mouseleave: this.eventMouseup.bind(this),
             mouseup: this.eventMouseup.bind(this),
          }
-      })
-
-      this.canvas = this.bakedHTML.ele('canvas')
-      this.ctx = this.canvas.getContext('2d')
+      }
    }
 }

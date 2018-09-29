@@ -2,9 +2,17 @@ app.initializeUI = function() {
    app.ui = {}
    app.ui.layout = new Layout(document.body)
 
+   app.ui.menu = new Menu({
+      onClick: (label) => {
+         console.log('menu clicked: ' + label)
+         app.ui.menu.navigate('home')
+         app.ui.menu.toggle()
+      }
+   })
+
    app.ui.appbar = new Appbar({
       onOpen: () => {
-         console.log('open menu')
+         app.ui.menu.toggle()
       }
    })
 
@@ -70,9 +78,14 @@ app.initializeUI = function() {
       }
    })
 
+   app.ui.layout.appendUI(app.ui.menu.bakedHTML, 'menu')
    app.ui.layout.appendUI(app.ui.appbar.bakedHTML, 'appbar')
    app.ui.layout.appendUI(app.ui.statusbar.bakedHTML, 'statusbar')
    app.ui.layout.appendUI(app.ui.toolbox.bakedHTML, 'toolbox')
    app.ui.layout.appendUI(app.ui.pallet.bakedHTML, 'pallet')
    app.ui.layout.appendUI(app.ui.easel.bakedHTML, 'easel')
+
+   // append to body
+   var elementLayout = app.ui.layout.bakedHTML.ele('layout')
+   document.body.appendChild(elementLayout)
 }

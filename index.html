@@ -1,28 +1,45 @@
 <!doctype html>
 <html>
-<head>
-   <style>
-      /* reset */
-      html, body {
-         padding: 0;
-         margin: 0;
-         height: 100%;
-         font-family: monospace, sans-serif;
-         overflow: hidden;
-         background:#999;
-      }
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-      html, body, body * {
-         box-sizing: border-box;
-      }
-   </style>
-</head>
-<body>
-   <script>
-      var load = document.createElement('script')
-      load.src = "./src/app/load.js?v=" + Math.random()
-      document.body.appendChild(load)
-   </script>
-</body>
+      <title>pixeling</title>
+      <meta name="description" content="a pixel art editor">
 
+      <!-- evil cache -->
+      <meta http-equiv='cache-control' content='no-cache'>
+      <meta http-equiv='expires' content='0'>
+      <meta http-equiv='pragma' content='no-cache'>
+      <!-- reset stylesheet -->
+      <style>
+         html, body {
+            font-family:monospace, sans-serif;
+            overflow:hidden; /* ok */
+            background:#999;
+            height:100%;
+         }
+
+         html, body, body * {
+            box-sizing:border-box;
+            background:none;
+            display:block;
+            border:none;
+            padding:0;
+            margin:0;
+         }
+
+         script {
+            display:none;
+         }
+      </style>
+
+   </head>
+   <body>
+      <script>
+         var load = document.createElement('script')
+         load.src = "./src/app/load.js?v=" + Math.random()
+         document.body.appendChild(load)
+      </script>
+   </body>
 </html>
