@@ -1,4 +1,5 @@
 app.onLoad = function() {
+   document.querySelector('.loading').style.display = 'none'
    app.initializeUI()
 
    app.image.create(48, 32)

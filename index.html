@@ -29,17 +29,55 @@
             margin:0;
          }
 
+         .loading {
+            display:inline-block;
+            position:absolute;
+            top:50%; left:50%;
+            transform: translate3d(-50%, -50%, 0);
+         }
+
+         .loading .spinner {
+            margin:auto;
+         border:4px solid #FFF;
+            width:50px;
+            height:50px;
+            border-radius:50%;
+            border-left-color:transparent;
+            animation: spin 1s linear infinite;
+            position:relative;
+         }
+
+         .loading .text {
+            margin-top:20px;
+            font-weight:300;
+            color:#FFF;
+         }
+
+         .loading .text span {
+            display:inline-block;
+            position:relative;
+            transform:rotate(-180deg);
+         }
+
+         @keyframes spin {
+            to { transform: rotateZ(360deg); }
+         }
+
          script {
             display:none;
          }
       </style>
 
    </head>
-   <body>
+   <body style="background:#333">
+      <div class="loading">
+         <div class="spinner"></div>
+         <div class="text"> (╯°□°）╯ <span>Loading...</span></div>
+      </div>
       <script>
          var load = document.createElement('script')
          load.src = "./src/app/load.js?v=" + Math.random()
-         document.body.appendChild(load)
+         //document.body.appendChild(load)
       </script>
    </body>
 </html>
