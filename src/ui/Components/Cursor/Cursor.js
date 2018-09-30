@@ -7,6 +7,9 @@ class Cursor extends Base  {
       this.canvas = this.bakedHTML.ele('canvas')
       this.ctx = this.canvas.getContext('2d')
 
+      this.imageWidth = 32
+      this.imageHeight = 32
+
       this.x = 0
       this.y = 0
       this.width = 1
@@ -243,11 +246,18 @@ class Cursor extends Base  {
       }
    }
 
-   updateCanvas(image = {}) {
+   updateImage(image) {
+      this.imageWidth = image.width
+      this.imageHeight = image.height
+
+      this.updateCanvas()
+   }
+
+   updateCanvas() {
       var cursorScale = this.scale
       this.canvas.style.cursor = this.getCursor()
-      if(image.width) this.canvas.width = image.width*cursorScale
-      if(image.height) this.canvas.height = image.height*cursorScale
+      this.canvas.width = this.imageWidth*cursorScale
+      this.canvas.height = this.imageHeight*cursorScale
 
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
    }

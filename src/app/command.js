@@ -7,7 +7,7 @@ app.command = {
       app.image.create(options.width, options.height)
 
       app.ui.canvas.updateImage(app.image)
-      app.ui.cursor.updateCanvas(app.image)
+      app.ui.cursor.updateImage(app.image)
       app.ui.easel.centerCanvas()
    },
    copy: function() {
