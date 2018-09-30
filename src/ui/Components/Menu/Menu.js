@@ -7,7 +7,7 @@ class Menu extends Base {
               name: 'home',
               items: [
                  { label: 'create', command: 'createDialog' },
-                 { label: 'open' },
+                 { label: 'open', command: 'openDialog' },
                  { label: 'export' },
                  { label: 'edit', to: 'edit', transition: 'forward' },
                  { label: 'view', to: 'view', transition: 'forward' }

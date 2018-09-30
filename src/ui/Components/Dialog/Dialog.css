@@ -48,6 +48,9 @@
    padding:0 5px;
    margin-top:5px;
 }
+.ui.dialog .container .body input[type='file'] {
+   color:#222;
+}
 
 .ui.dialog .container .body label ~ label {
    margin-top:10px;

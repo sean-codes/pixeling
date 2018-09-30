@@ -48,9 +48,9 @@ class Easel extends Base  {
       if(isZoom) {
          this.zoom(e.deltaY/this.scaleDampen)
       } else {
-         // var moveX = e.deltaX / this.moveDampen
-         // var moveY = e.deltaY / this.moveDampen
-         // this.moveCanvas(moveX , moveY)
+         var moveX = -e.deltaX / this.moveDampen
+         var moveY = -e.deltaY / this.moveDampen
+         this.moveCanvas(moveX , moveY)
       }
    }
 

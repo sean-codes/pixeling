@@ -25,7 +25,10 @@ class Dialog extends Base {
 
       for(var input of this.inputs) {
          var eleInput = this.bakedHTML.ele('input_'+input.label)
-         formData[input.label] = eleInput.value
+         formData[eleInput.getAttribute('name')] = {
+            element: eleInput,
+            value: eleInput.value
+         }
       }
 
       return formData
@@ -69,6 +72,7 @@ class Dialog extends Base {
             tag: 'input',
             name: 'input_'+ingredient.label,
             attr: {
+               name: ingredient.name,
                type: ingredient.type || 'text',
                value: ingredient.value
             }

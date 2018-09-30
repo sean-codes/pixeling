@@ -3,12 +3,14 @@ app.command = {
       app.ui.dialogNew.open()
    },
    create: function(options) {
-      app.ui.dialogNew.hide()
       app.image.create(options.width, options.height)
 
       app.ui.canvas.updateImage(app.image)
       app.ui.cursor.updateImage(app.image)
       app.ui.easel.centerCanvas()
+   },
+   openDialog: function() {
+      app.ui.dialogOpen.open()
    },
    center: function() {
       app.ui.easel.centerCanvas()

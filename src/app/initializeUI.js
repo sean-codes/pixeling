@@ -1,44 +1,7 @@
 app.initializeUI = function() {
    app.ui = {}
+
    app.ui.layout = new Layout(document.body)
-   app.ui.dialogNew = new Dialog({
-      title: 'create sprite',
-      inputs: [
-         {
-            label: 'width',
-            input: {
-               type: 'number',
-               min: 1,
-               value: 32
-            }
-         },
-         {
-            label: 'height',
-            input: {
-               type: 'number',
-               min: 1,
-               value: 32
-            }
-         }
-      ],
-      actions: [
-         {
-            label: 'create',
-            onClick: (data) => {
-               app.command.create({
-                  width: data.width,
-                  height: data.height
-               })
-            }
-         },
-         {
-            label: 'cancel',
-            onClick: (data) => {
-               app.ui.dialogNew.hide()
-            }
-         }
-      ]
-   })
 
    app.ui.menu = new Menu({
       onClick: (label) => {
@@ -114,13 +77,20 @@ app.initializeUI = function() {
       }
    })
 
-   app.ui.layout.appendUI(app.ui.dialogNew.bakedHTML, 'easel')
    app.ui.layout.appendUI(app.ui.menu.bakedHTML, 'menu')
    app.ui.layout.appendUI(app.ui.appbar.bakedHTML, 'appbar')
    app.ui.layout.appendUI(app.ui.statusbar.bakedHTML, 'statusbar')
    app.ui.layout.appendUI(app.ui.toolbox.bakedHTML, 'toolbox')
    app.ui.layout.appendUI(app.ui.pallet.bakedHTML, 'pallet')
    app.ui.layout.appendUI(app.ui.easel.bakedHTML, 'easel')
+
+   // app.ui.dialogNew = new Dialog(app.dialogs.New)
+   // app.ui.layout.appendUI(app.ui.dialogNew.bakedHTML, 'menu')
+   // you are really lazy :]
+   for(var dialogName in app.dialogs) {
+      app.ui['dialog'+dialogName] = new Dialog(app.dialogs[dialogName])
+      app.ui.layout.appendUI(app.ui['dialog'+dialogName].bakedHTML, 'menu')
+   }
 
    // append to body
    app.ui.layout.bakedHTML.appendTo(document.body)

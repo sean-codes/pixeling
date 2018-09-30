@@ -32,6 +32,9 @@ app.imports = {
       './src/app/Tools/Eraser.js',
       './src/app/Tools/Select.js',
       './src/app/Tools/Read.js',
+      // dialogs
+      './src/app/Dialogs/New.js',
+      './src/app/Dialogs/Open.js'
    ],
    css: [
       './src/ui/Components/Appbar/Appbar.css',
