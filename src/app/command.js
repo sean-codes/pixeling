@@ -1,4 +1,15 @@
 app.command = {
+   createDialog: function() {
+      app.ui.dialogNew.open()
+   },
+   create: function(options) {
+      app.ui.dialogNew.hide()
+      app.image.create(options.width, options.height)
+
+      app.ui.canvas.updateImage(app.image)
+      app.ui.cursor.updateCanvas(app.image)
+      app.ui.easel.centerCanvas()
+   },
    copy: function() {
       var selected = app.ui.cursor.selected
       if(selected) {

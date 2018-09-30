@@ -1,0 +1,76 @@
+.ui.dialog {
+   position:fixed;
+   top:0;
+   left:0;
+   width:100%;
+   height:100%;
+   z-index:10000;
+   background:rgba(0, 0, 0, 0.75);
+   overflow:auto;
+   display:flex;
+   transition: 0.2s;
+}
+
+.ui.dialog.hide {
+   opacity:0;
+   pointer-events:none;
+}
+
+.ui.dialog .container {
+   margin:auto;
+   width:225px;
+   background:#999;
+   display:flex;
+   flex-direction:column;
+   font-size:12px;
+}
+
+.ui.dialog .container .title {
+   height:30px;
+   line-height:30px;
+   color:#FFF;
+   padding:0 5px;
+   background:#777;
+}
+
+.ui.dialog .container .body {
+   max-height:200px;
+   flex:1;
+   padding:5px 5px;
+   color:#FFF;
+}
+
+.ui.dialog .container .body input {
+   background:#FFF;
+   width:100%;
+   height:25px;
+   line-height:25px;
+   padding:0 5px;
+   margin-top:5px;
+}
+
+.ui.dialog .container .body label ~ label {
+   margin-top:10px;
+}
+
+.ui.dialog .container .actions {
+
+   color:#FFF;
+
+   display:flex;
+   justify-content:flex-end;
+}
+
+.ui.dialog .container .actions .action {
+   width:65px;
+   margin:5px;
+   margin-left:0;
+   background:#777;
+   height:25px;
+   line-height:25px;
+   text-align:center;
+}
+.ui.dialog .container .actions .action:hover {
+   cursor:pointer;
+   background:rgba(0, 0, 0, 0.1);
+}

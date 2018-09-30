@@ -6,8 +6,8 @@ class Menu extends Base {
          {
               name: 'home',
               items: [
+                 { label: 'create', command: 'createDialog' },
                  { label: 'open' },
-                 { label: 'save' },
                  { label: 'export' },
                  { label: 'edit', to: 'edit', transition: 'forward' }
               ]
@@ -53,7 +53,7 @@ class Menu extends Base {
    }
 
    eventClickMenuItem(e, bakedHTML) {
-      var action = bakedHTML.data('action')
+      var action = bakedHTML.data('command')
       var to = bakedHTML.data('to')
 
 
@@ -62,7 +62,6 @@ class Menu extends Base {
          this.navigate(to, transition)
       } else {
          this.onClick(action)
-         console.log('not navigating')
       }
    }
 
@@ -94,7 +93,7 @@ class Menu extends Base {
             data: {
                to: item.to,
                transition: item.transition,
-               action: item.label
+               command: item.command
             },
             events: {
                click: this.eventClickMenuItem.bind(this)

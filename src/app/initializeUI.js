@@ -1,12 +1,50 @@
 app.initializeUI = function() {
    app.ui = {}
    app.ui.layout = new Layout(document.body)
+   app.ui.dialogNew = new Dialog({
+      title: 'create sprite',
+      inputs: [
+         {
+            label: 'width',
+            input: {
+               type: 'number',
+               min: 1,
+               value: 32
+            }
+         },
+         {
+            label: 'height',
+            input: {
+               type: 'number',
+               min: 1,
+               value: 32
+            }
+         }
+      ],
+      actions: [
+         {
+            label: 'create',
+            onClick: (data) => {
+               app.command.create({
+                  width: data.width,
+                  height: data.height
+               })
+            }
+         },
+         {
+            label: 'cancel',
+            onClick: (data) => {
+               app.ui.dialogNew.hide()
+            }
+         }
+      ]
+   })
 
    app.ui.menu = new Menu({
       onClick: (label) => {
-         console.log('menu clicked: ' + label)
          app.ui.menu.navigate('home')
          app.ui.menu.toggle()
+         app.command[label] && app.command[label]()
       }
    })
 
@@ -78,6 +116,7 @@ app.initializeUI = function() {
       }
    })
 
+   app.ui.layout.appendUI(app.ui.dialogNew.bakedHTML, 'easel')
    app.ui.layout.appendUI(app.ui.menu.bakedHTML, 'menu')
    app.ui.layout.appendUI(app.ui.appbar.bakedHTML, 'appbar')
    app.ui.layout.appendUI(app.ui.statusbar.bakedHTML, 'statusbar')

@@ -1,10 +1,9 @@
 class Cursor extends Base  {
 
-
    constructor(options) {
       super()
       this.bakeHTML()
-      
+
       this.canvas = this.bakedHTML.ele('canvas')
       this.ctx = this.canvas.getContext('2d')
 
@@ -33,7 +32,7 @@ class Cursor extends Base  {
          PositionEnd: { x: 0, y: 0 }
       }
 
-      this.update()
+      this.updateCanvas()
    }
 
    eventMousedown(e, element) {
@@ -115,16 +114,14 @@ class Cursor extends Base  {
    update(options) {
       for(var option in options) this[option] = options[option]
 
-      this.render()
+      this.updateCanvas()
+      this.renderCursor()
    }
 
    updateScale(scale) {
       this.scale = this.initialScale * scale
-      this.render()
-   }
 
-   render() {
-      this.updateHTML()
+      this.updateCanvas()
       this.renderCursor()
    }
 
@@ -246,11 +243,13 @@ class Cursor extends Base  {
       }
    }
 
-   updateHTML() {
+   updateCanvas(image = {}) {
       var cursorScale = this.scale
       this.canvas.style.cursor = this.getCursor()
-      this.canvas.width = app.image.width*cursorScale
-      this.canvas.height = app.image.height*cursorScale
+      if(image.width) this.canvas.width = image.width*cursorScale
+      if(image.height) this.canvas.height = image.height*cursorScale
+
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
    }
 
    recipe() {

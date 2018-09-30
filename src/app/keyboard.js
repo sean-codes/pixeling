@@ -41,7 +41,6 @@ app.keyboard = {
    },
 
    event: function(e) {
-      e.preventDefault()
 
       var modifiers = []
       if(e.altKey) modifiers.push('alt')
@@ -49,10 +48,10 @@ app.keyboard = {
       if(e.metaKey) modifiers.push('meta')
       if(e.shiftKey) modifiers.push('shift')
 
-      app.keyboard.down(modifiers, e.key)
+      app.keyboard.down(modifiers, e.key, e)
    },
 
-   down: function(modifiers, key) {
+   down: function(modifiers, key, e) {
       for(var keybind of app.keybinds) {
          // figure if the match
          var keybindString = JSON.stringify(keybind.modifiers.sort())
@@ -60,6 +59,7 @@ app.keyboard = {
          var match = keybindString == keydownString && key == keybind.key // lol weak :]
 
          if(match) {
+            e.preventDefault()
             app.command[keybind.command](keybind.info)
          }
       }
