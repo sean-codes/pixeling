@@ -10,6 +10,21 @@ app.command = {
       app.ui.cursor.updateImage(app.image)
       app.ui.easel.centerCanvas()
    },
+   center: function() {
+      app.ui.easel.centerCanvas()
+   },
+   zoomIn: function() {
+      app.ui.easel.zoomIn()
+      app.ui.easel.centerCanvas()
+   },
+   zoomOut: function() {
+      app.ui.easel.zoomOut()
+      app.ui.easel.centerCanvas()
+   },
+   zoomReset: function() {
+      app.ui.easel.zoomReset()
+      app.ui.easel.centerCanvas()
+   },
    copy: function() {
       var selected = app.ui.cursor.selected
       if(selected) {

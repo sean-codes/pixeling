@@ -9,7 +9,18 @@ class Menu extends Base {
                  { label: 'create', command: 'createDialog' },
                  { label: 'open' },
                  { label: 'export' },
-                 { label: 'edit', to: 'edit', transition: 'forward' }
+                 { label: 'edit', to: 'edit', transition: 'forward' },
+                 { label: 'view', to: 'view', transition: 'forward' }
+              ]
+           },
+           {
+              name: 'view',
+              items: [
+                 { label: 'back', to: 'home', transition: 'backward' },
+                 { label: 'center', command: 'center' },
+                 { label: 'zoom in', command: 'zoomIn' },
+                 { label: 'zoom out', command: 'zoomOut' },
+                 { label: 'zoom reset', command: 'zoomReset' }
               ]
            },
            {

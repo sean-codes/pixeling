@@ -60,8 +60,6 @@ app.tools.select = {
    },
 
    setSelected(mouse) {
-      app.history.push()
-
       var selected = this.getSelected(mouse)
       app.ui.cursor.update({ selected })
       app.image.clearPixels(selected)

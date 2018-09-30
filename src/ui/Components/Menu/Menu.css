@@ -9,6 +9,7 @@
    transition: all 0.2s;
    transition-delay: 0s;
    animation:overflow 0.4s;
+   font-size: 14px;
 }
 
 .ui.menu.hide {

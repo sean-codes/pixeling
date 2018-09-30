@@ -1,8 +1,8 @@
 class Easel extends Base  {
    constructor(options) {
       super()
-      this.uiCanvas = options.canvas
-      this.uiCursor = options.cursor
+
+      this.center = options.center
 
       this.bakeHTML()
 
@@ -18,9 +18,6 @@ class Easel extends Base  {
       this.scaleMin = 0.1
       this.scaleMax = 20
       this.scaleDampen = 100
-
-      this.bakedHTML.append(this.uiCanvas.bakedHTML)
-      this.bakedHTML.append(this.uiCursor.bakedHTML)
    }
 
    eventMousedown(e, element) {
@@ -37,12 +34,10 @@ class Easel extends Base  {
 
    eventMousemove(e, element) {
       if (this.moving) {
-         this.centerX += e.movementX
-         this.centerY += e.movementY
+         var moveX = e.movementX
+         var moveY = e.movementY
 
-         this.transformCanvasCanvas()
-         this.transformCursorCanvas()
-         this.transformIndicators()
+         this.moveCanvas(moveX, moveY)
       }
    }
 
@@ -51,54 +46,62 @@ class Easel extends Base  {
 
       var isZoom = e.ctrlKey
       if(isZoom) {
-         var newScale = this.scale - e.deltaY/this.scaleDampen
-         var newScaleMinMax = Math.min(this.scaleMax, Math.max(this.scaleMin, newScale))
-         var newScaleRounded = Math.round(newScaleMinMax*100)/100
-         this.scale = newScaleRounded
-         this.onScale(newScaleRounded)
+         this.zoom(e.deltaY/this.scaleDampen)
       } else {
-         this.centerX -= e.deltaX / this.moveDampen
-         this.centerY -= e.deltaY / this.moveDampen
+         // var moveX = e.deltaX / this.moveDampen
+         // var moveY = e.deltaY / this.moveDampen
+         // this.moveCanvas(moveX , moveY)
       }
+   }
 
-      this.transformCanvasCanvas()
-      this.transformCursorCanvas()
+   zoomIn() {
+      this.zoom(-0.1)
+   }
+
+   zoomOut() {
+      this.zoom(0.1)
+   }
+
+   zoomReset() {
+      this.scale = 1
+      this.onScale(this.scale)
+   }
+
+   zoom(amount) {
+      var newScale = this.scale - amount
+      var newScaleMinMax = Math.min(this.scaleMax, Math.max(this.scaleMin, newScale))
+      var newScaleRounded = Math.round(newScaleMinMax*100)/100
+      this.scale = newScaleRounded
+      this.moveCanvas(0, 0)
+      this.onScale(newScaleRounded)
+   }
+
+   moveCanvas(moveX, moveY) {
+      var easelElement = this.bakedHTML.ele('easel')
+      this.centerX += (moveX / easelElement.clientWidth)*100
+      this.centerY += (moveY / easelElement.clientHeight)*100
+
       this.transformIndicators()
+      this.transformElements()
    }
 
    centerCanvas() {
-      var easelElement = this.bakedHTML.ele('easel')
+      this.centerX = 50
+      this.centerY = 50
 
-      this.centerX = easelElement.clientWidth / 2
-      this.centerY = easelElement.clientHeight / 2
-
-      this.transformCanvasCanvas()
-      this.transformCursorCanvas()
       this.transformIndicators()
+      this.transformElements()
    }
 
-   transformCanvasCanvas() {
-      var uiCanvasElement = this.uiCanvas.bakedHTML.ele('canvas')
-      var x = this.centerX - uiCanvasElement.clientWidth / 2
-      var y = this.centerY - uiCanvasElement.clientHeight / 2
+   transformElements(element) {
+      for(var baked of this.center) {
+         var element = baked.element
 
-      uiCanvasElement.style.transform = `
-        translateX(${x}px)
-        translateY(${y}px)
-        scale(${this.scale})
-      `
-   }
-
-   transformCursorCanvas() {
-      var uiCursorElement = this.uiCursor.bakedHTML.ele('canvas')
-      var x = this.centerX - uiCursorElement.clientWidth / 2
-      var y = this.centerY - uiCursorElement.clientHeight / 2
-
-      uiCursorElement.style.transform = `
-         translateX(${x}px)
-         translateY(${y}px)
-         scale(${this.scale})
-      `
+         element.style.left = this.centerX + '%'
+         element.style.top = this.centerY + '%'
+         element.style.transform =
+            `translateX(-50%) translateY(-50%) scale(${this.scale})`
+      }
    }
 
    transformIndicators() {
@@ -109,13 +112,13 @@ class Easel extends Base  {
       var htmlIndicatorVerticalRIght = this.bakedHTML.ele('indicatorVR')
 
 
-      var x = Math.max(0, Math.min(this.centerX, easelElement.clientWidth))
-      var y = Math.max(0, Math.min(this.centerY, easelElement.clientHeight))
+      var x = Math.max(0, Math.min(this.centerX, 100))
+      var y = Math.max(0, Math.min(this.centerY, 100))
 
-      htmlIndicatorHorizontalTop.style.left = x + 'px'
-      htmlIndicatorHorizontalBottom.style.left = x + 'px'
-      htmlIndicatorVerticalLeft.style.top = y + 'px'
-      htmlIndicatorVerticalRIght.style.top = y + 'px'
+      htmlIndicatorHorizontalTop.style.left = x + '%'
+      htmlIndicatorHorizontalBottom.style.left = x + '%'
+      htmlIndicatorVerticalLeft.style.top = y + '%'
+      htmlIndicatorVerticalRIght.style.top = y + '%'
    }
 
    recipe() {
@@ -129,7 +132,7 @@ class Easel extends Base  {
             mouseleave: this.eventMouseup.bind(this),
             mousewheel: this.eventScroll.bind(this)
          },
-         append: [this.uiCanvas.bakedHTML, this.uiCursor.bakedHTML],
+         append: this.center,
          ingredients: [
             { name: 'indicatorHB', classes: ['indicator', 'horizontal'] },
             { name: 'indicatorHT', classes: ['indicator', 'horizontal', 'top'] },

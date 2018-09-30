@@ -94,9 +94,6 @@ class Cursor extends Base  {
       var x = Math.floor(e.offsetX / this.scale) - Math.floor(this.size/2)
       var y = Math.floor(e.offsetY / this.scale) - Math.floor(this.size/2)
 
-      x = Math.max(0, Math.min(canvasElement.width, x))
-      y = Math.max(0, Math.min(canvasElement.height, y))
-
       return { x, y }
    }
 
@@ -250,7 +247,7 @@ class Cursor extends Base  {
       this.imageWidth = image.width
       this.imageHeight = image.height
 
-      this.updateCanvas()
+      this.update()
    }
 
    updateCanvas() {

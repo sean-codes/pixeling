@@ -72,17 +72,11 @@ app.initializeUI = function() {
       ],
    })
 
-   app.ui.canvas = new Canvas({ image: app.image })
    app.ui.cursor = new Cursor({
-      onDown: (mouse) => {
-         app.ui.toolbox.down(mouse)
-      },
-      onUp: (mouse) => {
-         app.ui.toolbox.up(mouse)
-      },
-      onStroke: (mouse) => {
-         app.ui.toolbox.stroke(mouse)
-      },
+      image: app.image,
+      onDown: (mouse) => { app.ui.toolbox.down(mouse) },
+      onUp: (mouse) => { app.ui.toolbox.up(mouse) },
+      onStroke: (mouse) => { app.ui.toolbox.stroke(mouse) },
       onMove: (mouse) => {
          app.ui.toolbox.move(mouse)
          app.ui.statusbar.updateStatus({
@@ -91,12 +85,16 @@ app.initializeUI = function() {
       }
    })
 
+   app.ui.canvas = new Canvas({
+      image: app.image
+   })
+
    app.ui.easel = new Easel({
-      canvas: app.ui.canvas,
-      cursor: app.ui.cursor,
+      center: [
+         app.ui.canvas.bakedHTML,
+         app.ui.cursor.bakedHTML
+      ],
       onScale: (scale) => {
-         app.ui.cursor.updateScale(scale)
-         app.ui.canvas.updateScale(scale)
          app.ui.statusbar.updateStatus({
             scale: `[ scale: ${scale}x ]`
          })
@@ -125,6 +123,5 @@ app.initializeUI = function() {
    app.ui.layout.appendUI(app.ui.easel.bakedHTML, 'easel')
 
    // append to body
-   var elementLayout = app.ui.layout.bakedHTML.ele('layout')
-   document.body.appendChild(elementLayout)
+   app.ui.layout.bakedHTML.appendTo(document.body)
 }
