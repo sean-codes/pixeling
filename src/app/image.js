@@ -25,6 +25,20 @@ app.image = {
          }
       }
    },
+   export: function() {
+      var canvas = document.createElement('canvas')
+      canvas.width = this.width
+      canvas.height = this.height
+
+      var ctx = canvas.getContext('2d')
+
+      this.loopPixels((pixel) => {
+         ctx.fillStyle = this.hslaToString(pixel.color)
+         ctx.fillRect(pixel.x, pixel.y, 1, 1)
+      })
+      
+      return canvas.toDataURL()
+   },
    create: function(width, height) {
       var pixels = []
 
@@ -51,9 +65,9 @@ app.image = {
    drawPixels: function(area) {
       var color = app.ui.pallet.getColor()
 
-      this.loopPixels(area, app.image.pixels, (pixel) => {
+      this.loopPixels((pixel) => {
          app.image.drawPixel(pixel.x, pixel.y, color)
-      })
+      }, area.x, area.y, area.width, area.height)
 
       app.ui.canvas.updateImage(app.image)
    },
@@ -65,29 +79,17 @@ app.image = {
    },
 
    clearPixels: function(area) {
-      this.loopPixels(area, app.image.pixels, (pixel) => {
+      this.loopPixels((pixel) => {
          app.image.pixels[pixel.x][pixel.y] = this.createPixel(pixel.x, pixel.y)
-      })
+      }, area.x, area.y, area.width, area.height)
 
       app.ui.canvas.updateImage(app.image)
    },
 
-   loopPixels: function(area, pixels, run, direction) {
-      var direction = {
-         x: direction ? direction.x || 1 : 1,
-         y: direction ? direction.y || 1 : 1
-      }
-
-      var dirX = Math.sign(direction.x)
-      var dirY = Math.sign(direction.y)
-      var startX = dirX < 0 ? area.x : area.x + area.width-1
-      var startY = dirY < 0 ? area.y : area.y + area.height-1
-      var endX = dirX < 0 ? area.x + area.width : area.x
-      var endY = dirY < 0 ? area.y + area.height : area.y
-
-      for(var x = startX; (dirX < 0 ? x < endX : x >= endX); x -= dirX) {
-         for(var y = startY; (dirY < 0 ? y < endY : y >= endY); y -= dirY) {
-            pixels[x] && pixels[x][y] && run(pixels[x][y])
+   loopPixels: function(run, areaX=0, areaY=0, width=this.width, height=this.height) {
+      for(var x = areaX; x < areaX+width; x++) {
+         for(var y = areaY; y < areaY+height; y++) {
+            this.pixels[x] && this.pixels[x][y] && run(this.pixels[x][y])
          }
       }
    },

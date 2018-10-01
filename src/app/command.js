@@ -9,6 +9,15 @@ app.command = {
       app.ui.cursor.updateImage(app.image)
       app.ui.easel.centerCanvas()
    },
+   export: function() {
+      app.tools.select.unsetSelected() // when you find this.. sorry <3
+
+      var base64 = app.image.export()
+      var link = document.createElement('a')
+      link.setAttribute('href', base64)
+      link.setAttribute('download', 'pixeling.png')
+      link.click()
+   },
    openDialog: function() {
       app.ui.dialogOpen.open()
    },

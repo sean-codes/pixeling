@@ -81,6 +81,10 @@ class Cursor extends Base  {
       this.mouse.down ? this.onStroke(this.mouse) : this.onMove(this.mouse)
    }
 
+   eventMouseout(e, element) {
+      this.eventMouseup(e, element)
+   }
+
    eventMouseup(e, element) {
       if(!this.mouse.down) return
       this.mouse.down = false
@@ -267,7 +271,7 @@ class Cursor extends Base  {
          events: {
             mousedown: this.eventMousedown.bind(this),
             mousemove: this.eventMousemove.bind(this),
-            mouseleave: this.eventMouseup.bind(this),
+            mouseleave: this.eventMouseout.bind(this),
             mouseup: this.eventMouseup.bind(this),
          }
       }

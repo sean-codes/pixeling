@@ -31,7 +31,7 @@ class Canvas extends Base  {
 
    drawImage() {
       var dimensions = { x: 0, y: 0, width: this.image.width, height: this.image.height }
-      this.image.loopPixels(dimensions, this.image.pixels, (pixel) => {
+      this.image.loopPixels((pixel) => {
          this.ctx.fillStyle = pixel.colorString
          this.ctx.fillRect(
             Math.floor(pixel.x*this.scale),

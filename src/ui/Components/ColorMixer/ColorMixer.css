@@ -37,6 +37,7 @@
 
 .colorMixer .option {
   height: 20px;
+  max-height: 20px;
   width: 100%;
   border-radius: 2px;
   display: flex;
