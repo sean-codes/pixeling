@@ -29,16 +29,16 @@ class ColorMixer extends Base  {
    }
 
    eventMousedownOption(e, bakedHTML) {
-      bakedHTML.data('moving', 'true')
+      bakedHTML.data('moving', true)
    }
 
    eventMouseoutOption(e, bakedHTML) {
-      bakedHTML.data('moving', 'false')
+      bakedHTML.data('moving', false)
    }
 
    eventMousemoveOption(e, bakedHTML) {
 
-      if(bakedHTML.data('moving') == 'false') return
+      if(!bakedHTML.data('moving')) return
 
       var htmlCanvas = bakedHTML.ele('canvas')
 
