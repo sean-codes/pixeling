@@ -4,6 +4,7 @@ app.initializeUI = function() {
    app.ui.layout = new Layout(document.body)
 
    app.ui.menu = new Menu({
+      menu: app.config.menu,
       onClick: (label) => {
          app.ui.menu.navigate('home')
          app.ui.menu.toggle()
@@ -28,10 +29,10 @@ app.initializeUI = function() {
    app.ui.toolbox = new Toolbox({
       initialTool: 'draw',
       tools: [
-         { name: 'select', icon: 'select', overrides : app.tools.select  },
-         { name: 'draw', icon: 'draw', overrides : app.tools.draw },
-         { name: 'eraser', icon: 'eraser', overrides : app.tools.eraser  },
-         { name: 'read', icon: 'read', overrides : app.tools.read  },
+         { name: 'select', icon: 'select', overrides : app.tools.select, hint: 'shortcut: s' },
+         { name: 'draw', icon: 'draw', overrides : app.tools.draw, hint: 'shortcut: d' },
+         { name: 'eraser', icon: 'eraser', overrides : app.tools.eraser, hint: 'shortcut: e'  },
+         { name: 'read', icon: 'read', overrides : app.tools.read, hint: 'shortcut: r'  },
       ],
    })
 

@@ -1,5 +1,5 @@
 app.tools.read = {
-
+   hint: 'shortcut: r',
    select() {
       app.ui.cursor.update({ selected: false, mode: 'read' })
    },

@@ -2,12 +2,14 @@
    height: 100%;
    width: 40px;
    background: #151a1a;
+   color:#FFF;
 }
 
 .toolbox .tool {
    width: 100%;
    height: 40px;
    display: flex;
+   position:relative;
 }
 
 .toolbox .tool:hover {
@@ -23,4 +25,25 @@
 .toolbox .tool .icon {
    font-size: 19px;
    transform: rotateZ(-45deg);
+}
+
+.toolbox .tool .hint {
+   position:absolute;
+   left:0px; bottom:0;
+   transform:translateX(-100%);
+   pointer-events:none;
+
+   padding:5px 10px;
+   border-radius:2px 0 0 2px;
+   background:#151a1a;
+   font-size:11px;
+   white-space:nowrap;
+
+   opacity:0;
+   transition:0.2s;
+}
+
+.toolbox .tool:hover .hint {
+   transition-delay:0.25s;
+   opacity:1;
 }

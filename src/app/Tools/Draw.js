@@ -1,5 +1,4 @@
 app.tools.draw = {
-
    select() {
       app.ui.cursor.update({ fill: true, selected: false, mode: 'stroke' })
    },

@@ -59,7 +59,16 @@ class Toolbox extends Base  {
          name: 'tool_'+tool.name,
          data: { name: tool.name },
          classes: ['tool'],
-         ingredients: [{ classes: ['icon', tool.icon] }],
+         ingredients: [
+            { classes: ['icon', tool.icon] },
+            {
+               classes: ['hint'],
+               ingredients: [
+                  { classes: ['name'], innerHTML: tool.name },
+                  { classes: ['shortcut'], innerHTML: tool.hint }
+               ]
+            }
+         ],
          events: {
             click: this.toolClicked.bind(this)
          }

@@ -3,6 +3,11 @@ var app = {}
 
 app.imports = {
    js: [
+      // globals
+      './src/app/global.js',
+      // config
+      './src/config/keybinds.js',
+      './src/config/menu.js',
       // ui
       './src/ui/Base.js',
       './src/ui/Components/Appbar/Appbar.js',
@@ -20,7 +25,6 @@ app.imports = {
       './src/app/clipboard.js',
       './src/app/command.js',
       './src/app/initializeUI.js',
-      './src/app/global.js',
       './src/app/history.js',
       './src/app/html.js',
       './src/app/image.js',

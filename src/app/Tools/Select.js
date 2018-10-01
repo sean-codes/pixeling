@@ -1,4 +1,5 @@
 app.tools.select = {
+   hint: 'shortcut: s',
    select() {
       app.global.color = 'rgba(0, 0, 0, 0)'
       app.ui.cursor.update({ mode: 'select', size: 1 })

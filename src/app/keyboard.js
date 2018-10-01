@@ -1,41 +1,10 @@
-app.keybinds = [
-   {
-      modifiers: ['meta'],
-      key: 'c',
-      command: 'copy'
-   },
-   {
-      modifiers: ['meta'],
-      key: 'v',
-      command: 'paste'
-   },
-   {
-      modifiers: [],
-      key: 'd',
-      command: 'selectTool',
-      info: { tool: 'draw' }
-   },
-   {
-      modifiers: [],
-      key: 'e',
-      command: 'selectTool',
-      info: { tool: 'eraser' }
-   },
-   {
-      modifiers: [],
-      key: 's',
-      command: 'selectTool',
-      info: { tool: 'select' }
-   },
-   {
-      modifiers: [],
-      key: 'r',
-      command: 'selectTool',
-      info: { tool: 'read' }
-   }
-]
-
 app.keyboard = {
+   getHint: function() {
+      var hint = ''
+
+      return hint
+   },
+
    listen: function() {
       document.body.addEventListener('keydown', app.keyboard.event)
    },
@@ -52,7 +21,7 @@ app.keyboard = {
    },
 
    down: function(modifiers, key, e) {
-      for(var keybind of app.keybinds) {
+      for(var keybind of app.config.keybinds) {
          // figure if the match
          var keybindString = JSON.stringify(keybind.modifiers.sort())
          var keydownString = JSON.stringify(modifiers.sort())

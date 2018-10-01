@@ -1,4 +1,5 @@
 app.tools.eraser = {
+   hint: 'shortcut: e',
    select() {
       app.ui.cursor.update({ mode: 'erase' })
    },
