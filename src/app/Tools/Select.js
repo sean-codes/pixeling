@@ -15,6 +15,7 @@ app.tools.select = {
 
    down(mouse) {
       if(mouse.dragging) {
+         app.history.push()
          return
       }
 

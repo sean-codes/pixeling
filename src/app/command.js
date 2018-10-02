@@ -49,5 +49,13 @@ app.command = {
    selectTool: function(info) {
       console.log('command: select tool', info)
       app.ui.toolbox.selectTool(info.tool)
+   },
+   undo: function() {
+      console.log('undo')
+      console.log(app.history)
+      app.history.undo()
+   },
+   redo: function() {
+      console.log('redo')
    }
 }

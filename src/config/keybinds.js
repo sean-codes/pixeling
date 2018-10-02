@@ -1,5 +1,15 @@
 app.config.keybinds = [
    {
+      modifiers: ['meta'],
+      key: 'z',
+      command: 'undo'
+   },
+   {
+      modifiers: ['meta', 'shift'],
+      key: 'z',
+      command: 'redo'
+   },
+   {
       modifiers: ['ctrl'],
       key: 's',
       command: 'export'

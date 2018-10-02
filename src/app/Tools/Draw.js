@@ -4,6 +4,7 @@ app.tools.draw = {
    },
 
    down(mouse) {
+      app.history.push()
       this.draw(mouse.positionCurrent)
    },
 

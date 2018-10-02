@@ -5,15 +5,19 @@ app.history = {
    load: function(history) {
       app.ui.toolbox.selectTool(history.tool)
       app.ui.cursor.update({ selected: history.selected })
-      app.image = history.image
-      app.ui.canvas.updateImage(history.image)
+      app.image.pixels = history.pixels
+      app.image.width = history.width
+      app.image.height = history.height
+      app.ui.canvas.updateImage(app.image)
    },
 
    create: function() {
       return app.clone({
          tool: app.ui.toolbox.currentTool.name,
          selected: app.ui.cursor.selected,
-         image: app.image,
+         pixels: app.image.pixels,
+         width: app.image.width,
+         height: app.image.height
       })
    },
 
@@ -30,7 +34,6 @@ app.history = {
 
    undo: function() {
       var lastHistory = app.history.store.pop()
-      console.log(lastHistory.image)
       this.load(lastHistory)
    },
 

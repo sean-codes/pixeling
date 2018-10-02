@@ -144,7 +144,8 @@ class Cursor extends Base  {
    }
 
    renderCursorModeRead(dimensions) {
-      this.drawCrosshair(dimensions, '#FFF')
+      var cursorDimensions1px = { ...dimensions, width:1, height: 1 }
+      this.drawCrosshair(cursorDimensions1px, '#FFF')
    }
 
    renderCursorModeErase(dimensions) {
