@@ -1,23 +1,80 @@
-.layout {
+/*
+
+1 - top
+2 - center
+2.1 sidebar
+2.2 workspace
+2.2.1 - left dock
+2.2.2 - easel
+2.2.3 - right dock
+3. bottom
+
+desktop
+|--------------------------------------------------|
+| 1                                                |
+|--------------------------------------------------|
+| 2                                                |
+| 2.1 | 2.2                                        |
+|     | 2.2.1 | 2.2.2                      | 2.2.3 |
+|     |       |                            |       |
+|     |       |                            |       |<-- workspace is horizontal
+|     |       |                            |       |
+|     |       |                            |       |
+|     |       |                            |       |
+|     |       |                            |       |
+|     |       |                            |       |
+|--------------------------------------------------|
+| 3                                                |
+|--------------------------------------------------|
+
+mobile
+|---------------------------|
+| 1                         |
+|---------------------------|
+| 2                         |
+| 2.1 | 2.2                 |
+|     | 2.2.1               |
+|     |---------------------|
+|     | 2.2.2               |
+|     |                     |
+|     |                     |<-- workspace is vertical
+|     |                     |
+|     |                     |
+|     |                     |
+|     |                     |
+|     |---------------------|
+|     | 2.2.3               |
+|-----|---------------------|
+| 3                         |
+|-----|---------------------|
+
+*/
+
+.ui.layout {
    display: flex;
    flex-direction: column;
-   height: 100%;
+   height:100%;
 }
 
-.layout .row {
+.ui.layout > .top, .ui.layout > .bottom{
+   display: flex;
+   justify-content: space-between;
+}
+
+.ui.layout > .center {
+   flex: 1;
    display: flex;
 }
 
-.layout .row.flex {
-   flex: 1;
+.ui.layout > .center .sidebar,
+.ui.layout > .center .workspace {
    height: 100%;
 }
 
-.layout .column.fill {
-   flex: 1;
+.ui.layout > .center .workspace {
+   display: flex;
 }
 
-.layout .column {
-   position:relative;
-   height: 100%;
+.ui.layout > .center .workspace > .easel {
+   flex: 1;
 }

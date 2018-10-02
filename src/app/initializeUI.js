@@ -78,19 +78,19 @@ app.initializeUI = function() {
       }
    })
 
-   app.ui.layout.appendUI(app.ui.menu.bakedHTML, 'menu')
-   app.ui.layout.appendUI(app.ui.appbar.bakedHTML, 'appbar')
-   app.ui.layout.appendUI(app.ui.statusbar.bakedHTML, 'statusbar')
-   app.ui.layout.appendUI(app.ui.toolbox.bakedHTML, 'toolbox')
-   app.ui.layout.appendUI(app.ui.pallet.bakedHTML, 'pallet')
-   app.ui.layout.appendUI(app.ui.easel.bakedHTML, 'easel')
+   app.ui.layout.appendUI(app.ui.menu.bakedHTML, 'sidebar')
+   app.ui.layout.appendUI(app.ui.appbar.bakedHTML, 'top')
+   app.ui.layout.appendUI(app.ui.statusbar.bakedHTML, 'bottom')
+   app.ui.layout.appendUI(app.ui.toolbox.bakedHTML, 'workspace_dockright')
+   app.ui.layout.appendUI(app.ui.pallet.bakedHTML, 'workspace_dockleft')
+   app.ui.layout.appendUI(app.ui.easel.bakedHTML, 'workspace_easel')
 
    // app.ui.dialogNew = new Dialog(app.dialogs.New)
    // app.ui.layout.appendUI(app.ui.dialogNew.bakedHTML, 'menu')
    // you are really lazy :]
    for(var dialogName in app.dialogs) {
       app.ui['dialog'+dialogName] = new Dialog(app.dialogs[dialogName])
-      app.ui.layout.appendUI(app.ui['dialog'+dialogName].bakedHTML, 'menu')
+      app.ui.layout.appendUI(app.ui['dialog'+dialogName].bakedHTML, 'top')
    }
 
    // append to body

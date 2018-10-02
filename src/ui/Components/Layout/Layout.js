@@ -10,45 +10,45 @@ class Layout extends Base {
    }
 
    recipe() {
-      var recipeAppbar = {
-         name: 'layout_appbar',
-         classes: [ 'row' ]
+      var recipeTop = {
+         name: 'layout_top',
+         classes: [ 'top' ]
+      }
+
+      var recipeBottom = {
+         name: 'layout_bottom',
+         classes: [ 'bottom' ]
       }
 
       var recipeCenter = {
-         classes: [ 'row', 'flex' ],
+         classes: [ 'center' ],
          ingredients: [
             {
-               name: 'layout_menu',
-               classes: [ 'column' ]
+               name: 'layout_sidebar',
+               classes: [ 'sidebar' ]
             },
             {
-               name: 'layout_pallet',
-               classes: [ 'column' ]
+               name: 'layout_workspace_dockleft',
+               classes: [ 'dockright' ]
             },
             {
-               name: 'layout_easel',
-               classes: [ 'column', 'fill' ]
+               name: 'layout_workspace_easel',
+               classes: [ 'easel' ]
             },
             {
-               name: 'layout_toolbox',
-               classes: [ 'column' ]
+               name: 'layout_workspace_dockright',
+               classes: [ 'dockleft' ]
             }
          ]
       }
 
-      var recipeStatusbar = {
-         name: 'layout_statusbar',
-         classes: [ 'row' ]
-      }
-
       return {
          name: 'layout',
-         classes: [ 'layout' ],
+         classes: [ 'ui', 'layout' ],
          ingredients: [
-            recipeAppbar,
+            recipeTop,
             recipeCenter,
-            recipeStatusbar
+            recipeBottom
          ]
       }
    }
