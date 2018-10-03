@@ -15,7 +15,6 @@ app.tools.select = {
 
    down(mouse) {
       if(mouse.dragging) {
-         app.history.push()
          return
       }
 
@@ -50,6 +49,7 @@ app.tools.select = {
       app.ui.cursor.update({...mouse.positionEnd, mode: 'select' })
 
       if(mouse.dragging) {
+         app.history.push()
          return
       }
 
@@ -59,6 +59,7 @@ app.tools.select = {
       }
 
       this.setSelected(mouse)
+      app.history.push()
    },
 
    setSelected(mouse) {

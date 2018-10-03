@@ -52,10 +52,10 @@ app.command = {
    },
    undo: function() {
       console.log('undo')
-      console.log(app.history)
       app.history.undo()
    },
    redo: function() {
       console.log('redo')
+      app.history.redo()
    }
 }

@@ -25,6 +25,8 @@ app.config.menu = [
            { label: 'back', to: 'home', transition: 'backward' },
            { label: 'copy', hint: 'cmd-c' },
            { label: 'paste', hint: 'cmd-v' },
+           { label: 'undo', hint: 'cmd-z', command: 'undo' },
+           { label: 'redo', hint: 'cmd-shift-z', command: 'redo' },
            { label: 'flip', to: 'flip', transition: 'forward' },
            { label: 'rotate', to: 'rotate', transition: 'forward' }
         ]

@@ -17,7 +17,7 @@ app.keyboard = {
       if(e.metaKey) modifiers.push('meta')
       if(e.shiftKey) modifiers.push('shift')
 
-      app.keyboard.down(modifiers, e.key, e)
+      app.keyboard.down(modifiers, e.key.toLowerCase(), e)
    },
 
    down: function(modifiers, key, e) {

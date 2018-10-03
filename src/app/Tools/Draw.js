@@ -4,8 +4,11 @@ app.tools.draw = {
    },
 
    down(mouse) {
-      app.history.push()
       this.draw(mouse.positionCurrent)
+   },
+
+   up(mouse) {
+      app.history.push()
    },
 
    move(mouse) {

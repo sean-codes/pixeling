@@ -8,6 +8,10 @@ app.tools.eraser = {
       this.erase(mouse.positionStart)
    },
 
+   up(mouse) {
+      app.history.push()
+   },
+
    move(mouse) {
       app.ui.cursor.update(mouse.positionCurrent)
    },
