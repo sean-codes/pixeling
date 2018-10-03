@@ -24,8 +24,9 @@
 }
 
 .pallet.container .colors .color {
-   width: 30px;
-   height: 30px;
+   width:30px;
+   height:30px;
+   border:2.5px solid #151a1a;
 }
 
 .pallet.container .colors .color.active {
@@ -36,6 +37,7 @@
    position:relative;
    height:40px;
    width:100%;
+   margin-top:5px;
 }
 
 .pallet.container .brush {

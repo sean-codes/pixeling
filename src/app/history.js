@@ -3,7 +3,6 @@ app.history = {
    point: -1,
    load: function() {
       var history = JSON.parse(this.store[this.point])
-      console.log('loading', history.id)
       app.ui.toolbox.selectTool(history.tool)
       app.ui.cursor.update({ selected: history.selected })
       app.image.pixels = history.pixels
