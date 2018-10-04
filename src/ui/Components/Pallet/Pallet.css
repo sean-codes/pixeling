@@ -30,7 +30,7 @@
 }
 
 .pallet.container .colors .color.active {
-   border:3px dashed hsl(188, 75%, 50%);
+   border:3px solid #FFF;
 }
 
 .pallet.container .mixer {

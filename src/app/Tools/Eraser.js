@@ -23,8 +23,8 @@ app.tools.eraser = {
 
    erase(position) {
       app.image.clearPixels({
-         x: position.x,
-         y: position.y,
+         x: Math.ceil(position.x - app.ui.cursor.size/2),
+         y: Math.ceil(position.y - app.ui.cursor.size/2),
          width: app.ui.cursor.size,
          height: app.ui.cursor.size
       })

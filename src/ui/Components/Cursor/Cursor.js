@@ -95,8 +95,8 @@ class Cursor extends Base  {
    getMouseEventPosition(e) {
       var canvasElement = this.bakedHTML.ele('canvas')
 
-      var x = Math.floor(e.offsetX / this.scale) - Math.floor(this.size/2)
-      var y = Math.floor(e.offsetY / this.scale) - Math.floor(this.size/2)
+      var x = Math.floor(e.offsetX / this.scale)// - Math.floor(this.size/2)
+      var y = Math.floor(e.offsetY / this.scale)// - Math.floor(this.size/2)
 
       return { x, y }
    }
@@ -131,9 +131,10 @@ class Cursor extends Base  {
 
    renderCursor() {
       var cursorDimensions = {
-         x: this.x, y: this.y,
-         width: this.size,
-         height: this.size
+         x: this.x,
+         y: this.y,
+         width: 1,
+         height: 1
       }
 
       this.mode == 'erase' && this.renderCursorModeErase(cursorDimensions)
@@ -149,12 +150,25 @@ class Cursor extends Base  {
    }
 
    renderCursorModeErase(dimensions) {
-      this.drawRectangleStroke(dimensions, '#FFF')
+      var cursorDimensionsFullSize = {
+         x: Math.ceil(dimensions.x - this.size/2),
+         y: Math.ceil(dimensions.y - this.size/2),
+         width: dimensions.width*this.size,
+         height: dimensions.height*this.size
+      }
+      this.drawRectangleStroke(cursorDimensionsFullSize, '#FFF')
    }
 
    renderCursorModeStroke(dimensions) {
-      this.drawRectangleFilled(dimensions, this.color)
-      this.drawRectangleStroke(dimensions, 'rgba(255, 255, 255, 0.85)')
+      var cursorDimensionsFullSize = {
+         x: Math.ceil(dimensions.x - this.size/2),
+         y: Math.ceil(dimensions.y - this.size/2),
+         width: dimensions.width*this.size,
+         height: dimensions.height*this.size
+      }
+
+      this.drawRectangleFilled(cursorDimensionsFullSize, this.color)
+      this.drawRectangleStroke(cursorDimensionsFullSize, 'rgba(255, 255, 255, 0.85)')
    }
 
    renderCursorModeSelect(dimensions) {

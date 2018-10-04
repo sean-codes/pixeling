@@ -27,25 +27,15 @@ app.config.menu = [
            { label: 'paste', hint: 'cmd-v' },
            { label: 'undo', hint: 'cmd-z', command: 'undo' },
            { label: 'redo', hint: 'cmd-shift-z', command: 'redo' },
-           { label: 'flip', to: 'flip', transition: 'forward' },
-           { label: 'rotate', to: 'rotate', transition: 'forward' }
+           { label: 'flip', to: 'flip', transition: 'forward' }
         ]
      },
      {
         name: 'flip',
         items: [
            { label: 'back', to: 'edit', transition: 'backward' },
-           { label: 'horizontal' },
-           { label: 'vertical' },
-        ]
-     },
-     {
-        name: 'rotate',
-        items: [
-           { label: 'back', to: 'edit', transition: 'backward' },
-           { label: '90deg CW' },
-           { label: '90deg CCW' },
-           { label: '180deg' }
+           { label: 'horizontal', command: 'flipHorizontal' },
+           { label: 'vertical', command: 'flipVertical' },
         ]
      }
 ]
