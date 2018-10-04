@@ -10,6 +10,16 @@ app.config.keybinds = [
       command: 'redo'
    },
    {
+      modifiers: ['ctrl', 'shift'],
+      key: 'h',
+      command: 'flipHorizontal'
+   },
+   {
+      modifiers: ['ctrl', 'shift'],
+      key: 'v',
+      command: 'flipVertical'
+   },
+   {
       modifiers: ['ctrl'],
       key: 's',
       command: 'export'

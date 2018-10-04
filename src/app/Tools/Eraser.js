@@ -28,5 +28,5 @@ app.tools.eraser = {
          width: app.ui.cursor.size,
          height: app.ui.cursor.size
       })
-   }
+   },
 }

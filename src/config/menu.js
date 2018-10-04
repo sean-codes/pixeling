@@ -34,7 +34,7 @@ app.config.menu = [
         name: 'flip',
         items: [
            { label: 'back', to: 'edit', transition: 'backward' },
-           { label: 'horizontal', command: 'flipHorizontal' },
+           { label: 'horizontal', command: 'flipHorizontal', hint: 'ctrl-shift-h' },
            { label: 'vertical', command: 'flipVertical' },
         ]
      }

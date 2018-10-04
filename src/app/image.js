@@ -36,7 +36,7 @@ app.image = {
          ctx.fillStyle = this.hslaToString(pixel.color)
          ctx.fillRect(pixel.x, pixel.y, 1, 1)
       })
-      
+
       return canvas.toDataURL()
    },
    create: function(width, height) {

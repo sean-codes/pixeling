@@ -2,6 +2,7 @@ app.command = {
    createDialog: function() {
       app.ui.dialogNew.open()
    },
+
    create: function(options) {
       app.image.create(options.width, options.height)
 
@@ -9,6 +10,7 @@ app.command = {
       app.ui.cursor.updateImage(app.image)
       app.ui.easel.centerCanvas()
    },
+
    export: function() {
       app.tools.select.unsetSelected() // when you find this.. sorry <3
 
@@ -18,24 +20,30 @@ app.command = {
       link.setAttribute('download', 'pixeling.png')
       link.click()
    },
+
    openDialog: function() {
       app.ui.dialogOpen.open()
    },
+
    center: function() {
       app.ui.easel.centerCanvas()
    },
+
    zoomIn: function() {
       app.ui.easel.zoomIn()
       app.ui.easel.centerCanvas()
    },
+
    zoomOut: function() {
       app.ui.easel.zoomOut()
       app.ui.easel.centerCanvas()
    },
+
    zoomReset: function() {
       app.ui.easel.zoomReset()
       app.ui.easel.centerCanvas()
    },
+
    copy: function() {
       var selected = app.ui.cursor.selected
       if(selected) {
@@ -43,10 +51,12 @@ app.command = {
          console.log('copy: added to clipboard', copy)
       }
    },
+
    paste: function() {
       app.clipboard.paste()
       app.history.push()
    },
+
    selectTool: function(info) {
       console.log('command: select tool', info)
       app.ui.toolbox.selectTool(info.tool)
@@ -54,7 +64,42 @@ app.command = {
    undo: function() {
       app.history.undo()
    },
+
    redo: function() {
       app.history.redo()
+   },
+
+   flipHorizontal() {
+      var { x, y, width, height } = app.ui.cursor.selected
+         ? app.ui.cursor.selected.copy.dimensions
+         : { x: 0, y: 0, width: app.image.width, height: app.image.height }
+
+      var pixels = app.ui.cursor.selected
+         ? app.ui.cursor.selected.copy.pixels
+         : app.image.pixels
+
+      for(var xpos = 0; xpos < Math.floor(width/2); xpos++) {
+         for(var ypos = y; ypos < y + height; ypos++) {
+            var pixelLeft = app.clone(pixels[x+xpos][ypos])
+            var pixelRight = app.clone(pixels[(x+width)-xpos-1][ypos])
+
+            var saveX = pixelLeft.x
+            var saveY = pixelLeft.y
+
+            pixelLeft.x = pixelRight.x
+            pixelLeft.y = pixelRight.y
+
+            pixelRight.x = saveX
+            pixelRight.y = saveY
+
+            pixels[x+xpos][ypos] = pixelRight
+            pixels[(x+width)-xpos-1][ypos] = pixelLeft
+         }
+      }
+
+      app.ui.canvas.updateImage(app.image)
+      app.ui.cursor.updateImage(app.image)
+
+      app.history.push()
    }
 }
