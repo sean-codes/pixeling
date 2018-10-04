@@ -101,5 +101,43 @@ app.command = {
       app.ui.cursor.updateImage(app.image)
 
       app.history.push()
+   },
+
+   flipVertical() {
+      var { x, y, width, height } = app.ui.cursor.selected
+         ? app.ui.cursor.selected.copy.dimensions
+         : { x: 0, y: 0, width: app.image.width, height: app.image.height }
+
+      var pixels = app.ui.cursor.selected
+         ? app.ui.cursor.selected.copy.pixels
+         : app.image.pixels
+
+      for(var ypos = y; ypos < y + Math.floor(height/2); ypos++) {
+         for(var xpos = 0; xpos < width; xpos++) {
+            // we could potention simplfy this by only swapping color/colorstring
+            var yLeft = y + ypos
+            var yRight = (y+height)-ypos-1
+
+            var pixelLeft = app.clone(pixels[xpos][yLeft])
+            var pixelRight = app.clone(pixels[xpos][yRight])
+
+            var saveX = pixelLeft.x
+            var saveY = pixelLeft.y
+
+            pixelLeft.x = pixelRight.x
+            pixelLeft.y = pixelRight.y
+
+            pixelRight.x = saveX
+            pixelRight.y = saveY
+
+            pixels[xpos][yLeft] = pixelRight
+            pixels[xpos][yRight] = pixelLeft
+         }
+      }
+
+      app.ui.canvas.updateImage(app.image)
+      app.ui.cursor.updateImage(app.image)
+
+      app.history.push()
    }
 }

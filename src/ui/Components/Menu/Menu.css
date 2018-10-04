@@ -3,7 +3,7 @@
    height:100%;
    background:#333;
    color:#FFF;
-   width:150px;
+   width:200px;
    overflow:hidden;
    user-select:none;
    transition: all 0.2s;
@@ -19,7 +19,7 @@
 .ui.menu .group {
    position:absolute;
    top:0; left:0;
-   width:150px;
+   width:200px;
    height:100%;
    transition:0.2s;
    transform:translateX(100%);
