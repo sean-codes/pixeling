@@ -73,6 +73,8 @@ app.image = {
    },
 
    drawPixel: function(x, y, color) {
+      if(!app.image.pixels[x] || !app.image.pixels[x][y]) return
+      
       var pixel = app.image.pixels[x][y]
       pixel.color = app.image.addHSLColor(pixel.color, color)
       pixel.colorString = app.image.hslaToString(pixel.color)

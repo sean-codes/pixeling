@@ -42,8 +42,8 @@ app.tools.line = {
       var yEnd = end.y
 
       // hmm hypotnuse is multiply them with some squigly over
-      var xLength = xEnd-xStart
-      var yLength = yEnd-yStart
+      var xLength = xEnd-xStart || 0.0001
+      var yLength = yEnd-yStart || 0.0001
       var lineLength = Math.sqrt(xLength*xLength + yLength*yLength)
 
       // unit that vector ya
@@ -54,19 +54,35 @@ app.tools.line = {
       var temporaryPixels = []
 
       while(
-         (yUnit > 0 ? yStart <= yEnd: (yEnd < yStart && yEnd != yStart))
-         || (xUnit > 0 ? xStart <= xEnd: (xEnd < xStart && xEnd != xStart))) {
+         (yUnit > 0 ? yStart <= yEnd : yEnd < yStart) ||
+         (xUnit > 0 ? xStart <= xEnd : xEnd < xStart)
+      ) {
          var xPos = Math.round(xStart) // lets try floor first.. then round if that isnt right
          var yPos = Math.round(yStart)
 
-         temporaryPixels.push({
-            x: xPos,
-            y: yPos,
-            colorString: app.image.hslaToString(app.ui.pallet.color)
-         })
+         temporaryPixels = temporaryPixels.concat(this.pixelsForCursor(xPos, yPos))
 
          xStart += xUnit
          yStart += yUnit
+      }
+
+      return temporaryPixels
+   },
+
+   pixelsForCursor(xPos, yPos) {
+      var size = app.ui.cursor.size
+      var xStart = xPos - Math.floor(size/2)
+      var yStart = yPos - Math.floor(size/2)
+
+      var temporaryPixels = []
+      for(var x = xStart; x < xStart + size; x++) {
+         for(var y = yStart; y < yStart + size; y++) {
+            temporaryPixels.push({
+               x,
+               y,
+               colorString: app.image.hslaToString(app.ui.pallet.color)
+            })
+         }
       }
 
       return temporaryPixels

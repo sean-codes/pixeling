@@ -28,7 +28,6 @@ app.tools.rectangle = {
       var temporaryPixels = this.buildTemporaryPixels(start, end)
 
       for(var pixel of temporaryPixels) {
-         
          app.image.drawPixel(pixel.x, pixel.y, app.ui.pallet.getColor())
       }
       app.ui.canvas.updateImage(app.image)
@@ -51,12 +50,7 @@ app.tools.rectangle = {
       var xTemp = xStart
       var yTemp = yStart
       while(xDir > 0 ? xTemp <= xEnd : (xTemp >= xEnd && xDir != 0)) {
-         temporaryPixels.push({
-            x: xTemp,
-            y: yTemp,
-            colorString: app.image.hslaToString(app.ui.pallet.color)
-         })
-
+         temporaryPixels = temporaryPixels.concat(this.pixelsForCursor(xTemp, yTemp))
          xTemp += xDir
       }
 
@@ -64,12 +58,7 @@ app.tools.rectangle = {
       var xTemp = xStart
       var yTemp = yEnd
       while(xDir > 0 ? xTemp <= xEnd : (xTemp >= xEnd && xDir != 0)) {
-         temporaryPixels.push({
-            x: xTemp,
-            y: yTemp,
-            colorString: app.image.hslaToString(app.ui.pallet.color)
-         })
-
+         temporaryPixels = temporaryPixels.concat(this.pixelsForCursor(xTemp, yTemp))
          xTemp += xDir
       }
 
@@ -77,12 +66,7 @@ app.tools.rectangle = {
       var xTemp = xStart
       var yTemp = yStart
       while(yDir > 0 ? yTemp <= yEnd : (yTemp >= yEnd && yDir != 0)) {
-         temporaryPixels.push({
-            x: xTemp,
-            y: yTemp,
-            colorString: app.image.hslaToString(app.ui.pallet.color)
-         })
-
+         temporaryPixels = temporaryPixels.concat(this.pixelsForCursor(xTemp, yTemp))
          yTemp += yDir
       }
 
@@ -90,16 +74,29 @@ app.tools.rectangle = {
       var xTemp = xEnd
       var yTemp = yStart
       while(yDir > 0 ? yTemp <= yEnd : (yTemp >= yEnd && yDir != 0)) {
-         temporaryPixels.push({
-            x: xTemp,
-            y: yTemp,
-            colorString: app.image.hslaToString(app.ui.pallet.color)
-         })
-
+         temporaryPixels = temporaryPixels.concat(this.pixelsForCursor(xTemp, yTemp))
          yTemp += yDir
       }
-      console.log(temporaryPixels)
 
+
+      return temporaryPixels
+   },
+
+   pixelsForCursor(xPos, yPos) {
+      var size = app.ui.cursor.size
+      var xStart = xPos - Math.floor(size/2)
+      var yStart = yPos - Math.floor(size/2)
+
+      var temporaryPixels = []
+      for(var x = xStart; x < xStart + size; x++) {
+         for(var y = yStart; y < yStart + size; y++) {
+            temporaryPixels.push({
+               x,
+               y,
+               colorString: app.image.hslaToString(app.ui.pallet.color)
+            })
+         }
+      }
 
       return temporaryPixels
    }
