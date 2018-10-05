@@ -109,3 +109,25 @@
 .icon.line:after {
    top:0.6em;
 }
+
+.icon.rectangle {
+   height:0.9em;
+   width:0.9em;
+   position:relative;
+   box-sizing:border-box;
+   border-width:0.1em;
+   border-style:solid;
+}
+
+.icon.rectangle:before {
+   width:0.2em;
+   height:0.2em;
+   border-width:0.1em;
+   border-style:dashed;
+}
+
+.icon.rectangle:before {
+   top:-0.1em;
+   left:-0.1em;
+   transform:none;
+}

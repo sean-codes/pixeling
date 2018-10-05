@@ -73,6 +73,12 @@ app.config.keybinds = [
    },
    {
       modifiers: [],
+      key: 'r',
+      command: 'selectTool',
+      info: { tool: 'rectangle' }
+   },
+   {
+      modifiers: [],
       key: 'e',
       command: 'selectTool',
       info: { tool: 'eraser' }
@@ -85,7 +91,7 @@ app.config.keybinds = [
    },
    {
       modifiers: [],
-      key: 'r',
+      key: 'i',
       command: 'selectTool',
       info: { tool: 'read' }
    }

@@ -54,8 +54,8 @@ app.tools.line = {
       var temporaryPixels = []
 
       while(
-         (yUnit > 0 ? yStart <= yEnd: yEnd < yStart)
-         || (xUnit > 0 ? xStart <= xEnd: xEnd < xStart)) {
+         (yUnit > 0 ? yStart <= yEnd: (yEnd < yStart && yEnd != yStart))
+         || (xUnit > 0 ? xStart <= xEnd: (xEnd < xStart && xEnd != xStart))) {
          var xPos = Math.round(xStart) // lets try floor first.. then round if that isnt right
          var yPos = Math.round(yStart)
 

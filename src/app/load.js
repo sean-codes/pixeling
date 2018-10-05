@@ -34,9 +34,10 @@ app.imports = {
       // tools
       './src/app/Tools/Draw.js',
       './src/app/Tools/Eraser.js',
-      './src/app/Tools/Select.js',
-      './src/app/Tools/Read.js',
       './src/app/Tools/Line.js',
+      './src/app/Tools/Read.js',
+      './src/app/Tools/Rectangle.js',
+      './src/app/Tools/Select.js',
       // dialogs
       './src/app/Dialogs/New.js',
       './src/app/Dialogs/Open.js'
