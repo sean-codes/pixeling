@@ -44,7 +44,7 @@ class Cursor extends Base  {
 
       this.mouse.down = true
       this.mouse.dragging = this.canMoveSelected()
-
+      
       this.mouse.positionStart = this.getMouseEventPosition(e)
       this.mouse.positionLast = this.getMouseEventPosition(e)
 

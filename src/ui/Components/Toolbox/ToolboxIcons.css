@@ -71,8 +71,6 @@
 .icon.read {
    width:0.35em;
    height: 1.35em;
-   cborder-width:0.1em;
-   cborder-style:solid;
    border-radius: 50% 50% 0.1em  0.1em ;
    box-shadow:
       0 -0.35em 0 0.1em inset,
@@ -91,6 +89,23 @@
    box-shadow:0 0 0 0.5em inset;
 }
 
-.icon.fill {
-   
+.icon.line {
+   height:0.6em;
+   width:0.1em;
+   box-shadow: 0 0 0 1em inset;
+   top:0.2em;
+}
+
+.icon.line:before, .icon.line:after {
+   width:0.2em;
+   height:0.2em;
+   border-width:0.1em;
+   border-style:solid;
+}
+.icon.line:before {
+   top:-0.4em;
+}
+
+.icon.line:after {
+   top:0.6em;
 }

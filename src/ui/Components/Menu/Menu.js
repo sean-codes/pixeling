@@ -11,6 +11,7 @@ class Menu extends Base {
    }
 
    toggle() {
+      this.navigate('home')
       var eleMenu = this.bakedHTML.ele('menu')
       eleMenu.classList.toggle('hide')
    }
@@ -18,7 +19,6 @@ class Menu extends Base {
    eventClickMenuItem(e, bakedHTML) {
       var action = bakedHTML.data('command')
       var to = bakedHTML.data('to')
-
 
       if(to) {
          var transition = bakedHTML.data('transition')

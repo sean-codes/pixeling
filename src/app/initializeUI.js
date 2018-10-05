@@ -27,10 +27,11 @@ app.initializeUI = function() {
    })
 
    app.ui.toolbox = new Toolbox({
-      initialTool: 'draw',
+      initialTool: 'line',
       tools: [
          { name: 'select', icon: 'select', overrides : app.tools.select, hint: 'shortcut: s' },
          { name: 'draw', icon: 'draw', overrides : app.tools.draw, hint: 'shortcut: d' },
+         { name: 'line', icon: 'line', overrides : app.tools.line, hint: 'shortcut: l' },
          { name: 'eraser', icon: 'eraser', overrides : app.tools.eraser, hint: 'shortcut: e'  },
          { name: 'read', icon: 'read', overrides : app.tools.read, hint: 'shortcut: r'  },
       ],
@@ -65,13 +66,13 @@ app.initializeUI = function() {
       }
    })
 
+   app.ui.colorMixer = new ColorMixer()
    app.ui.pallet = new Pallet({
       mixer: app.ui.colorMixer,
       onChangeColor: (color) => {
          var colorString = app.image.hslaToString(color)
          app.ui.statusbar.updateStatus({ color: `[ color: ${colorString} ]` })
          app.ui.cursor.update({ color: colorString })
-         app.ui.toolbox.selectTool('draw')
       },
       onChangeSize: (size) => {
          app.ui.cursor.update({ size })

@@ -2,6 +2,7 @@ app.onLoad = function() {
    document.querySelector('.loading').style.display = 'none'
    app.initializeUI()
 
+   app.ui.toolbox.selectTool('line')
    app.command.create({
       width: 48,
       height: 32
@@ -9,4 +10,5 @@ app.onLoad = function() {
 
    app.keyboard.listen()
    app.history.push()
+
 }

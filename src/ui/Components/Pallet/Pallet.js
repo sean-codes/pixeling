@@ -32,7 +32,7 @@ class Pallet extends Base{
       this.bakeHTML()
 
       // set up mixer
-      this.mixer = new ColorMixer()
+      this.mixer = options.mixer
       this.bakedHTML.append(this.mixer.bakedHTML)
       this.mixer.onChange = (color) => {
          this.setColor(color)

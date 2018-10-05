@@ -139,5 +139,13 @@ app.command = {
       app.ui.cursor.updateImage(app.image)
 
       app.history.push()
+   },
+
+   toggleMenu: function() {
+      app.ui.menu.toggle()
+   },
+
+   toggleColorMixer() {
+      app.ui.colorMixer.toggle()
    }
 }

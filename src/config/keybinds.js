@@ -5,6 +5,16 @@ app.config.keybinds = [
       command: 'undo'
    },
    {
+      modifiers: [],
+      key: '\`',
+      command: 'toggleMenu'
+   },
+   {
+      modifiers: [],
+      key: 'c',
+      command: 'toggleColorMixer'
+   },
+   {
       modifiers: ['meta', 'shift'],
       key: 'z',
       command: 'redo'
@@ -54,6 +64,12 @@ app.config.keybinds = [
       key: 'd',
       command: 'selectTool',
       info: { tool: 'draw' }
+   },
+   {
+      modifiers: [],
+      key: 'l',
+      command: 'selectTool',
+      info: { tool: 'line' }
    },
    {
       modifiers: [],

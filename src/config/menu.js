@@ -14,8 +14,8 @@ app.config.menu = [
         items: [
            { label: 'back', to: 'home', transition: 'backward' },
            { label: 'center', command: 'center' },
-           { label: 'zoom in', command: 'zoomIn' },
-           { label: 'zoom out', command: 'zoomOut' },
+           { label: 'zoom in', command: 'zoomIn', hint: 'ctrl-scrollwheel' },
+           { label: 'zoom out', command: 'zoomOut', hint: 'ctrl-scrollwheel' },
            { label: 'zoom reset', command: 'zoomReset' }
         ]
      },

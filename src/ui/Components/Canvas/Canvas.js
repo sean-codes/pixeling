@@ -24,7 +24,7 @@ class Canvas extends Base  {
    }
 
    updateImage(image) {
-      this.image = image
+      this.image = image || this.image
       this.resetCanvas()
       this.drawImage()
    }
@@ -32,13 +32,7 @@ class Canvas extends Base  {
    drawImage() {
       var dimensions = { x: 0, y: 0, width: this.image.width, height: this.image.height }
       this.image.loopPixels((pixel) => {
-         this.ctx.fillStyle = pixel.colorString
-         this.ctx.fillRect(
-            Math.floor(pixel.x*this.scale),
-            Math.floor(pixel.y*this.scale),
-            Math.ceil(this.scale),
-            Math.ceil(this.scale)
-         )
+         this.drawPixel(pixel)
       })
    }
 
@@ -47,6 +41,25 @@ class Canvas extends Base  {
       this.canvas.height = this.image.height*this.scale
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
       this.drawCheckerBoard()
+   }
+
+   temporaryPixels(temporaryPixels) {
+      this.resetCanvas()
+      this.drawImage()
+      
+      for(var pixel of temporaryPixels) {
+         this.drawPixel(pixel)
+      }
+   }
+
+   drawPixel(pixel) {
+      this.ctx.fillStyle = pixel.colorString
+      this.ctx.fillRect(
+         Math.floor(pixel.x*this.scale),
+         Math.floor(pixel.y*this.scale),
+         Math.ceil(this.scale),
+         Math.ceil(this.scale)
+      )
    }
 
    drawCheckerBoard() {

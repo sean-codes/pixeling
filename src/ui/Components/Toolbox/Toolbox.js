@@ -2,8 +2,9 @@ class Toolbox extends Base  {
    constructor(options) {
       super()
       this.tools = options.tools
-      this.currentTool = this.tools.find((tool) => tool.name == options.initialTool)
       this.bakeHTML()
+
+      this.selectTool(options.initialTool)
    }
 
    down(mouse) {
@@ -37,7 +38,7 @@ class Toolbox extends Base  {
    }
 
    selectTool(toolName) {
-      this.currentTool.overrides.unSelect
+      this.currentTool && this.currentTool.overrides.unSelect
          && this.currentTool.overrides.unSelect()
 
       for(var tool of this.tools) {
