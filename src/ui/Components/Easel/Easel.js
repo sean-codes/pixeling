@@ -130,7 +130,7 @@ class Easel extends Base  {
             mousedown: this.eventMousedown.bind(this),
             mouseup: this.eventMouseup.bind(this),
             mouseleave: this.eventMouseup.bind(this),
-            mousewheel: this.eventScroll.bind(this)
+            wheel: this.eventScroll.bind(this)
          },
          append: this.center,
          ingredients: [

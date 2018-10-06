@@ -5,6 +5,7 @@ class Pallet extends Base{
       this.onChangeSize = options.onChangeSize
       this.tempSize = 1
       this.size = 1
+      this.sizeChangeDampener = Date.now()
 
       this.colors = [
          { h: 0, s: 0, l: 0, a: 1 },
@@ -51,8 +52,11 @@ class Pallet extends Base{
    }
 
    eventBrushSizeScroll(e, bakedHTML) {
-      this.tempSize += Math.sign(e.deltaY) * 0.25
-      this.brushSizeChanged()
+      if(Date.now() - this.sizeChangeDampener > 50) {
+         this.sizeChangeDampener = Date.now()
+         this.tempSize += Math.sign(e.deltaY)
+         this.brushSizeChanged()
+      }
    }
 
    eventIncreaseBrushSize(e, bakedHTML) {
@@ -63,6 +67,18 @@ class Pallet extends Base{
    eventDecreaseBrushSize(e, bakedHTML) {
       this.tempSize -= 1
       this.brushSizeChanged()
+   }
+
+   nextColor() {
+      var nextColorID = this.selected+1
+      if(nextColorID == this.colors.length) nextColorID = 0
+      this.setActiveColor(nextColorID)
+   }
+
+   prevColor() {
+      var nextColorID = this.selected-1
+      if(nextColorID < 0) nextColorID = this.colors.length - 1
+      this.setActiveColor(nextColorID)
    }
 
    brushSizeChanged() {

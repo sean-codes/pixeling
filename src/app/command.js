@@ -170,5 +170,22 @@ app.command = {
 
    toggleColorMixer() {
       app.ui.colorMixer.toggle()
+   },
+
+   palletNextColor() {
+      app.ui.pallet.nextColor()
+   },
+
+   palletPrevColor() {
+      app.ui.pallet.prevColor()
+   },
+
+   palletIncreaseBrush() {
+      console.log('wtf')
+      app.ui.pallet.eventIncreaseBrushSize()
+   },
+
+   palletDecreaseBrush() {
+      app.ui.pallet.eventDecreaseBrushSize()
    }
 }

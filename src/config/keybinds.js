@@ -11,6 +11,26 @@ app.config.keybinds = [
    },
    {
       modifiers: [],
+      key: 'arrowup',
+      command: 'palletIncreaseBrush'
+   },
+   {
+      modifiers: [],
+      key: 'arrowdown',
+      command: 'palletDecreaseBrush'
+   },
+   {
+      modifiers: [],
+      key: 'arrowright',
+      command: 'palletNextColor'
+   },
+   {
+      modifiers: [],
+      key: 'arrowleft',
+      command: 'palletPrevColor'
+   },
+   {
+      modifiers: [],
       key: 'backspace',
       command: 'delete'
    },
