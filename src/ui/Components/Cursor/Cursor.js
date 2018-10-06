@@ -145,6 +145,7 @@ class Cursor extends Base  {
 
       this.mode == 'erase' && this.renderCursorModeErase(cursorDimensions)
       this.mode == 'stroke' && this.renderCursorModeStroke(cursorDimensions)
+      this.mode == 'fill' && this.renderCursorModeFill(cursorDimensions)
       this.mode == 'select' && this.renderCursorModeSelect(cursorDimensions)
       this.mode == 'move' && this.renderCursorModeMove(cursorDimensions)
       this.mode == 'read' && this.renderCursorModeRead(cursorDimensions)
@@ -175,6 +176,11 @@ class Cursor extends Base  {
 
       this.drawRectangleFilled(cursorDimensionsFullSize, this.color)
       this.drawRectangleStroke(cursorDimensionsFullSize, 'rgba(255, 255, 255, 0.85)')
+   }
+
+   renderCursorModeFill(dimensions) {
+      this.drawRectangleFilled(dimensions, this.color)
+      this.drawRectangleStroke(dimensions, 'rgba(255, 255, 255, 0.85)')
    }
 
    renderCursorModeSelect(dimensions) {

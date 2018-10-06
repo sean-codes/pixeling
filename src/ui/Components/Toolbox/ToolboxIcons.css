@@ -131,3 +131,44 @@
    left:-0.1em;
    transform:none;
 }
+
+.icon.fill {
+   width:0.9em;
+   height:0.9em;
+   border-width:0.1em;
+   ccborder-style:solid;
+}
+
+.icon.fill:after {
+   /*
+   border-width:0.35em;
+   border-style:solid;
+   border-color: transparent;
+   border-top-color: inherit;
+   transform:rotateZ(45deg) translateX(-0.27em) translateY(0.6em);
+   */
+   width:0.75em;
+   height:0.75em;
+   ccbox-shadow:0 0 0 2em  inset;
+   border-width:0.1em;
+   border-style:solid;
+   bottom:0em;
+   border-radius:50% 0 50% 50%;
+}
+
+.icon.fill:before {
+   width:0.3em;
+   height:0.3em;
+   border-radius:50%;
+   box-shadow:0 0 0 2em inset;
+   bottom:0.3em;
+
+   /*
+   width:0.3em;
+   height:0.3em;
+   left:70%;
+   bottom:-0.6em;
+   box-shadow: 0 0 0 2em inset;
+   border-radius:50% 0 50% 50%;
+   */
+}

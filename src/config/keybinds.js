@@ -83,6 +83,12 @@ app.config.keybinds = [
    },
    {
       modifiers: [],
+      key: 'f',
+      command: 'selectTool',
+      info: { tool: 'fill' }
+   },
+   {
+      modifiers: [],
       key: 'r',
       command: 'selectTool',
       info: { tool: 'rectangle' }

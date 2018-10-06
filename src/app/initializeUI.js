@@ -33,6 +33,7 @@ app.initializeUI = function() {
          { name: 'draw', icon: 'draw', overrides : app.tools.draw, hint: 'shortcut: d' },
          { name: 'line', icon: 'line', overrides : app.tools.line, hint: 'shortcut: l' },
          { name: 'rectangle', icon: 'rectangle', overrides : app.tools.rectangle, hint: 'shortcut: r' },
+         { name: 'fill', icon: 'fill', overrides : app.tools.fill, hint: 'shortcut: f'  },
          { name: 'eraser', icon: 'eraser', overrides : app.tools.eraser, hint: 'shortcut: e'  },
          { name: 'read', icon: 'read', overrides : app.tools.read, hint: 'shortcut: i'  },
       ],

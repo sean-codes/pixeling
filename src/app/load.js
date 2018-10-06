@@ -38,6 +38,7 @@ app.imports = {
       // tools
       './src/app/Tools/Draw.js',
       './src/app/Tools/Eraser.js',
+      './src/app/Tools/Fill.js',
       './src/app/Tools/Line.js',
       './src/app/Tools/Read.js',
       './src/app/Tools/Rectangle.js',
