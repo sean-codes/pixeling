@@ -6,6 +6,7 @@ app.image = {
    transparentColor: function() {
       return { h: 0, s: 0, l: 0, a: 0 }
    },
+
    load: function(image) {
       this.create(image.width, image.height)
 
@@ -25,6 +26,7 @@ app.image = {
          }
       }
    },
+
    export: function() {
       var canvas = document.createElement('canvas')
       canvas.width = this.width
@@ -62,12 +64,10 @@ app.image = {
       }
    },
 
-   drawPixels: function(area) {
-      var color = app.ui.pallet.getColor()
-
-      this.loopPixels((pixel) => {
-         app.image.drawPixel(pixel.x, pixel.y, color)
-      }, area.x, area.y, area.width, area.height)
+   drawPixels: function(pixels) {
+      for(var pixel of pixels) {
+         this.drawPixel(pixel.x, pixel.y, pixel.color)
+      }
 
       app.ui.canvas.updateImage(app.image)
    },

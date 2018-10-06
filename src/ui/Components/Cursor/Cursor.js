@@ -32,7 +32,8 @@ class Cursor extends Base  {
          positionLast: { x: 0, y: 0 },
          positionCurrent: { x: 0, y: 0 },
          positionStart: { x: 0, y: 0 },
-         PositionEnd: { x: 0, y: 0 }
+         positionEnd: { x: 0, y: 0 },
+         positions: []
       }
 
       this.updateCanvas()
@@ -44,9 +45,9 @@ class Cursor extends Base  {
 
       this.mouse.down = true
       this.mouse.dragging = this.canMoveSelected()
-      
       this.mouse.positionStart = this.getMouseEventPosition(e)
       this.mouse.positionLast = this.getMouseEventPosition(e)
+      this.mouse.positions = [ this.mouse.positionStart ]
 
       this.onDown(this.mouse)
    }
@@ -78,7 +79,12 @@ class Cursor extends Base  {
       // we need to run this between delta x and y to fill in the gaps
       // 1. find the angle between last position and current
       // 2. we could brute force or run on only the pixels between once
-      this.mouse.down ? this.onStroke(this.mouse) : this.onMove(this.mouse)
+      if(this.mouse.down) {
+         this.mouse.positions.push(this.mouse.positionCurrent)
+         return this.onStroke(this.mouse)
+      }
+
+      this.onMove(this.mouse)
    }
 
    eventMouseout(e, element) {

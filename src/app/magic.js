@@ -53,6 +53,7 @@ app.magic = {
             temporaryPixels.push({
                x,
                y,
+               color: app.ui.pallet.color,
                colorString: app.image.hslaToString(app.ui.pallet.color)
             })
          }
