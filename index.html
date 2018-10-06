@@ -51,8 +51,9 @@
 
          .loading .text {
             margin-top:20px;
-            font-weight:300;
+            font-weight:600;
             color:#FFF;
+            text-align:center;
          }
 
          .loading .text span {
@@ -61,8 +62,36 @@
             transform:rotate(-180deg);
          }
 
-         @keyframes spin {
-            to { transform: rotateZ(360deg); }
+         .loading .bar {
+            position:relative;
+            width:240px;
+            height:15px;
+            box-sizing:border-box;
+            margin:20px auto;
+            border:2px solid #FFF;
+            overflow:hidden;
+         }
+
+         .loading .bar:after {
+            content: '';
+            position:absolute;
+            height:100%;
+            width:75px;
+            background:rgba(255, 255, 255, 0.25);
+            top:0;
+            left:-75px;
+            animation: filler 2s infinite;
+         }
+
+         .loading .bar .fill {
+            height:100%;
+            background:#FFF;
+            width:0%;
+            transition: all 0.2s;
+         }
+
+         @keyframes filler {
+            to { left: 240px; }
          }
 
          script {
@@ -73,13 +102,23 @@
    </head>
    <body style="background:#333">
       <div class="loading">
-         <div class="spinner"></div>
          <div class="text"> (╯°□°）╯ <span>Loading...</span></div>
+         <div class="bar">
+            <div class="fill"></div>
+         </div>
       </div>
       <script>
          var load = document.createElement('script')
          load.src = "./src/app/load.js?v=" + Math.random()
          document.body.appendChild(load)
+         load.onload = function() {
+            app.load({
+               onLoadStatus: (percent, lastFile) => {
+                  var eleFill = document.querySelector('.fill')
+                  eleFill.style.width = (percent*100) + '%'
+               }
+            })
+         }
       </script>
    </body>
 </html>

@@ -67,8 +67,9 @@ app.imports = {
 app.importing = []
 app.importStartTime = Date.now()
 
-app.load = function(){
+app.load = function(options){
    console.groupCollapsed('importing...')
+   app.onLoadStatus = options.onLoadStatus
    for(var fileType in app.imports) {
       for(var file of app.imports[fileType]) {
          var breakCache = "?v="+Math.round(Math.random()*1000000000000000000)
@@ -81,6 +82,8 @@ app.load = function(){
          app.importing.push({ ...element })
       }
    }
+   app.importingLength = app.importing.length
+
    app.loadNext()
 }
 
@@ -96,6 +99,8 @@ app.loadNext = function() {
    document.head.appendChild(htmlImporting)
 
    htmlImporting.onload = () => {
+      var percent = (app.importingLength - app.importing.length) / app.importingLength
+      app.onLoadStatus(percent, importing)
       setTimeout(app.loadNext, 1) // trying to figure out github issue
    }
 }
@@ -105,5 +110,3 @@ app.isLoaded = function() {
    console.log('importing complete: ' + (Date.now() - app.importStartTime) + 'ms')
    app.onLoad()
 }
-
-app.load()
