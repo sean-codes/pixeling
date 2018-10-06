@@ -2,6 +2,7 @@ app.tools.line = {
 
    select() {
       console.log('selecting line tool')
+      app.ui.cursor.update({ fill: true, selected: false, mode: 'stroke' })
    },
 
    move(mouse) {
@@ -36,55 +37,8 @@ app.tools.line = {
    },
 
    buildTemporaryPixels(start, end) {
-      var xStart = start.x
-      var yStart = start.y
-      var xEnd = end.x
-      var yEnd = end.y
-
-      // hmm hypotnuse is multiply them with some squigly over
-      var xLength = xEnd-xStart || 0.0001
-      var yLength = yEnd-yStart || 0.0001
-      var lineLength = Math.sqrt(xLength*xLength + yLength*yLength)
-
-      // unit that vector ya
-      var xUnit = 1 / (lineLength / xLength)
-      var yUnit = 1 / (lineLength / yLength)
-
-      // ok give me an array of pixels on the double
-      var temporaryPixels = []
-
-      while(
-         (yUnit > 0 ? yStart <= yEnd : yEnd < yStart) ||
-         (xUnit > 0 ? xStart <= xEnd : xEnd < xStart)
-      ) {
-         var xPos = Math.round(xStart) // lets try floor first.. then round if that isnt right
-         var yPos = Math.round(yStart)
-
-         temporaryPixels = temporaryPixels.concat(this.pixelsForCursor(xPos, yPos))
-
-         xStart += xUnit
-         yStart += yUnit
-      }
-
-      return temporaryPixels
+      var size = app.ui.cursor.size
+      return app.magic.pixelsBetweenPoints(start, end, size)
    },
 
-   pixelsForCursor(xPos, yPos) {
-      var size = app.ui.cursor.size
-      var xStart = xPos - Math.floor(size/2)
-      var yStart = yPos - Math.floor(size/2)
-
-      var temporaryPixels = []
-      for(var x = xStart; x < xStart + size; x++) {
-         for(var y = yStart; y < yStart + size; y++) {
-            temporaryPixels.push({
-               x,
-               y,
-               colorString: app.image.hslaToString(app.ui.pallet.color)
-            })
-         }
-      }
-
-      return temporaryPixels
-   }
 }

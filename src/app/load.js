@@ -1,6 +1,10 @@
 // include everything
 var app = {}
 
+app.clone = function(object) {
+   return JSON.parse(JSON.stringify(object))
+}
+
 app.imports = {
    js: [
       // globals
@@ -22,6 +26,7 @@ app.imports = {
       './src/ui/Components/Statusbar/Statusbar.js',
       './src/ui/Components/Toolbox/Toolbox.js',
       // app
+      './src/app/magic.js',
       './src/app/clipboard.js',
       './src/app/command.js',
       './src/app/initializeUI.js',
@@ -30,7 +35,6 @@ app.imports = {
       './src/app/image.js',
       './src/app/keyboard.js',
       './src/app/onLoad.js',
-      './src/app/utility.js',
       // tools
       './src/app/Tools/Draw.js',
       './src/app/Tools/Eraser.js',

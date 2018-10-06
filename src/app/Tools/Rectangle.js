@@ -35,69 +35,18 @@ app.tools.rectangle = {
    },
 
    buildTemporaryPixels(start, end) {
-      var xStart = start.x
-      var yStart = start.y
-      var xEnd = end.x
-      var yEnd = end.y
-
-      var xDir = Math.sign(xEnd - xStart)
-      var yDir = Math.sign(yEnd - yStart)
-
-      var temporaryPixels = []
-
-      console.log(xStart, xEnd, xDir)
-      // top line
-      var xTemp = xStart
-      var yTemp = yStart
-      while(xDir > 0 ? xTemp <= xEnd : (xTemp >= xEnd && xDir != 0)) {
-         temporaryPixels = temporaryPixels.concat(this.pixelsForCursor(xTemp, yTemp))
-         xTemp += xDir
-      }
-
-      // bottom line
-      var xTemp = xStart
-      var yTemp = yEnd
-      while(xDir > 0 ? xTemp <= xEnd : (xTemp >= xEnd && xDir != 0)) {
-         temporaryPixels = temporaryPixels.concat(this.pixelsForCursor(xTemp, yTemp))
-         xTemp += xDir
-      }
-
-      // left line
-      var xTemp = xStart
-      var yTemp = yStart
-      while(yDir > 0 ? yTemp <= yEnd : (yTemp >= yEnd && yDir != 0)) {
-         temporaryPixels = temporaryPixels.concat(this.pixelsForCursor(xTemp, yTemp))
-         yTemp += yDir
-      }
-
-      // right line
-      var xTemp = xEnd
-      var yTemp = yStart
-      while(yDir > 0 ? yTemp <= yEnd : (yTemp >= yEnd && yDir != 0)) {
-         temporaryPixels = temporaryPixels.concat(this.pixelsForCursor(xTemp, yTemp))
-         yTemp += yDir
-      }
-
-
-      return temporaryPixels
-   },
-
-   pixelsForCursor(xPos, yPos) {
       var size = app.ui.cursor.size
-      var xStart = xPos - Math.floor(size/2)
-      var yStart = yPos - Math.floor(size/2)
+      var topLeft = { x: start.x, y: start.y }
+      var topRight = { x: end.x, y: start.y }
+      var bottomLeft = { x: start.x, y: end.y }
+      var bottomRight = { x: end.x, y: end.y }
 
-      var temporaryPixels = []
-      for(var x = xStart; x < xStart + size; x++) {
-         for(var y = yStart; y < yStart + size; y++) {
-            temporaryPixels.push({
-               x,
-               y,
-               colorString: app.image.hslaToString(app.ui.pallet.color)
-            })
-         }
-      }
+      var pixels = []
+      pixels.push(...app.magic.pixelsBetweenPoints(topLeft, topRight, size))
+      pixels.push(...app.magic.pixelsBetweenPoints(topRight, bottomRight, size))
+      pixels.push(...app.magic.pixelsBetweenPoints(bottomLeft, bottomRight, size))
+      pixels.push(...app.magic.pixelsBetweenPoints(topLeft, bottomLeft, size))
 
-      return temporaryPixels
+      return app.magic.removeCollidingPixels(pixels)
    }
 }

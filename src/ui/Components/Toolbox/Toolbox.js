@@ -3,8 +3,6 @@ class Toolbox extends Base  {
       super()
       this.tools = options.tools
       this.bakeHTML()
-
-      this.selectTool(options.initialTool)
    }
 
    down(mouse) {
