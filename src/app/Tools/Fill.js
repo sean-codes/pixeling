@@ -14,12 +14,16 @@ app.tools.fill = {
    down(mouse) {
       var pos = mouse.positionCurrent
       var pixel = app.image.pixels[pos.x][pos.y]
-      var initialColor = pixel.color
-      if(this.colorsCloseEnough(initialColor, app.ui.pallet.color)){
+      var initialColor = app.clone(pixel.color)
+      app.image.drawPixel(pos.x, pos.y, app.ui.pallet.color)
+
+      // if the color delta is not really changed
+      if(this.colorsCloseEnough(initialColor, pixel.color)){
          return
       }
       this.fillAdjecentPixels(pos, initialColor)
       app.ui.canvas.updateImage(app.image)
+      app.history.push()
    },
 
    fillAdjecentPixels(pos, color) {

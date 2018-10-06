@@ -166,5 +166,9 @@ app.command = {
       })
       app.image.clearPixels(imageRect)
       app.history.push()
+   },
+
+   toggleColorMixer() {
+      app.ui.colorMixer.toggle()
    }
 }

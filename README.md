@@ -2,6 +2,6 @@
 
 a pixel art editor
 
-![example image](https://github.com/sean-codes/pixeling/blob/master/example.png?raw=true)
+![example image](/example.png?v=3)
 
-[unfinished preview](https://sean-codes.github.io/pixeling/)
+open: [click here](https://sean-codes.github.io/pixeling/)
