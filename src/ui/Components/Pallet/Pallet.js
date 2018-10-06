@@ -51,7 +51,7 @@ class Pallet extends Base{
    }
 
    eventBrushSizeScroll(e, bakedHTML) {
-      this.tempSize += Math.sign(e.deltaY) * Math.min(1, Math.abs(e.deltaY))
+      this.tempSize += Math.sign(e.deltaY) * 0.25
       this.brushSizeChanged()
    }
 

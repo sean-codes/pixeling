@@ -11,6 +11,16 @@ app.config.keybinds = [
    },
    {
       modifiers: [],
+      key: 'backspace',
+      command: 'delete'
+   },
+   {
+      modifiers: ['meta'],
+      key: 'a',
+      command: 'selectAll'
+   },
+   {
+      modifiers: [],
       key: 'c',
       command: 'toggleColorMixer'
    },

@@ -147,5 +147,24 @@ app.command = {
 
    toggleColorMixer() {
       app.ui.colorMixer.toggle()
+   },
+
+   delete() {
+      if(app.ui.cursor.selected) {
+         app.ui.cursor.update({ selected: undefined })
+      }
+   },
+
+   selectAll() {
+      var imageRect = app.image.getImageRect()
+      app.ui.toolbox.selectTool('select')
+      app.ui.cursor.update({
+         selected: {
+            ...imageRect,
+            copy: app.clipboard.getCopy(imageRect)
+         }
+      })
+      app.image.clearPixels(imageRect)
+      app.history.push()
    }
 }

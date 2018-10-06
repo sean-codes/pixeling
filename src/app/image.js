@@ -74,7 +74,7 @@ app.image = {
 
    drawPixel: function(x, y, color) {
       if(!app.image.pixels[x] || !app.image.pixels[x][y]) return
-      
+
       var pixel = app.image.pixels[x][y]
       pixel.color = app.image.addHSLColor(pixel.color, color)
       pixel.colorString = app.image.hslaToString(pixel.color)
@@ -144,6 +144,10 @@ app.image = {
 
    hslaToString: function(hsla) {
       return `hsla(${hsla.h}, ${hsla.s}%, ${hsla.l}%, ${hsla.a})`
+   },
+
+   getImageRect() {
+      return { x: 0, y: 0, width: this.width, height: this.height}
    },
 
    pixelID(x, y) {

@@ -17,6 +17,7 @@ app.tools.draw = {
 
    stroke(mouse) {
       app.ui.cursor.update(mouse.positionCurrent)
+
       this.draw(mouse.positionCurrent)
    },
 
