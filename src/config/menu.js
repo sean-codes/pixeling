@@ -28,6 +28,7 @@ app.config.menu = [
            { label: 'paste', hint: 'cmd-v' },
            { label: 'undo', hint: 'cmd-z', command: 'undo' },
            { label: 'redo', hint: 'cmd-shift-z', command: 'redo' },
+           { label: 'canvas size', command: 'canvasDialog' },
            { label: 'flip', to: 'flip', transition: 'forward' }
         ]
      },

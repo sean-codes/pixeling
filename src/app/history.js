@@ -4,11 +4,12 @@ app.history = {
    load: function() {
       var history = JSON.parse(this.store[this.point])
       app.ui.toolbox.selectTool(history.tool)
-      app.ui.cursor.update({ selected: history.selected })
       app.image.pixels = history.pixels
       app.image.width = history.width
       app.image.height = history.height
       app.ui.canvas.updateImage(app.image)
+      app.ui.cursor.updateImage(app.image)
+      app.ui.cursor.update({ selected: history.selected })
    },
 
    create: function() {

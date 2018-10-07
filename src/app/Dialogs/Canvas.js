@@ -1,5 +1,5 @@
-app.dialogs.New = {
-   title: 'create sprite',
+app.dialogs.Canvas = {
+   title: 'set canvas size',
    inputs: [
       {
          label: 'width',
@@ -22,19 +22,19 @@ app.dialogs.New = {
    ],
    actions: [
       {
-         label: 'create',
+         label: 'update',
          onClick: (data) => {
-            app.ui.dialogNew.hide()
-            app.command.create({
-               width: data.width.value,
-               height: data.height.value
-            })
+            app.ui.dialogCanvas.hide()
+            app.image.setCanvasSize(data.width.value, data.height.value)
+            app.ui.canvas.updateImage(app.image)
+            app.ui.cursor.updateImage(app.image)
+            app.history.push()
          }
       },
       {
          label: 'cancel',
          onClick: (data) => {
-            app.ui.dialogNew.hide()
+            app.ui.dialogCanvas.hide()
          }
       }
    ]

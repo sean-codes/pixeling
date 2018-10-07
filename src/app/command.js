@@ -3,6 +3,10 @@ app.command = {
       app.ui.dialogNew.open()
    },
 
+   canvasDialog: function() {
+      app.ui.dialogCanvas.open()
+   },
+
    create: function(options) {
       app.image.create(options.width, options.height)
 

@@ -93,7 +93,7 @@
    height:0.6em;
    width:0.1em;
    box-shadow: 0 0 0 1em inset;
-   top:0.2em;
+   top:0em;
 }
 
 .icon.line:before, .icon.line:after {
@@ -103,7 +103,7 @@
    border-style:solid;
 }
 .icon.line:before {
-   top:-0.4em;
+   top:-0.35em;
 }
 
 .icon.line:after {
@@ -123,7 +123,7 @@
    width:0.2em;
    height:0.2em;
    border-width:0.1em;
-   border-style:dashed;
+   border-style:solid;
 }
 
 .icon.rectangle:before {

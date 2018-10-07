@@ -41,7 +41,14 @@ app.image = {
 
       return canvas.toDataURL()
    },
+
    create: function(width, height) {
+      app.image.width = width
+      app.image.height = height
+      app.image.pixels = this.createPixelsArray(width, height)
+   },
+
+   createPixelsArray: function(width, height) {
       var pixels = []
 
       for(var x = 0; x < width; x++) {
@@ -51,9 +58,7 @@ app.image = {
          }
       }
 
-      app.image.width = width
-      app.image.height = height
-      app.image.pixels = pixels
+      return pixels
    },
 
    createPixel: function(x, y) {
@@ -63,6 +68,26 @@ app.image = {
          colorString: this.hslaToString(this.transparentColor())
       }
    },
+
+   setCanvasSize: function(width, height) {
+      var oldWidth = this.width
+      var oldHeight = this.height
+      var oldPixels = app.clone(this.pixels)
+      var newPixels = this.createPixelsArray(width, height)
+
+      for(var x = 0; x < oldWidth; x++) {
+         for(var y = 0; y < oldHeight; y++) {
+            if(oldPixels[x] && oldPixels[x][y] && newPixels[x] && newPixels[x][y]) {
+               newPixels[x][y] = oldPixels[x][y]
+            }
+         }
+      }
+
+      app.image.pixels = newPixels
+      app.image.width = width
+      app.image.height = height
+   },
+
 
    drawPixels: function(pixels) {
       for(var pixel of pixels) {

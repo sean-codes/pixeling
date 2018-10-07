@@ -45,7 +45,8 @@ app.imports = {
       './src/app/Tools/Select.js',
       // dialogs
       './src/app/Dialogs/New.js',
-      './src/app/Dialogs/Open.js'
+      './src/app/Dialogs/Open.js',
+      './src/app/Dialogs/Canvas.js'
    ],
    css: [
       './src/ui/Components/Appbar/Appbar.css',
