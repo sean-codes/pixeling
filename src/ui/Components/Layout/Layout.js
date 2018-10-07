@@ -32,8 +32,18 @@ class Layout extends Base {
                classes: [ 'dockright' ]
             },
             {
-               name: 'layout_workspace_easel',
-               classes: [ 'easel' ]
+               name: 'layout_workspace_center',
+               classes: [ 'center' ],
+               ingredients: [
+                  {
+                     name: 'layout_workspace_docktop',
+                     classes: [ 'docktop' ]
+                  },
+                  {
+                     name: 'layout_workspace_dockbottom',
+                     classes: [ 'dockbottom' ]
+                  }
+               ]
             },
             {
                name: 'layout_workspace_dockright',

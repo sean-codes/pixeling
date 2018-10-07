@@ -5,7 +5,9 @@
 2.1 sidebar
 2.2 workspace
 2.2.1 - left dock
-2.2.2 - easel
+2.2.2 - center dock
+2.2.2.1 - top dock
+2.2.2.2 - bottom dock
 2.2.3 - right dock
 3. bottom
 
@@ -16,9 +18,9 @@ desktop
 | 2                                                |
 | 2.1 | 2.2                                        |
 |     | 2.2.1 | 2.2.2                      | 2.2.3 |
-|     |       |                            |       |
-|     |       |                            |       |<-- workspace is horizontal
-|     |       |                            |       |
+|     |       | 2.2.2.1                    |       |
+|     |       |----------------------------|       |<-- workspace is horizontal
+|     |       | 2.2.2.2                    |       |
 |     |       |                            |       |
 |     |       |                            |       |
 |     |       |                            |       |
@@ -66,15 +68,17 @@ mobile
    display: flex;
 }
 
-.ui.layout > .center .sidebar,
-.ui.layout > .center .workspace {
+.ui.layout > .center .sidebar {
    height: 100%;
 }
 
-.ui.layout > .center .workspace {
-   display: flex;
+
+.ui.layout > .center > .center {
+   flex: 1;
+   flex-direction: column;
+   display:flex;
 }
 
-.ui.layout > .center .workspace > .easel {
+.ui.layout > .center > .center > .dockbottom {
    flex: 1;
 }

@@ -5,10 +5,11 @@ app.tools.read = {
    },
 
    down(mouse) {
+      var image = app.frames.getCurrentFrame()
       var x = mouse.positionCurrent.x
       var y = mouse.positionCurrent.y
 
-      var pixel = app.image.pixels[x][y]
+      var pixel = image.pixels[x][y]
       var color = pixel.color
 
       if(color.h || color.s || color.l || color.a) {

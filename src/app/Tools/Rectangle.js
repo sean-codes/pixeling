@@ -28,9 +28,9 @@ app.tools.rectangle = {
       var temporaryPixels = this.buildTemporaryPixels(start, end)
 
       for(var pixel of temporaryPixels) {
-         app.image.drawPixel(pixel.x, pixel.y, app.ui.pallet.getColor())
+         app.frames.drawPixel(pixel.x, pixel.y, app.ui.pallet.getColor())
       }
-      app.ui.canvas.updateImage(app.image)
+      app.ui.canvas.updateImage(app.frames.getCurrentFrame())
       app.history.push()
    },
 

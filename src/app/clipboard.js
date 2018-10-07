@@ -35,22 +35,22 @@ app.clipboard = {
       if(!copy) {
          return console.log('paste: nothing has been copied')
       }
-
+      var image = app.frames.getCurrentFrame()
       for(var cx = 0; cx < copy.dimensions.width; cx++) {
          for(var cy = 0; cy < copy.dimensions.height; cy++) {
             var pasteX = cx + x
             var pasteY = cy + y
             copy.pixels[cx][cy].x = pasteX
             copy.pixels[cx][cy].y = pasteY
-            if(app.image.pixels[pasteX] && app.image.pixels[pasteX][pasteY]) {
+            if(image.pixels[pasteX] && image.pixels[pasteX][pasteY]) {
                var copyPixel = copy.pixels[cx][cy]
-               app.image.drawPixel(pasteX, pasteY, copyPixel.color)
+               app.frames.drawPixel(pasteX, pasteY, copyPixel.color)
             }
          }
       }
 
-      app.ui.cursor.updateImage(app.image)
-      app.ui.canvas.updateImage(app.image)
+      app.ui.cursor.updateImage(image)
+      app.ui.canvas.updateImage(image)
    },
 
    getCopy(area) {
@@ -64,10 +64,11 @@ app.clipboard = {
          pixels: []
       }
 
+      var image = app.frames.getCurrentFrame()
       for(var x = 0; x < area.width; x++) {
          copy.pixels[x] = []
          for(var y = 0; y < area.height; y++) {
-            copy.pixels[x][y] = app.image.pixels[area.x+x][area.y+y]
+            copy.pixels[x][y] = image.pixels[area.x+x][area.y+y]
          }
       }
 

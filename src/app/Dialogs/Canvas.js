@@ -7,7 +7,7 @@ app.dialogs.Canvas = {
             name: 'width',
             type: 'number',
             min: 1,
-            value: () => { return app.image.width }
+            value: () => { return app.frames.width }
          }
       },
       {
@@ -16,7 +16,7 @@ app.dialogs.Canvas = {
             name: 'height',
             type: 'number',
             min: 1,
-            value: () => { return app.image.height }
+            value: () => { return app.frames.height }
          }
       }
    ],
@@ -25,9 +25,14 @@ app.dialogs.Canvas = {
          label: 'update',
          onClick: (data) => {
             app.ui.dialogCanvas.hide()
-            app.image.setCanvasSize(data.width.value, data.height.value)
-            app.ui.canvas.updateImage(app.image)
-            app.ui.cursor.updateImage(app.image)
+
+            var width = Number(data.width.value)
+            var height = Number(data.height.value)
+            app.frames.setCanvasSize(width, height)
+
+            var image = app.frames.getCurrentFrame()
+            app.ui.canvas.updateImage(image)
+            app.ui.cursor.updateImage(image)
             app.history.push()
          }
       },

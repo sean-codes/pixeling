@@ -1,8 +1,13 @@
-app.image = {
+app.frames = {
+   list: [],
+   currentFrame: 0,
    width: 48,
    height: 32,
-   pixels: {},
    ctx: document.createElement('canvas').getContext('2d'),
+   getCurrentFrame: function() {
+      return this.list[this.currentFrame]
+   },
+
    transparentColor: function() {
       return { h: 0, s: 0, l: 0, a: 0 }
    },
@@ -29,23 +34,42 @@ app.image = {
 
    export: function() {
       var canvas = document.createElement('canvas')
-      canvas.width = this.width
+      canvas.width = this.width * this.list.length
       canvas.height = this.height
 
       var ctx = canvas.getContext('2d')
+      var offX = 0
 
-      this.loopPixels((pixel) => {
-         ctx.fillStyle = this.hslaToString(pixel.color)
-         ctx.fillRect(pixel.x, pixel.y, 1, 1)
-      })
+      for(var frame of this.list) {
+         for(var x = 0; x < frame.width; x++) {
+            for(var y = 0; y < frame.height; y++) {
+               var pixel = frame.pixels[x][y]
+               ctx.fillStyle = this.hslaToString(pixel.color)
+               ctx.fillRect(pixel.x + offX, pixel.y, 1, 1)
+            }
+         }
+         offX += frame.width
+      }
 
       return canvas.toDataURL()
    },
 
    create: function(width, height) {
-      app.image.width = width
-      app.image.height = height
-      app.image.pixels = this.createPixelsArray(width, height)
+      this.width = width
+      this.height = height
+      this.list = []
+      this.currentFrame = 0
+      this.addFrame()
+   },
+
+   addFrame: function() {
+      var frame = {
+         width: this.width,
+         height: this.height,
+         pixels: this.createPixelsArray(this.width, this.height)
+      }
+
+      this.list.push(frame)
    },
 
    createPixelsArray: function(width, height) {
@@ -72,20 +96,23 @@ app.image = {
    setCanvasSize: function(width, height) {
       var oldWidth = this.width
       var oldHeight = this.height
-      var oldPixels = app.clone(this.pixels)
-      var newPixels = this.createPixelsArray(width, height)
 
-      for(var x = 0; x < oldWidth; x++) {
-         for(var y = 0; y < oldHeight; y++) {
-            if(oldPixels[x] && oldPixels[x][y] && newPixels[x] && newPixels[x][y]) {
-               newPixels[x][y] = oldPixels[x][y]
+      for(var frame of this.list) {
+         var oldPixels = app.clone(frame.pixels)
+         var newPixels = this.createPixelsArray(width, height)
+
+         for(var x = 0; x < oldWidth; x++) {
+            for(var y = 0; y < oldHeight; y++) {
+               if(oldPixels[x] && oldPixels[x][y] && newPixels[x] && newPixels[x][y]) {
+                  newPixels[x][y] = oldPixels[x][y]
+               }
             }
          }
-      }
 
-      app.image.pixels = newPixels
-      app.image.width = width
-      app.image.height = height
+         frame.pixels = newPixels
+         frame.width = width
+         frame.height = height
+      }
    },
 
 
@@ -93,30 +120,30 @@ app.image = {
       for(var pixel of pixels) {
          this.drawPixel(pixel.x, pixel.y, pixel.color)
       }
-
-      app.ui.canvas.updateImage(app.image)
    },
 
    drawPixel: function(x, y, color) {
-      if(!app.image.pixels[x] || !app.image.pixels[x][y]) return
+      var image = this.getCurrentFrame()
+      if(!image.pixels[x] || !image.pixels[x][y]) return
 
-      var pixel = app.image.pixels[x][y]
-      pixel.color = app.image.addHSLColor(pixel.color, color)
-      pixel.colorString = app.image.hslaToString(pixel.color)
+      var pixel = image.pixels[x][y]
+      pixel.color = this.addHSLColor(pixel.color, color)
+      pixel.colorString = this.hslaToString(pixel.color)
    },
 
    clearPixels: function(area) {
+      var image = this.getCurrentFrame()
       this.loopPixels((pixel) => {
-         app.image.pixels[pixel.x][pixel.y] = this.createPixel(pixel.x, pixel.y)
+         image.pixels[pixel.x][pixel.y] = this.createPixel(pixel.x, pixel.y)
       }, area.x, area.y, area.width, area.height)
-
-      app.ui.canvas.updateImage(app.image)
    },
 
    loopPixels: function(run, areaX=0, areaY=0, width=this.width, height=this.height) {
+      var image = this.getCurrentFrame()
+
       for(var x = areaX; x < areaX+width; x++) {
          for(var y = areaY; y < areaY+height; y++) {
-            this.pixels[x] && this.pixels[x][y] && run(this.pixels[x][y])
+            image.pixels[x] && image.pixels[x][y] && run(image.pixels[x][y])
          }
       }
    },
@@ -177,5 +204,5 @@ app.image = {
 
    pixelID(x, y) {
       return x + 'x' + y
-   },
+   }
 }

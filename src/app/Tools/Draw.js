@@ -8,8 +8,8 @@ app.tools.draw = {
    },
 
    up(mouse) {
-      app.history.push()
       this.draw(mouse.positions)
+      app.history.push()
    },
 
    move(mouse) {
@@ -28,7 +28,8 @@ app.tools.draw = {
 
    draw(positions) {
       var pixels = this.pixelsBetweenPositions(positions)
-      app.image.drawPixels(pixels)
+      app.frames.drawPixels(pixels)
+      app.ui.canvas.updateImage(app.frames.getCurrentFrame())
    },
 
    pixelsBetweenPositions(positions) {

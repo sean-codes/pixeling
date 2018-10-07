@@ -9,7 +9,11 @@ class Dialog extends Base {
 
    open() {
       this.bakedHTML.element.classList.remove('hide')
+
+      // loop default input values
       for(var input of this.inputs) {
+         if(!input.input.value) continue
+         
          var eleInput = this.bakedHTML.ele('input_'+input.label)
          eleInput.value = input.input.value()
       }

@@ -54,7 +54,7 @@ app.magic = {
                x,
                y,
                color: app.ui.pallet.color,
-               colorString: app.image.hslaToString(app.ui.pallet.color)
+               colorString: app.frames.hslaToString(app.ui.pallet.color)
             })
          }
       }

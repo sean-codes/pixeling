@@ -7,7 +7,7 @@ app.dialogs.New = {
             name: 'width',
             type: 'number',
             min: 1,
-            value: () => { return app.image.width }
+            value: () => { return app.frames.width }
          }
       },
       {
@@ -16,7 +16,7 @@ app.dialogs.New = {
             name: 'height',
             type: 'number',
             min: 1,
-            value: () => { return app.image.height }
+            value: () => { return app.frames.height }
          }
       }
    ],
@@ -26,8 +26,8 @@ app.dialogs.New = {
          onClick: (data) => {
             app.ui.dialogNew.hide()
             app.command.create({
-               width: data.width.value,
-               height: data.height.value
+               width: Number(data.width.value),
+               height: Number(data.height.value)
             })
          }
       },

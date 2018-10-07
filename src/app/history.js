@@ -4,11 +4,10 @@ app.history = {
    load: function() {
       var history = JSON.parse(this.store[this.point])
       app.ui.toolbox.selectTool(history.tool)
-      app.image.pixels = history.pixels
-      app.image.width = history.width
-      app.image.height = history.height
-      app.ui.canvas.updateImage(app.image)
-      app.ui.cursor.updateImage(app.image)
+      app.frames.list = history.frames
+      app.frames.currentFrame = history.currentFrame
+      app.ui.canvas.updateImage(app.frames.getCurrentFrame())
+      app.ui.cursor.updateImage(app.frames.getCurrentFrame())
       app.ui.cursor.update({ selected: history.selected })
    },
 
@@ -18,9 +17,8 @@ app.history = {
          id: Math.random(),
          tool: app.ui.toolbox.currentTool.name,
          selected: app.ui.cursor.selected,
-         pixels: app.image.pixels,
-         width: app.image.width,
-         height: app.image.height
+         frames: app.frames.list,
+         currentFrame: app.frames.currentFrame
       })
    },
 

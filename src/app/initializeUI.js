@@ -40,7 +40,6 @@ app.initializeUI = function() {
    })
 
    app.ui.cursor = new Cursor({
-      image: app.image,
       onDown: (mouse) => { app.ui.toolbox.down(mouse) },
       onUp: (mouse) => { app.ui.toolbox.up(mouse) },
       onStroke: (mouse) => { app.ui.toolbox.stroke(mouse) },
@@ -52,9 +51,7 @@ app.initializeUI = function() {
       }
    })
 
-   app.ui.canvas = new Canvas({
-      image: app.image
-   })
+   app.ui.canvas = new Canvas()
 
    app.ui.easel = new Easel({
       center: [
@@ -72,7 +69,7 @@ app.initializeUI = function() {
    app.ui.pallet = new Pallet({
       mixer: app.ui.colorMixer,
       onChangeColor: (color) => {
-         var colorString = app.image.hslaToString(color)
+         var colorString = app.frames.hslaToString(color)
          app.ui.statusbar.updateStatus({ color: `[ color: ${colorString} ]` })
          app.ui.cursor.update({ color: colorString })
       },
@@ -81,12 +78,23 @@ app.initializeUI = function() {
       }
    })
 
+   app.ui.frames = new Frames({
+      frames: app.frames,
+      newFrame: () => {
+
+      },
+      changeFrame: () => {
+
+      }
+   })
+
    app.ui.layout.appendUI(app.ui.menu.bakedHTML, 'sidebar')
    app.ui.layout.appendUI(app.ui.appbar.bakedHTML, 'top')
    app.ui.layout.appendUI(app.ui.statusbar.bakedHTML, 'bottom')
    app.ui.layout.appendUI(app.ui.toolbox.bakedHTML, 'workspace_dockright')
+   app.ui.layout.appendUI(app.ui.frames.bakedHTML, 'workspace_docktop')
    app.ui.layout.appendUI(app.ui.pallet.bakedHTML, 'workspace_dockleft')
-   app.ui.layout.appendUI(app.ui.easel.bakedHTML, 'workspace_easel')
+   app.ui.layout.appendUI(app.ui.easel.bakedHTML, 'workspace_dockbottom')
 
    // app.ui.dialogNew = new Dialog(app.dialogs.New)
    // app.ui.layout.appendUI(app.ui.dialogNew.bakedHTML, 'menu')

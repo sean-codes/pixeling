@@ -22,10 +22,12 @@ app.dialogs.Open = {
                var image = new Image()
                image.onload = () => {
                   app.ui.dialogOpen.hide()
-                  
-                  app.image.load(image)
-                  app.ui.canvas.updateImage(app.image)
-                  app.ui.cursor.updateImage(app.image)
+
+                  app.frames.load(image)
+
+                  var frame = app.frames.getCurrentFrame()
+                  app.ui.canvas.updateImage(frame)
+                  app.ui.cursor.updateImage(frame)
                   app.ui.easel.centerCanvas()
                }
                image.src = e.target.result

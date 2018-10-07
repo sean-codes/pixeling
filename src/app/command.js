@@ -8,17 +8,18 @@ app.command = {
    },
 
    create: function(options) {
-      app.image.create(options.width, options.height)
+      app.frames.create(options.width, options.height)
 
-      app.ui.canvas.updateImage(app.image)
-      app.ui.cursor.updateImage(app.image)
+      app.ui.canvas.updateImage(app.frames.getCurrentFrame())
+      app.ui.cursor.updateImage(app.frames.getCurrentFrame())
       app.ui.easel.centerCanvas()
+      app.history.push()
    },
 
    export: function() {
       app.tools.select.unsetSelected() // when you find this.. sorry <3
 
-      var base64 = app.image.export()
+      var base64 = app.frames.export()
       var link = document.createElement('a')
       link.setAttribute('href', base64)
       link.setAttribute('download', 'pixeling.png')
@@ -74,13 +75,15 @@ app.command = {
    },
 
    flipHorizontal() {
+      var image = app.frames.getCurrentFrame()
+
       var { x, y, width, height } = app.ui.cursor.selected
          ? app.ui.cursor.selected.copy.dimensions
-         : { x: 0, y: 0, width: app.image.width, height: app.image.height }
+         : { x: 0, y: 0, width: image.width, height: image.height }
 
       var pixels = app.ui.cursor.selected
          ? app.ui.cursor.selected.copy.pixels
-         : app.image.pixels
+         : image.pixels
 
       for(var xpos = 0; xpos < Math.floor(width/2); xpos++) {
          for(var ypos = y; ypos < y + height; ypos++) {
@@ -101,20 +104,22 @@ app.command = {
          }
       }
 
-      app.ui.canvas.updateImage(app.image)
-      app.ui.cursor.updateImage(app.image)
+      app.ui.canvas.updateImage(image)
+      app.ui.cursor.updateImage(image)
 
       app.history.push()
    },
 
    flipVertical() {
+      var image = app.frames.getCurrentFrame()
+
       var { x, y, width, height } = app.ui.cursor.selected
          ? app.ui.cursor.selected.copy.dimensions
-         : { x: 0, y: 0, width: app.image.width, height: app.image.height }
+         : { x: 0, y: 0, width: image.width, height: image.height }
 
       var pixels = app.ui.cursor.selected
          ? app.ui.cursor.selected.copy.pixels
-         : app.image.pixels
+         : image.pixels
 
       for(var ypos = y; ypos < y + Math.floor(height/2); ypos++) {
          for(var xpos = 0; xpos < width; xpos++) {
@@ -139,8 +144,8 @@ app.command = {
          }
       }
 
-      app.ui.canvas.updateImage(app.image)
-      app.ui.cursor.updateImage(app.image)
+      app.ui.canvas.updateImage(image)
+      app.ui.cursor.updateImage(image)
 
       app.history.push()
    },

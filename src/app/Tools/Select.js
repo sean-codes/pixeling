@@ -59,13 +59,14 @@ app.tools.select = {
       }
 
       this.setSelected(mouse)
+      app.ui.canvas.updateImage(app.frames.getCurrentFrame())
       app.history.push()
    },
 
    setSelected(mouse) {
       var selected = this.getSelected(mouse)
       app.ui.cursor.update({ selected })
-      app.image.clearPixels(selected)
+      app.frames.clearPixels(selected)
    },
 
    unsetSelected() {
