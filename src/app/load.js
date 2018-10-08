@@ -24,6 +24,7 @@ app.imports = {
       './src/ui/Components/Layout/Layout.js',
       './src/ui/Components/Menu/Menu.js',
       './src/ui/Components/Pallet/Pallet.js',
+      './src/ui/Components/Preview/Preview.js',
       './src/ui/Components/Statusbar/Statusbar.js',
       './src/ui/Components/Toolbox/Toolbox.js',
       // app
@@ -61,6 +62,7 @@ app.imports = {
       './src/ui/Components/Layout/Layout.css',
       './src/ui/Components/Menu/Menu.css',
       './src/ui/Components/Pallet/Pallet.css',
+      './src/ui/Components/Preview/Preview.css',
       './src/ui/Components/Statusbar/Statusbar.css',
       './src/ui/Components/Toolbox/Toolbox.css',
       './src/ui/Components/Toolbox/ToolboxIcons.css'

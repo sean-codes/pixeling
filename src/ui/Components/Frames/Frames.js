@@ -6,6 +6,7 @@ class Frames extends Base {
       this.callAddFrame = options.addFrame || function(){}
       this.callSelectFrame = options.selectFrame || function(){}
 
+      this.size = 80
       this.framesOffsetX = 0
       this.mouse = {
          down: false,
@@ -81,22 +82,43 @@ class Frames extends Base {
    updateFrame(frameID, frame) {
       console.log('updating frame', frameID)
       var eleCanvas = this.bakedHTML.ele('canvas_'+frameID)
+
       this.drawFramePreview(eleCanvas, frame)
    }
 
    drawFramePreview(eleCanvas, frame) {
-      eleCanvas.width = frame.width
-      eleCanvas.height = frame.height
+      var scale = this.size / Math.max(frame.width, frame.height)
+      eleCanvas.width = frame.width * scale
+      eleCanvas.height = frame.height * scale
 
-      console.log(frame.width, frame.height, eleCanvas)
       var ctx = eleCanvas.getContext('2d')
-
+      this.drawCheckedBackground(ctx, scale)
       for(var x = 0; x < frame.width; x++) {
          for(var y = 0; y < frame.height; y++) {
             var pixel = frame.pixels[x][y]
             ctx.fillStyle = pixel.colorString
-            ctx.fillRect(x, y, 1, 1)
+            ctx.fillRect(x*scale, y*scale, scale, scale)
          }
+      }
+   }
+
+   drawCheckedBackground(ctx, scale) {
+      var size = 16
+      var spacesX = Math.ceil(ctx.canvas.width / (size*scale))
+      var spacesY = Math.ceil(ctx.canvas.height / (size*scale))
+      var counter = 0
+      for(var x = 0; x < spacesX; x++) {
+         for(var y = 0; y < spacesY; y++) {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'
+            if(counter % 2) ctx.fillRect(
+               x*size*scale,
+               y*size*scale,
+               scale*size,
+               scale*size
+            )
+            counter += 1
+         }
+         if(spacesY % 2 == 0) counter += 1
       }
    }
 

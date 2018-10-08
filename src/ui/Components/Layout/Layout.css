@@ -83,3 +83,7 @@ mobile
 .ui.layout > .center > .center > .dockbottom {
    flex: 1;
 }
+
+.ui.layout > .center .dock {
+   position:relative;
+}

@@ -1,0 +1,26 @@
+.ui.preview {
+   position:absolute;
+   bottom:10px;
+   right:10px;
+   box-sizing:border-box;
+   background: #151a1a;
+   padding:10px;
+   transition:all 0.1s;
+   z-index:1;
+}
+
+.ui.preview.hide {
+   opacity:0;
+   pointer-events:none;
+}
+
+.ui.preview .reel {
+
+}
+
+.ui.preview canvas {
+   background:#FFF;
+   position:absolute;
+   top:10px;
+   left:10px;
+}

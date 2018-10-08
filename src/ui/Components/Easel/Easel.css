@@ -39,7 +39,10 @@
 }
 
 .easel canvas {
-   position: absolute;
+   position:absolute;
+}
+
+canvas {
 
    /* Legal fallback */
    image-rendering: optimizeSpeed;

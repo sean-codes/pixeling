@@ -35,9 +35,14 @@ app.config.keybinds = [
       command: 'delete'
    },
    {
-      modifiers: ['ctrl'],
+      modifiers: [],
       key: 'f',
       command: 'toggleFrames'
+   },
+   {
+      modifiers: [],
+      key: 'p',
+      command: 'togglePreview'
    },
    {
       modifiers: ['meta'],

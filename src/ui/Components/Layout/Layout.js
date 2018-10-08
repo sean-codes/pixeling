@@ -29,7 +29,7 @@ class Layout extends Base {
             },
             {
                name: 'layout_workspace_dockleft',
-               classes: [ 'dockright' ]
+               classes: [ 'dock', 'dockright' ]
             },
             {
                name: 'layout_workspace_center',
@@ -37,17 +37,17 @@ class Layout extends Base {
                ingredients: [
                   {
                      name: 'layout_workspace_docktop',
-                     classes: [ 'docktop' ]
+                     classes: [ 'dock', 'docktop' ]
                   },
                   {
                      name: 'layout_workspace_dockbottom',
-                     classes: [ 'dockbottom' ]
+                     classes: [ 'dock', 'dockbottom' ]
                   }
                ]
             },
             {
                name: 'layout_workspace_dockright',
-               classes: [ 'dockleft' ]
+               classes: [ 'dock', 'dockleft' ]
             }
          ]
       }

@@ -3,6 +3,11 @@ app.command = {
       app.ui.frames.toggle()
    },
 
+   togglePreview: function() {
+      console.log('wtf')
+      app.ui.preview.toggle()
+   },
+
    createDialog: function() {
       app.ui.dialogNew.open()
    },
@@ -18,6 +23,7 @@ app.command = {
       app.ui.cursor.updateImage(app.frames.getCurrentFrame())
       app.ui.easel.centerCanvas()
       app.ui.frames.setFrames(app.frames.list, app.frames.currentFrame)
+      app.ui.preview.setFrames(app.frames.list, app.frames.currentFrame)
       app.history.push()
    },
 

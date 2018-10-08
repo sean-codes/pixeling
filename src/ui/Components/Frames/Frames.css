@@ -1,19 +1,26 @@
 .ui.frames {
-   max-height:80px;
-   height:80px;
    display:flex;
    overflow:hidden;
-   transition: all 0.2s;
    display:flex;
    max-width:100%;
-}
-
-.ui.frames.hide * {
-   opacity:0;
+   max-height:100px;
+   background:#333;
+   border-bottom:10px solid #151a1a;
+   transition: max-height 0.2s, border 0.2s;
+   box-sizing:border-box;
+   position:relative;
+   z-index:2;
+   will-change:auto;
 }
 
 .ui.frames.hide {
+   transition-delay:0s, 0.1s;
    max-height:0px;
+   border-bottom:0px solid #151a1a;
+}
+
+.ui.frames.hide {
+
 }
 
 .ui.frames > .frames {
@@ -57,7 +64,9 @@
 }
 
 .ui.frames > .frames > .reel .frame canvas {
-   width:100%;
+   background:#FFF;
+   max-width:100%;
+   max-height:100%;
    margin:auto;
 }
 

@@ -6,4 +6,5 @@ app.updateFrame = function() {
    app.ui.canvas.updateImage(frame)
    app.ui.cursor.updateImage(frame)
    app.ui.frames.updateFrame(frameID, frame)
+   app.ui.preview.updateFrame(frameID, frame)
 }

@@ -8,6 +8,7 @@ app.onLoad = function() {
       height: 32
    })
 
+   
    app.keyboard.listen()
    app.history.push()
 }

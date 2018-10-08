@@ -82,7 +82,9 @@ app.initializeUI = function() {
       frames: app.frames,
       addFrame: () => {
          app.frames.addFrame()
-         app.ui.frames.setFrames(app.frames.list, 0)
+         app.frames.currentFrame = app.frames.list.length - 1
+         app.ui.frames.setFrames(app.frames.list, app.frames.currentFrame)
+         app.ui.preview.setFrames(app.frames.list, app.frames.currentFrame)
       },
       selectFrame: (clickedFrameID) => {
          app.tools.select.unsetSelected()
@@ -95,6 +97,8 @@ app.initializeUI = function() {
       }
    })
 
+   app.ui.preview = new Preview()
+
    app.ui.layout.appendUI(app.ui.menu.bakedHTML, 'sidebar')
    app.ui.layout.appendUI(app.ui.appbar.bakedHTML, 'top')
    app.ui.layout.appendUI(app.ui.statusbar.bakedHTML, 'bottom')
@@ -102,6 +106,7 @@ app.initializeUI = function() {
    app.ui.layout.appendUI(app.ui.frames.bakedHTML, 'workspace_docktop')
    app.ui.layout.appendUI(app.ui.pallet.bakedHTML, 'workspace_dockleft')
    app.ui.layout.appendUI(app.ui.easel.bakedHTML, 'workspace_dockbottom')
+   app.ui.layout.appendUI(app.ui.preview.bakedHTML, 'workspace_dockbottom')
 
    // app.ui.dialogNew = new Dialog(app.dialogs.New)
    // app.ui.layout.appendUI(app.ui.dialogNew.bakedHTML, 'menu')

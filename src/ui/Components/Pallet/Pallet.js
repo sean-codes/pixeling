@@ -48,7 +48,7 @@ class Pallet extends Base{
    }
 
    eventClickColor(e, bakedHTML) {
-      this.setActiveColor(bakedHTML.element.dataset.id)
+      this.setActiveColor(Number(bakedHTML.element.dataset.id))
    }
 
    eventBrushSizeScroll(e, bakedHTML) {
@@ -69,6 +69,15 @@ class Pallet extends Base{
       this.brushSizeChanged()
    }
 
+   brushSizeChanged() {
+      this.tempSize = Math.min(20, Math.max(1, this.tempSize))
+      this.size = Math.round(this.tempSize)
+
+      var htmlBrushSize = this.bakedHTML.ele('brushsize')
+      htmlBrushSize.innerHTML = this.size
+      this.onChangeSize(this.size)
+   }
+
    nextColor() {
       var nextColorID = this.selected+1
       if(nextColorID == this.colors.length) nextColorID = 0
@@ -81,14 +90,6 @@ class Pallet extends Base{
       this.setActiveColor(nextColorID)
    }
 
-   brushSizeChanged() {
-      this.tempSize = Math.min(20, Math.max(1, this.tempSize))
-      this.size = Math.round(this.tempSize)
-
-      var htmlBrushSize = this.bakedHTML.ele('brushsize')
-      htmlBrushSize.innerHTML = this.size
-      this.onChangeSize(this.size)
-   }
 
    setActiveColor(colorId) {
       this.selected = colorId
@@ -96,6 +97,7 @@ class Pallet extends Base{
 
       // toggle color element active class
       for(var id = 0; id < this.colors.length; id++) {
+         console.log(id)
          var colorElement = this.bakedHTML.ele('color_'+id)
          colorElement.classList.toggle('active', id == colorId)
       }

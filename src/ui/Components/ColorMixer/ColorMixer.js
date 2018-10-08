@@ -122,7 +122,7 @@ class ColorMixer extends Base  {
       var optionRecipes = colorParts.map((name) => this.optionRecipe(name))
 
       return {
-         classes: [ 'colorMixer' ],
+         classes: [ 'ui', 'colorMixer', 'hide' ],
          ingredients: optionRecipes
       }
    }
