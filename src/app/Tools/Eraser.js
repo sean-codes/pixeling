@@ -19,7 +19,7 @@ app.tools.eraser = {
    stroke(mouse) {
       app.ui.cursor.update(mouse.positionCurrent)
       this.erase(mouse.positionCurrent)
-      app.ui.canvas.updateImage(app.frames.getCurrentFrame())
+      app.updateFrame()
    },
 
    erase(position) {

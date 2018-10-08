@@ -30,7 +30,8 @@ app.tools.rectangle = {
       for(var pixel of temporaryPixels) {
          app.frames.drawPixel(pixel.x, pixel.y, app.ui.pallet.getColor())
       }
-      app.ui.canvas.updateImage(app.frames.getCurrentFrame())
+      
+      app.updateFrame()
       app.history.push()
    },
 

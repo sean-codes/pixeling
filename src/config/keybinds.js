@@ -35,12 +35,17 @@ app.config.keybinds = [
       command: 'delete'
    },
    {
+      modifiers: ['ctrl'],
+      key: 'f',
+      command: 'toggleFrames'
+   },
+   {
       modifiers: ['meta'],
       key: 'a',
       command: 'selectAll'
    },
    {
-      modifiers: [],
+      modifiers: ['ctrl'],
       key: 'c',
       command: 'toggleColorMixer'
    },

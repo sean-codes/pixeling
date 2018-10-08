@@ -49,8 +49,7 @@ app.clipboard = {
          }
       }
 
-      app.ui.cursor.updateImage(image)
-      app.ui.canvas.updateImage(image)
+      app.updateFrame()
    },
 
    getCopy(area) {

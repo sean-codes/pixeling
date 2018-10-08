@@ -80,11 +80,18 @@ app.initializeUI = function() {
 
    app.ui.frames = new Frames({
       frames: app.frames,
-      newFrame: () => {
-
+      addFrame: () => {
+         app.frames.addFrame()
+         app.ui.frames.setFrames(app.frames.list, 0)
       },
-      changeFrame: () => {
+      selectFrame: (clickedFrameID) => {
+         app.tools.select.unsetSelected()
+         app.frames.currentFrame = clickedFrameID
+         var image = app.frames.getCurrentFrame()
+         app.ui.canvas.updateImage(image)
+         app.ui.cursor.updateImage(image)
 
+         app.ui.frames.setFrames(app.frames.list, clickedFrameID)
       }
    })
 

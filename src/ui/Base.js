@@ -46,6 +46,10 @@ class Base {
             if(returnValue == 'false' || returnValue == 'undefined') return false
             if(returnValue == 'true') return true
             return this.element.dataset[name]
+         },
+         clear: function() {
+            this.ingredients = []
+            this.element.innerHTML = ''
          }
       }
 

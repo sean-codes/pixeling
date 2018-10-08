@@ -23,7 +23,7 @@ app.tools.fill = {
          return
       }
       this.fillAdjecentPixels(pos, initialColor)
-      app.ui.canvas.updateImage(frame)
+      app.updateFrame()
       app.history.push()
    },
 

@@ -13,7 +13,8 @@ app.config.menu = [
         name: 'view',
         items: [
            { label: 'back', to: 'home', transition: 'backward' },
-           { label: 'color mixer', command: 'toggleColorMixer', hint: 'c' },
+           { label: 'color mixer', command: 'toggleColorMixer', hint: 'ctrl-c' },
+           { label: 'frames', command: 'toggleFrames', hint: 'ctrl-f' },
            { label: 'center', command: 'center' },
            { label: 'zoom in', command: 'zoomIn', hint: 'ctrl-scrollwheel' },
            { label: 'zoom out', command: 'zoomOut', hint: 'ctrl-scrollwheel' },

@@ -1,38 +1,68 @@
 .ui.frames {
-   height:80px;
    max-height:80px;
+   height:80px;
    display:flex;
    overflow:hidden;
    transition: all 0.2s;
+   display:flex;
+   max-width:100%;
+}
+
+.ui.frames.hide * {
+   opacity:0;
 }
 
 .ui.frames.hide {
    max-height:0px;
 }
 
-.ui.frames.hide .frame{
-   opacity:0;
+.ui.frames > .frames {
+   position:relative;
+   flex: 1;
+   display:flex;
+   overflow:hidden;
 }
 
-.ui.frames .frame {
+.ui.frames > .frames > .reel {
+   display:flex;
+}
+
+.ui.frames > .new {
+   width:80px;
+}
+
+.ui.frames > .frames > .reel .frame,
+.ui.frames > .new .btn {
    transition: all 0.2s;
+   transition-delay:0.2s;
    box-sizing:border-box;
    height:60px;
+   min-width:60px;
    width:60px;
    margin:10px;
    margin-bottom:10px;
    position:relative;
    cursor:pointer;
    background:#999;
+   display:Flex;
+   border:4px solid transparent;
 }
 
-
-.ui.frames .frame + .frame {
+.ui.frames > .frames > .reel .frame + .frame {
    margin-left:0;
 }
 
-.ui.frames .frame.new {
-   border:2px solid;
+.ui.frames > .frames .frame.current {
+   border:4px solid #FFF;
+}
+
+.ui.frames > .frames > .reel .frame canvas {
+   width:100%;
+   margin:auto;
+}
+
+.ui.frames > .new .btn {
+   border:3px solid;
    line-height:60px;
    text-align:center;
    font-size:40px;
@@ -40,12 +70,13 @@
    background:none;
 }
 
-.ui.frames .new:hover {
+.ui.frames > .new .btn:hover {
+   transition: all 0s;
    color:#FFF;
 }
 
-.ui.frames .new:after,
-.ui.frames .new:before {
+.ui.frames > .new .btn:after,
+.ui.frames > .new .btn:before {
    content: '';
    width:3px;
    height:20px;
@@ -56,7 +87,7 @@
    transform:translateX(-50%) translateY(-50%);
 }
 
-.ui.frames .new:after {
+.ui.frames > .new .btn:after {
    transform-origin: center;
    transform:translateX(-50%) translateY(-50%) rotateZ(90deg);
 }

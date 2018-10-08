@@ -36,6 +36,7 @@ app.imports = {
       './src/app/frames.js',
       './src/app/keyboard.js',
       './src/app/onLoad.js',
+      './src/app/updateFrame.js',
       // tools
       './src/app/Tools/Draw.js',
       './src/app/Tools/Eraser.js',

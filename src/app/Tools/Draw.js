@@ -29,7 +29,8 @@ app.tools.draw = {
    draw(positions) {
       var pixels = this.pixelsBetweenPositions(positions)
       app.frames.drawPixels(pixels)
-      app.ui.canvas.updateImage(app.frames.getCurrentFrame())
+
+      app.updateFrame()
    },
 
    pixelsBetweenPositions(positions) {

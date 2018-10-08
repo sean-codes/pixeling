@@ -1,4 +1,8 @@
 app.command = {
+   toggleFrames: function() {
+      app.ui.frames.toggle()
+   },
+
    createDialog: function() {
       app.ui.dialogNew.open()
    },
@@ -13,6 +17,7 @@ app.command = {
       app.ui.canvas.updateImage(app.frames.getCurrentFrame())
       app.ui.cursor.updateImage(app.frames.getCurrentFrame())
       app.ui.easel.centerCanvas()
+      app.ui.frames.setFrames(app.frames.list, app.frames.currentFrame)
       app.history.push()
    },
 
@@ -165,7 +170,7 @@ app.command = {
    },
 
    selectAll() {
-      var imageRect = app.image.getImageRect()
+      var imageRect = app.frames.getImageRect()
       app.ui.toolbox.selectTool('select')
       app.ui.cursor.update({
          selected: {
@@ -173,7 +178,9 @@ app.command = {
             copy: app.clipboard.getCopy(imageRect)
          }
       })
-      app.image.clearPixels(imageRect)
+      app.frames.clearPixels(imageRect)
+
+      app.ui.canvas.updateImage(app.frames.getCurrentFrame())
       app.history.push()
    },
 
@@ -190,7 +197,6 @@ app.command = {
    },
 
    palletIncreaseBrush() {
-      console.log('wtf')
       app.ui.pallet.eventIncreaseBrushSize()
    },
 

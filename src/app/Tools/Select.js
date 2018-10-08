@@ -59,7 +59,7 @@ app.tools.select = {
       }
 
       this.setSelected(mouse)
-      app.ui.canvas.updateImage(app.frames.getCurrentFrame())
+      app.updateFrame()
       app.history.push()
    },
 
