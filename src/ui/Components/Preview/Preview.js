@@ -4,6 +4,10 @@ class Preview extends Base {
       this.bakeHTML()
 
       this.size = 200
+      this.looping = false
+      this.currentFrame = 0
+      this.loopInterval = 100
+      this.loopFrame = 0
    }
 
    toggle() {
@@ -11,7 +15,39 @@ class Preview extends Base {
       elePreview.classList.toggle('hide')
    }
 
+   togglePreviewLoop() {
+      if(this.looping) {
+         this.looping = false
+         this.setVisibleFrame(this.currentFrame)
+      } else {
+         this.looping = !this.looping
+         this.loop()
+      }
+
+   }
+
+   loop() {
+      this.loopFrame += 1
+      if(this.loopFrame == this.frames.length) this.loopFrame = 0
+      this.setVisibleFrame(this.loopFrame)
+
+      this.looping && setTimeout(() => {
+         this.loop()
+      }, this.loopInterval)
+   }
+
+   setVisibleFrame(idToSetCurrent) {
+      for(var frameID in this.frames) {
+         var eleCanvas = this.bakedHTML.ele('frame_'+frameID)
+         eleCanvas.classList.toggle('current', idToSetCurrent == frameID)
+      }
+   }
+
    setFrames(frames) {
+      if(frames.length <= this.loopCurrent) {
+         this.loopCurrent = 0
+      }
+      this.frames = frames
       var bakedReel = this.bakedHTML.find('reel')
       bakedReel.clear()
 
@@ -44,7 +80,11 @@ class Preview extends Base {
          for(var y = 0; y < frame.height; y++) {
             var pixel = frame.pixels[x][y]
             ctx.fillStyle = pixel.colorString
-            ctx.fillRect(x*scale, y*scale, scale, scale)
+            ctx.fillRect(
+               Math.floor(x*scale),
+               Math.floor(y*scale),
+               Math.ceil(scale),
+               Math.ceil(scale))
          }
       }
    }

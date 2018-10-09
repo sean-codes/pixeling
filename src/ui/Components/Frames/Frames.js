@@ -20,6 +20,12 @@ class Frames extends Base {
       eleContainer.classList.toggle('hide')
    }
 
+   nextFrame(){
+      var nextFrame = this.currentFrame + 1
+      if(nextFrame == this.frames.length) nextFrame = 0
+      this.selectFrame(nextFrame)
+   }
+
    eventAddButton(e, bakeHTML) {
       e.stopPropagation()
       this.addFrame()
@@ -54,6 +60,7 @@ class Frames extends Base {
    }
 
    selectFrame(id) {
+      this.currentFrame = id
       this.callSelectFrame(id)
    }
 
@@ -62,6 +69,9 @@ class Frames extends Base {
    }
 
    setFrames(frames, current) {
+      this.frames = frames
+      this.currentFrame = current
+
       var bakedReel = this.bakedHTML.find('reel')
       bakedReel.clear()
 
@@ -80,8 +90,8 @@ class Frames extends Base {
    }
 
    updateFrame(frameID, frame) {
-      console.log('updating frame', frameID)
       var eleCanvas = this.bakedHTML.ele('canvas_'+frameID)
+      console.log('updating frame', frameID, eleCanvas)
 
       this.drawFramePreview(eleCanvas, frame)
    }
@@ -97,7 +107,11 @@ class Frames extends Base {
          for(var y = 0; y < frame.height; y++) {
             var pixel = frame.pixels[x][y]
             ctx.fillStyle = pixel.colorString
-            ctx.fillRect(x*scale, y*scale, scale, scale)
+            ctx.fillRect(
+               Math.floor(x*scale),
+               Math.floor(y*scale),
+               Math.ceil(scale),
+               Math.ceil(scale))
          }
       }
    }

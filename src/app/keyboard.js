@@ -16,7 +16,7 @@ app.keyboard = {
       if(e.ctrlKey) modifiers.push('ctrl')
       if(e.metaKey) modifiers.push('meta')
       if(e.shiftKey) modifiers.push('shift')
-      
+
       app.keyboard.down(modifiers, e.key.toLowerCase(), e)
    },
 
@@ -28,7 +28,7 @@ app.keyboard = {
          var match = keybindString == keydownString && key == keybind.key // lol weak :]
 
          if(match) {
-            e.preventDefault()
+            modifiers.length && e.preventDefault()
             app.command[keybind.command](keybind.info)
          }
       }

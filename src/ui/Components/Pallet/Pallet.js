@@ -97,7 +97,6 @@ class Pallet extends Base{
 
       // toggle color element active class
       for(var id = 0; id < this.colors.length; id++) {
-         console.log(id)
          var colorElement = this.bakedHTML.ele('color_'+id)
          colorElement.classList.toggle('active', id == colorId)
       }

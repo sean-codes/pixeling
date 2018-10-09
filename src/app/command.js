@@ -1,10 +1,21 @@
 app.command = {
+   onionFramesDialog: function() {
+      app.ui.dialogdialogOnionFrames.open()
+   },
+
    toggleFrames: function() {
       app.ui.frames.toggle()
    },
 
+   nextFrame: function(){
+      app.ui.frames.nextFrame()
+   },
+
+   togglePreviewLoop: function() {
+      app.ui.preview.togglePreviewLoop()
+   },
+
    togglePreview: function() {
-      console.log('wtf')
       app.ui.preview.toggle()
    },
 
@@ -19,11 +30,8 @@ app.command = {
    create: function(options) {
       app.frames.create(options.width, options.height)
 
-      app.ui.canvas.updateImage(app.frames.getCurrentFrame())
-      app.ui.cursor.updateImage(app.frames.getCurrentFrame())
       app.ui.easel.centerCanvas()
-      app.ui.frames.setFrames(app.frames.list, app.frames.currentFrame)
-      app.ui.preview.setFrames(app.frames.list, app.frames.currentFrame)
+      app.updateFrame()
       app.history.push()
    },
 

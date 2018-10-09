@@ -1,5 +1,10 @@
 app.config.keybinds = [
    {
+      modifiers: ['alt'],
+      key: 'tab',
+      command: 'nextFrame'
+   },
+   {
       modifiers: ['meta'],
       key: 'z',
       command: 'undo'
@@ -113,7 +118,7 @@ app.config.keybinds = [
    },
    {
       modifiers: [],
-      key: 'f',
+      key: 'g',
       command: 'selectTool',
       info: { tool: 'fill' }
    },

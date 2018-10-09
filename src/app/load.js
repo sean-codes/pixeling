@@ -49,7 +49,8 @@ app.imports = {
       // dialogs
       './src/app/Dialogs/New.js',
       './src/app/Dialogs/Open.js',
-      './src/app/Dialogs/Canvas.js'
+      './src/app/Dialogs/Canvas.js',
+      './src/app/Dialogs/OnionFrames.js'
    ],
    css: [
       './src/ui/Components/Appbar/Appbar.css',

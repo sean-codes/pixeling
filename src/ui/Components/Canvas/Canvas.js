@@ -5,20 +5,13 @@ class Canvas extends Base  {
       this.initialScale = 10
       this.scale = this.initialScale
 
-      this.image = {
-         width:32,
-         height:32
-      }
+      this.frames = []
+      this.onion = 1
 
       this.bakeHTML()
 
       this.canvas = this.bakedHTML.ele('canvas')
       this.ctx = this.canvas.getContext('2d')
-      //this.image = options.image
-      // this.canvas.width = this.image.width*this.scale
-      // this.canvas.height = this.image.height*this.scale
-
-      this.resetCanvas()
    }
 
    updateScale(scale) {
@@ -27,24 +20,40 @@ class Canvas extends Base  {
       this.drawImage()
    }
 
-   updateImage(image) {
-      console.log(image)
-      this.image = image || this.image
+   setFrames(currentFrame, frames) {
+      this.frames = frames
+      this.currentFrame = currentFrame
+
       this.resetCanvas()
       this.drawImage()
    }
 
    drawImage() {
-      for(var x = 0; x < this.image.width; x++) {
-         for(var y = 0; y < this.image.height; y++) {
-            this.drawPixel(this.image.pixels[x][y])
+      // a bit all over the place. i need a nap
+      var start = Math.max(0, this.currentFrame - this.onion)
+      var totalDistance = (this.currentFrame - start + 1)
+      var currentDistance = 1
+
+      while(start <= this.currentFrame) {
+         var opacity = currentDistance / totalDistance
+         var frame = this.frames[start]
+         this.ctx.globalAlpha = opacity
+
+         for(var x = 0; x < frame.width; x++) {
+            for(var y = 0; y < frame.height; y++) {
+               this.drawPixel(frame.pixels[x][y])
+            }
          }
+         start += 1
+         currentDistance += 1
       }
+      this.ctx.globalAlpha = 1
    }
 
    resetCanvas() {
-      this.canvas.width = this.image.width*this.scale
-      this.canvas.height = this.image.height*this.scale
+      var frame = this.frames[this.currentFrame]
+      this.canvas.width = frame.width*this.scale
+      this.canvas.height = frame.height*this.scale
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
       this.drawCheckerBoard()
    }
@@ -69,9 +78,11 @@ class Canvas extends Base  {
    }
 
    drawCheckerBoard() {
+      var frame = this.frames[this.currentFrame]
+
       var size = 16
-      var spacesX = Math.ceil(this.image.width / size)
-      var spacesY = Math.ceil(this.image.height / size)
+      var spacesX = Math.ceil(frame.width / size)
+      var spacesY = Math.ceil(frame.height / size)
       var counter = 0
       for(var x = 0; x < spacesX; x++) {
          for(var y = 0; y < spacesY; y++) {

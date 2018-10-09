@@ -83,17 +83,14 @@ app.initializeUI = function() {
       addFrame: () => {
          app.frames.addFrame()
          app.frames.currentFrame = app.frames.list.length - 1
-         app.ui.frames.setFrames(app.frames.list, app.frames.currentFrame)
-         app.ui.preview.setFrames(app.frames.list, app.frames.currentFrame)
+
+         app.updateFrame()
       },
       selectFrame: (clickedFrameID) => {
          app.tools.select.unsetSelected()
          app.frames.currentFrame = clickedFrameID
-         var image = app.frames.getCurrentFrame()
-         app.ui.canvas.updateImage(image)
-         app.ui.cursor.updateImage(image)
 
-         app.ui.frames.setFrames(app.frames.list, clickedFrameID)
+         app.updateFrame()
       }
    })
 
