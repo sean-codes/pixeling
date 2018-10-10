@@ -123,8 +123,7 @@ app.command = {
          }
       }
 
-      app.ui.canvas.updateImage(image)
-      app.ui.cursor.updateImage(image)
+      app.updateFrame()
 
       app.history.push()
    },
@@ -163,8 +162,7 @@ app.command = {
          }
       }
 
-      app.ui.canvas.updateImage(image)
-      app.ui.cursor.updateImage(image)
+      app.updateFrame()
 
       app.history.push()
    },

@@ -19,7 +19,6 @@ app.tools.eraser = {
    stroke(mouse) {
       app.ui.cursor.update(mouse.positionCurrent)
       this.erase(mouse.positionCurrent)
-      app.updateFrame()
    },
 
    erase(position) {
@@ -29,5 +28,6 @@ app.tools.eraser = {
          width: app.ui.cursor.size,
          height: app.ui.cursor.size
       })
+      app.updateFrame()
    },
 }

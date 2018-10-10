@@ -6,8 +6,7 @@ app.history = {
       app.ui.toolbox.selectTool(history.tool)
       app.frames.list = history.frames
       app.frames.currentFrame = history.currentFrame
-      app.ui.canvas.updateImage(app.frames.getCurrentFrame())
-      app.ui.cursor.updateImage(app.frames.getCurrentFrame())
+      app.updateFrame()
       app.ui.cursor.update({ selected: history.selected })
    },
 
