@@ -5,9 +5,9 @@ app.updateFrame = function() {
    var frame = app.frames.getCurrentFrame()
 
    app.ui.cursor.updateImage(frame)
-   app.ui.frames.setFrames(frames, frameID)
-   app.ui.preview.setFrames(frames, frameID)
-   app.ui.canvas.setFrames(frameID, frames)
+   app.ui.frames.setFrames(app.clone(frames), frameID)
+   app.ui.preview.setFrames(app.clone(frames), frameID)
+   app.ui.canvas.setFrames(frameID, app.clone(frames))
    app.ui.preview.setVisibleFrame(frameID)
    // app.ui.frames.updateFrame(frameID, frame)
    // app.ui.preview.updateFrame(frameID, frame)

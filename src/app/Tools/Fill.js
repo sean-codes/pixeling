@@ -1,4 +1,4 @@
-app.tools.fill = {
+app.tools.fill = new app.tools.Base({
    select() {
       app.ui.cursor.update({ fill: true, selected: false, mode: 'fill' })
    },
@@ -60,4 +60,4 @@ app.tools.fill = {
          Math.abs(c1.a - c2.a) <= 0.1
       )
    }
-}
+})

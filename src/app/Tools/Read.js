@@ -1,4 +1,4 @@
-app.tools.read = {
+app.tools.read = new app.tools.Base({
    hint: 'shortcut: r',
    select() {
       app.ui.cursor.update({ selected: false, mode: 'read' })
@@ -29,4 +29,4 @@ app.tools.read = {
       console.log('read pixel')
 
    }
-}
+})

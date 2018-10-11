@@ -246,7 +246,6 @@ class Cursor extends Base  {
       this.ctx.moveTo(x+width/2, y+height)
       this.ctx.lineTo(x+width/2, y+height+height/2)
       this.ctx.stroke()
-      //this.ctx.strokeRect(x-1, y-1, width+2, height+2)
    }
 
    drawRectangleDashed(dimensions) {

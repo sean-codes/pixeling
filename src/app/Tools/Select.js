@@ -1,7 +1,5 @@
-app.tools.select = {
-   hint: 'shortcut: s',
+app.tools.select = new app.tools.Base({
    select() {
-      app.global.color = 'rgba(0, 0, 0, 0)'
       app.ui.cursor.update({ mode: 'select' })
    },
 
@@ -105,4 +103,4 @@ app.tools.select = {
          height: mouse.positionCurrent.y - mouse.positionStart.y
       }
    }
-}
+})

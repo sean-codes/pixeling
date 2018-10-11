@@ -4,9 +4,11 @@ class Frames extends Base {
       this.bakeHTML()
 
       this.callAddFrame = options.addFrame || function(){}
+      this.callDeleteFrame = options.deleteFrame || function(){}
       this.callSelectFrame = options.selectFrame || function(){}
 
       this.size = 80
+      this.frames = []
       this.framesOffsetX = 0
       this.mouse = {
          down: false,
@@ -24,6 +26,12 @@ class Frames extends Base {
       var nextFrame = this.currentFrame + 1
       if(nextFrame == this.frames.length) nextFrame = 0
       this.selectFrame(nextFrame)
+   }
+
+   eventDeleteButton(e, bakeHTML) {
+      e.stopPropagation()
+      console.log(bakeHTML.data('id'))
+      this.deleteFrame(bakeHTML.name)
    }
 
    eventAddButton(e, bakeHTML) {
@@ -68,30 +76,36 @@ class Frames extends Base {
       this.callAddFrame()
    }
 
-   setFrames(frames, current) {
-      this.frames = frames
-      this.currentFrame = current
+   deleteFrame() {
+      this.callDeleteFrame()
+   }
 
+   setFrames(frames, current) {
       var bakedReel = this.bakedHTML.find('reel')
-      bakedReel.clear()
+      var needToRebuildHTML = frames.length != this.frames.length
+      if(needToRebuildHTML) bakedReel.clear()
+
+      console.log('set frames', frames.length, this.frames.length, needToRebuildHTML)
+      this.currentFrame = current
+      this.frames = frames
 
       for(var frameID in frames) {
          var frame = frames[frameID]
-         var recipeFrame = this.recipeFrame(frameID)
-         if(frameID == current) {
-            recipeFrame.classes.push('current')
+
+         if(needToRebuildHTML) {
+            var recipeFrame = this.recipeFrame(frameID)
+            bakedReel.append(this.bake(recipeFrame))
          }
 
-         var bakedFrame = this.bake(recipeFrame)
-         bakedReel.append(bakedFrame)
-
+         var eleFrame = this.bakedHTML.ele('frame_'+frameID)
+         eleFrame.classList.toggle('current', frameID == current)
          this.updateFrame(frameID, frame)
       }
    }
 
    updateFrame(frameID, frame) {
       var eleCanvas = this.bakedHTML.ele('canvas_'+frameID)
-      console.log('updating frame', frameID, eleCanvas)
+      console.log('updating frame', frameID, eleCanvas, frame)
 
       this.drawFramePreview(eleCanvas, frame)
    }
@@ -186,6 +200,7 @@ class Frames extends Base {
    recipeFrame(id) {
       return {
          classes: ['frame'],
+         name: 'frame_'+id,
          ingredients: [
             {
                name: 'canvas_'+id,
@@ -194,7 +209,10 @@ class Frames extends Base {
             {
                data: { id: id },
                classes: ['delete'],
-               innerHTML: '+'
+               innerHTML: '+',
+               events: {
+                  click: this.eventDeleteButton.bind(this)
+               }
             }
          ],
          data: {

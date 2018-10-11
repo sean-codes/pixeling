@@ -1,9 +1,11 @@
 // pixel editor
 
-// globals
-tool
-color
-selection
+// app
+tools
+history
+clipboard
+commands
+frames (images)
 
 // components
 selection
@@ -23,14 +25,14 @@ tools
       onDown -> add pixel
       onMove -> add pixel
 
- fill
-   onDown -> fill pixels
-   onMove -> nothing
+   fill
+      onDown -> fill pixels
+      onMove -> nothing
 
-    select
-    onDown -> set selection
-    onMove -> expand selection
+   select
+      onDown -> set selection
+      onMove -> expand selection
 
-hand
-   onDown -> set pixels held
-   onMove -> move pixels
+   hand
+      onDown -> set pixels held
+      onMove -> move pixels

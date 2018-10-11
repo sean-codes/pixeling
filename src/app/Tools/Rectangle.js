@@ -1,4 +1,4 @@
-app.tools.rectangle = {
+app.tools.rectangle = new app.tools.Base({
    select() {
       app.ui.cursor.update({ fill: true, selected: false, mode: 'stroke' })
    },
@@ -30,7 +30,7 @@ app.tools.rectangle = {
       for(var pixel of temporaryPixels) {
          app.frames.drawPixel(pixel.x, pixel.y, app.ui.pallet.getColor())
       }
-      
+
       app.updateFrame()
       app.history.push()
    },
@@ -43,11 +43,11 @@ app.tools.rectangle = {
       var bottomRight = { x: end.x, y: end.y }
 
       var pixels = []
-      pixels.push(...app.magic.pixelsBetweenPoints(topLeft, topRight, size))
-      pixels.push(...app.magic.pixelsBetweenPoints(topRight, bottomRight, size))
-      pixels.push(...app.magic.pixelsBetweenPoints(bottomLeft, bottomRight, size))
-      pixels.push(...app.magic.pixelsBetweenPoints(topLeft, bottomLeft, size))
+      pixels.push(...this.utility.pixelsBetweenPoints(topLeft, topRight, size))
+      pixels.push(...this.utility.pixelsBetweenPoints(topRight, bottomRight, size))
+      pixels.push(...this.utility.pixelsBetweenPoints(bottomLeft, bottomRight, size))
+      pixels.push(...this.utility.pixelsBetweenPoints(topLeft, bottomLeft, size))
 
-      return app.magic.removeCollidingPixels(pixels)
+      return this.utility.removeCollidingPixels(pixels)
    }
-}
+})

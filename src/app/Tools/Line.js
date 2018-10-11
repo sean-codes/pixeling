@@ -1,4 +1,4 @@
-app.tools.line = {
+app.tools.line = new app.tools.Base({
 
    select() {
       console.log('selecting line tool')
@@ -38,7 +38,7 @@ app.tools.line = {
 
    buildTemporaryPixels(start, end) {
       var size = app.ui.cursor.size
-      return app.magic.pixelsBetweenPoints(start, end, size)
+      return this.utility.pixelsBetweenPoints(start, end, size)
    },
 
-}
+})

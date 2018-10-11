@@ -1,5 +1,6 @@
 app.onLoad = function() {
    document.querySelector('.loading').style.display = 'none'
+
    app.initializeUI()
 
    app.ui.toolbox.selectTool('draw')
@@ -8,7 +9,7 @@ app.onLoad = function() {
       height: 32
    })
 
-   
+
    app.keyboard.listen()
    app.history.push()
 }

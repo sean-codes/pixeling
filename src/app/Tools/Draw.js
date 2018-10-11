@@ -1,4 +1,4 @@
-app.tools.draw = {
+app.tools.draw = new app.tools.Base({
    select() {
       app.ui.cursor.update({ fill: true, selected: false, mode: 'stroke' })
    },
@@ -38,10 +38,10 @@ app.tools.draw = {
       var pixels = []
       var lastPos = positions[0]
       for(var position of positions) {
-         pixels.push(...app.magic.pixelsBetweenPoints(lastPos, position, size))
+         pixels.push(...this.utility.pixelsBetweenPoints(lastPos, position, size))
          lastPos = position
       }
 
-      return app.magic.removeCollidingPixels(pixels)
+      return this.utility.removeCollidingPixels(pixels)
    }
-}
+})

@@ -1,4 +1,4 @@
-app.tools.eraser = {
+app.tools.eraser = new app.tools.Base({
    hint: 'shortcut: e',
    select() {
       app.ui.cursor.update({ mode: 'erase' })
@@ -30,4 +30,4 @@ app.tools.eraser = {
       })
       app.updateFrame()
    },
-}
+})
