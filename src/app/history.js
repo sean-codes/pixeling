@@ -3,7 +3,7 @@ app.history = {
    point: -1,
    load: function() {
       var history = JSON.parse(this.store[this.point])
-      app.ui.toolbox.selectTool(history.tool)
+      //app.ui.toolbox.selectTool(history.tool)
       app.frames.list = history.frames
       app.frames.currentFrame = history.currentFrame
       app.updateFrame()
@@ -14,7 +14,7 @@ app.history = {
       // add tool, select, image
       return JSON.stringify({
          id: Math.random(),
-         tool: app.ui.toolbox.currentTool.name,
+         //tool: app.ui.toolbox.currentTool.name,
          selected: app.ui.cursor.selected,
          frames: app.frames.list,
          currentFrame: app.frames.currentFrame

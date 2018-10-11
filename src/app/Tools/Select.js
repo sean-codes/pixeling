@@ -49,18 +49,17 @@ app.tools.select = {
       app.ui.cursor.update({...mouse.positionEnd, mode: 'select' })
 
       if(mouse.dragging) {
-         app.history.push()
          return
       }
 
       if(this.mouseDidNotMove(mouse)) {
          this.unsetSelected()
+         app.history.push()
          return
       }
 
       this.setSelected(mouse)
       app.updateFrame()
-      app.history.push()
    },
 
    setSelected(mouse) {

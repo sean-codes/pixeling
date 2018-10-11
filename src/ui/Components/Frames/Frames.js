@@ -190,6 +190,11 @@ class Frames extends Base {
             {
                name: 'canvas_'+id,
                tag: 'canvas'
+            },
+            {
+               data: { id: id },
+               classes: ['delete'],
+               innerHTML: '+'
             }
          ],
          data: {
