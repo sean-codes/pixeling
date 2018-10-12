@@ -72,6 +72,20 @@ app.frames = {
       this.list.push(frame)
    },
 
+   deleteFrame: function(frameID) {
+      if(this.list.length < 2) return
+
+      var before = this.list.slice(0, frameID)
+      var after = this.list.slice(frameID+1, this.list.length)
+      var newFramesList = [ ...before, ...after ]
+
+      // some reason this.currentFrame is not shortcutting
+      if(this.currentFrame != 0 && this.currentFrame >= frameID) {
+         this.currentFrame -= 1
+      }
+      this.list = newFramesList
+   },
+
    createPixelsArray: function(width, height) {
       var pixels = []
 

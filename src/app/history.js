@@ -39,7 +39,6 @@ app.history = {
 
    rewrite: function() {
       this.point -= 1
-      console.log(this.point)
       this.push()
    },
 

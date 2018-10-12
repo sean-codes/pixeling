@@ -46,12 +46,12 @@ app.tools.select = new app.tools.Base({
             app.ui.cursor.selected.y,
             app.ui.cursor.selected.copy)
 
-         if(app.ui.cursor.selected.sx == app.ui.cursor.selected.x
-         && app.ui.cursor.selected.sy== app.ui.cursor.selected.y ) {
-            app.history.undo()
-         } else {
+         // if(app.ui.cursor.selected.sx == app.ui.cursor.selected.x
+         // && app.ui.cursor.selected.sy== app.ui.cursor.selected.y ) {
+         //    app.history.undo()
+         // } else {
             app.history.rewrite()
-         }
+         // }
       }
 
       app.ui.cursor.update({ selected: undefined })
@@ -65,15 +65,17 @@ app.tools.select = new app.tools.Base({
       var copyRectLargerThanAPixel = copyRect.width > 1 && copyRect.height > 1
       var copy = undefined
 
-      if(shouldCopy && copyRectLargerThanAPixel) {
-         app.history.push()
-         copy = app.clipboard.getCopy(copyRect)
-         app.frames.clearPixels(copyRect)
-         app.updateFrame()
-      }
+      if(copyRectLargerThanAPixel) {
+         if(shouldCopy) {
+            app.history.push()
+            copy = app.clipboard.getCopy(copyRect)
+            app.frames.clearPixels(copyRect)
+            app.updateFrame()
+         }
 
-      var selected = { ...copyRect, copy }
-      app.ui.cursor.update({ selected })
+         var selected = { ...copyRect, copy }
+         app.ui.cursor.update({ selected })
+      }
    },
 
 })

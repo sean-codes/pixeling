@@ -124,8 +124,9 @@ app.command = {
       }
 
       app.updateFrame()
-
-      app.history.push()
+      if(!app.ui.cursor.selected) {
+         app.history.push()
+      }
    },
 
    flipVertical() {
@@ -163,8 +164,9 @@ app.command = {
       }
 
       app.updateFrame()
-
-      app.history.push()
+      if(!app.ui.cursor.selected) {
+         app.history.push()
+      }
    },
 
    toggleMenu: function() {

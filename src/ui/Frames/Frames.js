@@ -30,7 +30,7 @@ class Frames extends Base {
 
    eventDeleteButton(e, bakeHTML) {
       e.stopPropagation()
-      this.deleteFrame(bakeHTML.data('id'))
+      this.deleteFrame(Number(bakeHTML.data('id')))
    }
 
    eventAddButton(e, bakeHTML) {
