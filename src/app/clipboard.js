@@ -21,20 +21,11 @@ app.clipboard = {
       }
       var copy = this.store
 
-      var selected = {
-         ...copy.dimensions,
-         copy
-      }
-
+      var selected = { ...copy.dimensions, copy }
       app.ui.cursor.update({ selected })
    },
 
    pasteCopy(x, y, copy) {
-
-      console.log('paste: attempting', x, y, copy)
-      if(!copy) {
-         return console.log('paste: nothing has been copied')
-      }
       var image = app.frames.getCurrentFrame()
       for(var cx = 0; cx < copy.dimensions.width; cx++) {
          for(var cy = 0; cy < copy.dimensions.height; cy++) {

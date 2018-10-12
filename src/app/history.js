@@ -1,13 +1,20 @@
 app.history = {
    store: [],
    point: -1,
+
+   reset: function() {
+      this.store = []
+      this.point = -1
+      this.push()
+   },
+
    load: function() {
       var history = JSON.parse(this.store[this.point])
-      //app.ui.toolbox.selectTool(history.tool)
+      // app.ui.toolbox.selectTool(history.tool)
       app.frames.list = history.frames
       app.frames.currentFrame = history.currentFrame
+      app.ui.cursor.update({ selected: undefined })
       app.updateFrame()
-      app.ui.cursor.update({ selected: history.selected })
    },
 
    create: function() {
@@ -31,8 +38,9 @@ app.history = {
    },
 
    rewrite: function() {
-      app.history.store.pop()
-      app.history.push()
+      this.point -= 1
+      console.log(this.point)
+      this.push()
    },
 
    undo: function() {

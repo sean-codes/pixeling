@@ -32,7 +32,7 @@ app.command = {
 
       app.ui.easel.centerCanvas()
       app.updateFrame()
-      app.history.push()
+      app.history.reset()
    },
 
    export: function() {

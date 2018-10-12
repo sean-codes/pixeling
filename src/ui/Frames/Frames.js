@@ -30,8 +30,7 @@ class Frames extends Base {
 
    eventDeleteButton(e, bakeHTML) {
       e.stopPropagation()
-      console.log(bakeHTML.data('id'))
-      this.deleteFrame(bakeHTML.name)
+      this.deleteFrame(bakeHTML.data('id'))
    }
 
    eventAddButton(e, bakeHTML) {
@@ -76,8 +75,8 @@ class Frames extends Base {
       this.callAddFrame()
    }
 
-   deleteFrame() {
-      this.callDeleteFrame()
+   deleteFrame(frameID) {
+      this.callDeleteFrame(frameID)
    }
 
    setFrames(frames, current) {
@@ -85,7 +84,6 @@ class Frames extends Base {
       var needToRebuildHTML = frames.length != this.frames.length
       if(needToRebuildHTML) bakedReel.clear()
 
-      console.log('set frames', frames.length, this.frames.length, needToRebuildHTML)
       this.currentFrame = current
       this.frames = frames
 
@@ -105,8 +103,6 @@ class Frames extends Base {
 
    updateFrame(frameID, frame) {
       var eleCanvas = this.bakedHTML.ele('canvas_'+frameID)
-      console.log('updating frame', frameID, eleCanvas, frame)
-
       this.drawFramePreview(eleCanvas, frame)
    }
 

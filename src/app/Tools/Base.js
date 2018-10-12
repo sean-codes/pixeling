@@ -44,7 +44,7 @@ app.tools.Base = function(overrides) {
          // sean reduce here. its okay we can figure the more performat later!
          return this.removeCollidingPixels(pixels)
       },
-      
+
       pixelsAroundForSize(point, size) {
          var xStart = point.x - Math.floor(size/2)
          var yStart = point.y - Math.floor(size/2)
@@ -71,6 +71,25 @@ app.tools.Base = function(overrides) {
             return sum
          }, [])
       },
+
+      mouseDidMove(mouse) {
+         return (mouse.positionDelta.x || mouse.positionDelta.y)
+      },
+
+      mouseHasMoved(mouse) {
+         return (mouse.positionTotalDelta.x || mouse.positionTotalDelta.y)
+      },
+
+      mouseMovedRect(mouse) {
+         var x = mouse.positionStart.x
+         var y = mouse.positionStart.y
+         var width = Math.abs(mouse.positionTotalDelta.x) + 1
+         var height = Math.abs(mouse.positionTotalDelta.y) + 1
+         if(mouse.positionTotalDelta.x < 0) x += mouse.positionTotalDelta.x
+         if(mouse.positionTotalDelta.y < 0) y += mouse.positionTotalDelta.y
+
+         return { x, y, width, height }
+      }
    }
 
    // add functions

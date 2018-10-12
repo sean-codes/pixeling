@@ -11,5 +11,4 @@ app.onLoad = function() {
 
 
    app.keyboard.listen()
-   app.history.push()
 }

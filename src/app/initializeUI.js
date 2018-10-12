@@ -91,6 +91,9 @@ app.initializeUI = function() {
          app.frames.currentFrame = clickedFrameID
 
          app.updateFrame()
+      },
+      deleteFrame: (deleteFrameID) => {
+         console.log('remove frame: ' + deleteFrameID)
       }
    })
 

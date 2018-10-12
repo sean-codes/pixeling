@@ -16,54 +16,27 @@ app.tools.select = new app.tools.Base({
          return
       }
 
-      if(app.ui.cursor.selected) {
-         app.clipboard.pasteCopy(
-            app.ui.cursor.selected.x,
-            app.ui.cursor.selected.y,
-            app.ui.cursor.selected.copy)
-      }
-
-      app.ui.cursor.update({
-         selected: {
-            ...mouse.positionStart,
-            copy: undefined
-         }
-      })
+      this.unsetSelected()
    },
 
    stroke(mouse) {
-      if(mouse.dragging) {
-         app.ui.cursor.selected.x += mouse.positionDelta.x
-         app.ui.cursor.selected.y += mouse.positionDelta.y
-
-         app.ui.cursor.update()
-         return
-      }
-
-      app.ui.cursor.update({ selected: this.getSelected(mouse) })
+      mouse.dragging
+         ? this.moveCursorSelected(mouse)
+         : this.setSelectedAndCopy(mouse)
    },
 
    up(mouse) {
-      app.ui.cursor.update({...mouse.positionEnd, mode: 'select' })
-
       if(mouse.dragging) {
          return
       }
 
-      if(this.mouseDidNotMove(mouse)) {
-         this.unsetSelected()
-         app.history.push()
-         return
-      }
-
-      this.setSelected(mouse)
-      app.updateFrame()
+      this.setSelectedAndCopy(mouse, true)
    },
 
-   setSelected(mouse) {
-      var selected = this.getSelected(mouse)
-      app.ui.cursor.update({ selected })
-      app.frames.clearPixels(selected)
+   moveCursorSelected(mouse) {
+      app.ui.cursor.selected.x += mouse.positionDelta.x
+      app.ui.cursor.selected.y += mouse.positionDelta.y
+      app.ui.cursor.update()
    },
 
    unsetSelected() {
@@ -71,36 +44,36 @@ app.tools.select = new app.tools.Base({
          app.clipboard.pasteCopy(
             app.ui.cursor.selected.x,
             app.ui.cursor.selected.y,
-            app.ui.cursor.selected.copy
-         )
+            app.ui.cursor.selected.copy)
+
+         if(app.ui.cursor.selected.sx == app.ui.cursor.selected.x
+         && app.ui.cursor.selected.sy== app.ui.cursor.selected.y ) {
+            app.history.undo()
+         } else {
+            app.history.rewrite()
+         }
       }
 
       app.ui.cursor.update({ selected: undefined })
    },
 
-   getSelected(mouse) {
-      var moved = this.getMouseMoved(mouse)
-      var x = mouse.positionStart.x
-      var y = mouse.positionStart.y
-      var width = Math.abs(moved.width) + 1
-      var height = Math.abs(moved.height) + 1
-      if(moved.width < 0) x += moved.width
-      if(moved.height < 0) y += moved.height
+   setSelectedAndCopy(mouse, shouldCopy=false) {
+      var copyRect = this.utility.mouseMovedRect(mouse)
+      copyRect.sx = app.ui.cursor.selected ? app.ui.cursor.selected.sx : copyRect.x
+      copyRect.sy = app.ui.cursor.selected ? app.ui.cursor.selected.sy : copyRect.y
 
-      var copy = app.clipboard.getCopy({ x, y, width, height })
+      var copyRectLargerThanAPixel = copyRect.width > 1 && copyRect.height > 1
+      var copy = undefined
 
-      return { x, y, width, height, copy }
-   },
-
-   mouseDidNotMove(mouse) {
-      var moved = this.getMouseMoved(mouse)
-      return (!moved.width && !moved.height)
-   },
-
-   getMouseMoved(mouse) {
-      return {
-         width: mouse.positionCurrent.x - mouse.positionStart.x,
-         height: mouse.positionCurrent.y - mouse.positionStart.y
+      if(shouldCopy && copyRectLargerThanAPixel) {
+         app.history.push()
+         copy = app.clipboard.getCopy(copyRect)
+         app.frames.clearPixels(copyRect)
+         app.updateFrame()
       }
-   }
+
+      var selected = { ...copyRect, copy }
+      app.ui.cursor.update({ selected })
+   },
+
 })
