@@ -35,7 +35,7 @@ class Cursor extends Base  {
          positionEnd: { x: 0, y: 0 },
          positions: []
       }
-
+      
       this.updateCanvas()
    }
 

@@ -72,7 +72,6 @@ app.command = {
       var selected = app.ui.cursor.selected
       if(selected) {
          var copy = app.clipboard.copy(selected)
-         console.log('copy: added to clipboard', copy)
       }
    },
 
@@ -82,7 +81,6 @@ app.command = {
    },
 
    selectTool: function(info) {
-      console.log('command: select tool', info)
       app.ui.toolbox.selectTool(info.tool)
    },
    undo: function() {
@@ -194,7 +192,7 @@ app.command = {
       })
       app.frames.clearPixels(imageRect)
 
-      app.ui.canvas.updateImage(app.frames.getCurrentFrame())
+      app.updateFrame()
       app.history.push()
    },
 

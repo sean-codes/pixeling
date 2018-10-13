@@ -41,6 +41,7 @@ app.tools.select = new app.tools.Base({
 
    unsetSelected() {
       if(app.ui.cursor.selected) {
+
          app.clipboard.pasteCopy(
             app.ui.cursor.selected.x,
             app.ui.cursor.selected.y,
@@ -50,7 +51,8 @@ app.tools.select = new app.tools.Base({
          // && app.ui.cursor.selected.sy== app.ui.cursor.selected.y ) {
          //    app.history.undo()
          // } else {
-            app.history.rewrite()
+         app.ui.cursor.update({ selected: undefined })
+         app.history.rewrite()
          // }
       }
 

@@ -4,8 +4,6 @@ app.updateFrame = function() {
    var frames = app.frames.list
    var frame = app.frames.getCurrentFrame()
 
-
-   console.log(frameID, frame)
    app.ui.cursor.updateImage(frame)
    app.ui.frames.setFrames(app.clone(frames), frameID)
    app.ui.preview.setFrames(app.clone(frames), frameID)
