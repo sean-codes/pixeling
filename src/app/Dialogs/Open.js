@@ -8,6 +8,14 @@ app.dialogs.Open = {
             accept: 'image/*'
          }
       },
+      {
+         label: 'frame count',
+         input: {
+            name: 'frames',
+            type: 'number',
+            value: () => 1
+         }
+      }
    ],
    actions: [
       {
@@ -22,13 +30,9 @@ app.dialogs.Open = {
                var image = new Image()
                image.onload = () => {
                   app.ui.dialogOpen.hide()
-
-                  app.frames.load(image)
-
-                  var frame = app.frames.getCurrentFrame()
-                  app.ui.canvas.updateImage(frame)
-                  app.ui.cursor.updateImage(frame)
-                  app.ui.easel.centerCanvas()
+                  app.frames.load(image, data.frames.value)
+                  app.history.reset()
+                  app.updateFrame()
                }
                image.src = e.target.result
             }

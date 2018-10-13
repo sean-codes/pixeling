@@ -11,8 +11,10 @@ app.history = {
    load: function() {
       var history = JSON.parse(this.store[this.point])
       // app.ui.toolbox.selectTool(history.tool)
+      if(app.frames.list.length != history.frames.length) {
+         app.frames.currentFrame = history.currentFrame
+      }
       app.frames.list = history.frames
-      app.frames.currentFrame = history.currentFrame
       app.ui.cursor.update({ selected: undefined })
       app.updateFrame()
    },

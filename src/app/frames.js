@@ -12,8 +12,10 @@ app.frames = {
       return { h: 0, s: 0, l: 0, a: 0 }
    },
 
-   load: function(image) {
-      this.create(image.width, image.height)
+   load: function(image, frames=1) {
+      var frameWidth = image.width/frames
+      var frameHeight = image.height
+      this.create(frameWidth, frameHeight)
 
       // loop through new image pixels
       var canvas = document.createElement('canvas')
@@ -23,11 +25,18 @@ app.frames = {
       var ctx = canvas.getContext('2d')
       ctx.drawImage(image, 0, 0)
 
-      for(var x = 0; x < image.width; x++) {
-         for(var y = 0; y < image.height; y++) {
-            var pixelData = ctx.getImageData(x, y, 1, 1).data
-            var hslaColor = this.rgbaToHsla(...pixelData)
-            this.drawPixel(x, y, hslaColor)
+      for(var offset = 0; offset < frames; offset++) {
+         if(offset){
+            this.addFrame()
+            this.currentFrame = this.list.length-1
+         }
+
+         for(var x = 0; x < frameWidth; x++) {
+            for(var y = 0; y < frameHeight; y++) {
+               var pixelData = ctx.getImageData(x+(offset*frameWidth), y, 1, 1).data
+               var hslaColor = this.rgbaToHsla(...pixelData)
+               this.drawPixel(x, y, hslaColor)
+            }
          }
       }
    },

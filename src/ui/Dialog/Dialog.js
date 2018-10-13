@@ -13,7 +13,7 @@ class Dialog extends Base {
       // loop default input values
       for(var input of this.inputs) {
          if(!input.input.value) continue
-         
+
          var eleInput = this.bakedHTML.ele('input_'+input.label)
          eleInput.value = input.input.value()
       }
@@ -25,7 +25,7 @@ class Dialog extends Base {
 
    setInput(name, value) {
       var eleInput = this.bakedHTML.ele('input_'+name)
-      eleInput.value = value
+      //eleInput.value = value
    }
 
    gatherData() {
@@ -81,12 +81,12 @@ class Dialog extends Base {
             name: 'input_'+ingredient.label,
             attr: {
                name: ingredient.name,
-               type: ingredient.type || 'text',
-               value: ingredient.value
+               type: ingredient.type || 'text'
             }
          }
 
          for(var attr in ingredient.input) {
+            if(attr == 'value') continue
             inputRecipe.attr[attr] = ingredient.input[attr]
          }
 
