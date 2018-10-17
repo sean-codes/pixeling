@@ -116,6 +116,10 @@ app.frames = {
       }
    },
 
+   setCanvasSize: function(width, height) {
+      this.cropCanvas(0, 0, width, height)
+   },
+
    cropCanvas: function(startX, startY, width, height) {
       for(var frame of this.list) {
          var oldPixels = app.clone(frame.pixels)
@@ -134,30 +138,10 @@ app.frames = {
          frame.width = width
          frame.height = height
       }
+
+      this.width = width
+      this.height = height
    },
-
-   setCanvasSize: function(width, height) {
-      var oldWidth = this.width
-      var oldHeight = this.height
-
-      for(var frame of this.list) {
-         var oldPixels = app.clone(frame.pixels)
-         var newPixels = this.createPixelsArray(width, height)
-
-         for(var x = 0; x < oldWidth; x++) {
-            for(var y = 0; y < oldHeight; y++) {
-               if(oldPixels[x] && oldPixels[x][y] && newPixels[x] && newPixels[x][y]) {
-                  newPixels[x][y] = oldPixels[x][y]
-               }
-            }
-         }
-
-         frame.pixels = newPixels
-         frame.width = width
-         frame.height = height
-      }
-   },
-
 
    drawPixels: function(pixels) {
       for(var pixel of pixels) {

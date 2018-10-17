@@ -6,7 +6,8 @@ app.dialogs.Open = {
             name: 'file',
             type: 'file',
             accept: 'image/*'
-         }
+         },
+         click: true
       },
       {
          label: 'frame count',

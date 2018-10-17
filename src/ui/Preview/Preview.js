@@ -37,13 +37,14 @@ class Preview extends Base {
    }
 
    setVisibleFrame(idToSetCurrent) {
+      this.currentFrame = idToSetCurrent
       for(var frameID in this.frames) {
          var eleCanvas = this.bakedHTML.ele('frame_'+frameID)
          eleCanvas.classList.toggle('current', idToSetCurrent == frameID)
       }
    }
 
-   setFrames(frames) {
+   setFrames(frames, selected) {
       if(frames.length <= this.loopCurrent) {
          this.loopCurrent = 0
       }
@@ -57,11 +58,11 @@ class Preview extends Base {
          var bakedFrame = this.bake(this.recipeFrame(frameID))
          bakedReel.append(bakedFrame)
 
-         this.updateFrame(frameID, frame)
+         this.updateFrame(frameID, frame, selected)
       }
    }
 
-   updateFrame(frameID, frame) {
+   updateFrame(frameID, frame, selected) {
       var eleReel = this.bakedHTML.ele('reel')
       var eleCanvas = this.bakedHTML.ele('frame_'+frameID)
 
@@ -87,6 +88,21 @@ class Preview extends Base {
                Math.ceil(scale))
          }
       }
+
+      // selected, i know this function is dense :<
+      if(frameID != this.currentFrame || !selected || !selected.copy) return
+      for(var x = 0; x < selected.width; x++) {
+         for(var y = 0; y < selected.height; y++) {
+            var pixel = selected.copy.pixels[x][y]
+
+            ctx.fillStyle = pixel.colorString
+            ctx.fillRect(
+               Math.floor((selected.x + x)*scale),
+               Math.floor((selected.y + y)*scale),
+               Math.ceil(scale),
+               Math.ceil(scale))
+         }
+      }
    }
 
    drawCheckedBackground(ctx, scale) {
@@ -107,10 +123,6 @@ class Preview extends Base {
          }
          if(spacesY % 2 == 0) counter += 1
       }
-   }
-
-   playFrames() {
-
    }
 
    recipe() {

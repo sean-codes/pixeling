@@ -12,9 +12,9 @@ class Dialog extends Base {
 
       // loop default input values
       for(var input of this.inputs) {
-         if(!input.input.value) continue
-
          var eleInput = this.bakedHTML.ele('input_'+input.label)
+         input.click && eleInput.click()
+         if(!input.input.value) continue
          eleInput.value = input.input.value()
       }
    }
