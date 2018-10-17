@@ -116,6 +116,26 @@ app.frames = {
       }
    },
 
+   cropCanvas: function(startX, startY, width, height) {
+      for(var frame of this.list) {
+         var oldPixels = app.clone(frame.pixels)
+         var newPixels = this.createPixelsArray(width, height)
+
+         for(var x = 0; x < width; x++) {
+            for(var y = 0; y < height; y++) {
+               newPixels[x][y] = oldPixels[x+startX][y+startY]
+
+               newPixels[x][y].x = x
+               newPixels[x][y].y = y
+            }
+         }
+
+         frame.pixels = newPixels
+         frame.width = width
+         frame.height = height
+      }
+   },
+
    setCanvasSize: function(width, height) {
       var oldWidth = this.width
       var oldHeight = this.height

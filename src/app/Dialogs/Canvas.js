@@ -30,10 +30,7 @@ app.dialogs.Canvas = {
             var height = Number(data.height.value)
             app.frames.setCanvasSize(width, height)
 
-            var image = app.frames.getCurrentFrame()
-            app.ui.canvas.updateImage(image)
-            app.ui.cursor.updateImage(image)
-            app.history.push()
+            app.updateFrame()
          }
       },
       {

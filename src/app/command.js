@@ -49,6 +49,18 @@ app.command = {
       app.ui.dialogOpen.open()
    },
 
+   crop: function() {
+      if(app.ui.cursor.selected) {
+         var { x, y, width, height } = app.ui.cursor.selected
+         app.tools.select.unsetSelected()
+         app.frames.cropCanvas(x, y, width, height)
+
+         app.updateFrame()
+
+         app.history.push()
+      }
+   },
+
    center: function() {
       app.ui.easel.centerCanvas()
    },

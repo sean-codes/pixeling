@@ -32,6 +32,7 @@ app.config.menu = [
            { label: 'paste', hint: 'cmd-v' },
            { label: 'undo', hint: 'cmd-z', command: 'undo' },
            { label: 'redo', hint: 'cmd-shift-z', command: 'redo' },
+           { label: 'crop', command: 'crop' },
            { label: 'canvas size', command: 'canvasDialog' },
            { label: 'flip', to: 'flip', transition: 'forward' }
         ]
@@ -47,6 +48,7 @@ app.config.menu = [
      {
         name: 'preview',
         items: [
+           { label: 'back', to: 'home', transition: 'backward' },
            { label: 'toggle preview', command: 'togglePreview', hint: 'p' },
            { label: 'loop', command: 'togglePreviewLoop' }
         ]
