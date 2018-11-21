@@ -14,12 +14,6 @@ class Canvas extends Base  {
       this.ctx = this.canvas.getContext('2d')
    }
 
-   updateScale(scale) {
-      this.scale = this.initialScale * scale
-      this.resetCanvas()
-      this.drawImage()
-   }
-
    setFrames(currentFrame, frames) {
       this.frames = frames
       this.currentFrame = currentFrame
@@ -99,6 +93,21 @@ class Canvas extends Base  {
       }
    }
 
+   updateCanvasPositionAndScale(x, y, scale) {
+      var element = this.bakedHTML.ele('canvas')
+
+      element.style.left = x + '%'
+      element.style.top = y + '%'
+      element.style.transform =
+         `translateX(-50%) translateY(-50%) scale(${scale})`
+   }
+
+   updateScale(scale) {
+      this.scale = this.initialScale * scale
+      this.resetCanvas()
+      this.drawImage()
+   }
+   
    recipe() {
       return {
          name: 'canvas',

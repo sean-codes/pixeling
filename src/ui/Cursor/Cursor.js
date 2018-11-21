@@ -15,6 +15,7 @@ class Cursor extends Base  {
       this.width = 1
       this.height = 1
       this.scale = 1
+      this.easelScale = 1
       this.size = 1
       this.selected = undefined
       this.color = '#000'
@@ -35,7 +36,7 @@ class Cursor extends Base  {
          positionEnd: { x: 0, y: 0 },
          positions: []
       }
-      
+
       this.updateCanvas()
    }
 
@@ -76,11 +77,7 @@ class Cursor extends Base  {
       }
 
       this.mouse.positionLast = { x, y }
-      // i see you noticed the pixel skipping
-      // within / around here
-      // we need to run this between delta x and y to fill in the gaps
-      // 1. find the angle between last position and current
-      // 2. we could brute force or run on only the pixels between once
+
       if(this.mouse.down) {
          this.mouse.positions.push(this.mouse.positionCurrent)
          return this.onStroke(this.mouse)
@@ -89,7 +86,7 @@ class Cursor extends Base  {
       this.onMove(this.mouse)
    }
 
-   eventMouseout(e, element) {
+   eventMouseleave(e, element) {
       this.eventMouseup(e, element)
    }
 
@@ -101,10 +98,17 @@ class Cursor extends Base  {
    }
 
    getMouseEventPosition(e) {
-      var canvasElement = this.bakedHTML.ele('canvas')
+      var eleCursor = this.bakedHTML.ele('cursor')
+      var eleCanvas = this.bakedHTML.ele('canvas')
 
-      var x = Math.floor(e.offsetX / this.scale)// - Math.floor(this.size/2)
-      var y = Math.floor(e.offsetY / this.scale)// - Math.floor(this.size/2)
+      var rectCursor = eleCursor.getBoundingClientRect()
+      var rectCanvas = eleCanvas.getBoundingClientRect()
+
+      var rawX = -(rectCanvas.x - rectCursor.x) + e.offsetX // just swap the order...
+      var rawY = -(rectCanvas.y - rectCursor.y) + e.offsetY // never! :]
+
+      var x = Math.floor(rawX / this.scale / this.easelScale)
+      var y = Math.floor(rawY / this.scale / this.easelScale)
 
       return { x, y }
    }
@@ -125,13 +129,6 @@ class Cursor extends Base  {
 
    update(options) {
       for(var option in options) this[option] = options[option]
-
-      this.updateCanvas()
-      this.renderCursor()
-   }
-
-   updateScale(scale) {
-      this.scale = this.initialScale * scale
 
       this.updateCanvas()
       this.renderCursor()
@@ -291,17 +288,39 @@ class Cursor extends Base  {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
    }
 
+   updateCanvasPositionAndScale(x, y, scale) {
+      this.easelScale = scale
+      var eleCanvas = this.bakedHTML.ele('canvas')
+
+      eleCanvas.style.left = x + '%'
+      eleCanvas.style.top = y + '%'
+      eleCanvas.style.transform =
+         `translateX(-50%) translateY(-50%) scale(${scale})`
+   }
+
+   updateScale(scale) {
+      this.scale = this.initialScale * scale
+
+      this.updateCanvas()
+      this.renderCursor()
+   }
+
    recipe() {
       return {
-         tag: 'canvas',
-         name: 'canvas',
-         classes: ['cursor'],
+         name: 'cursor',
+         classes: ['ui', 'cursor'],
          events: {
-            mousedown: this.eventMousedown.bind(this),
             mousemove: this.eventMousemove.bind(this),
-            mouseleave: this.eventMouseout.bind(this),
+            mouseleave: this.eventMouseleave.bind(this),
+            mousedown: this.eventMousedown.bind(this),
             mouseup: this.eventMouseup.bind(this),
-         }
+         },
+         ingredients: [
+            {
+               tag: 'canvas',
+               name: 'canvas'
+            }
+         ]
       }
    }
 }

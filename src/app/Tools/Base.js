@@ -88,7 +88,12 @@ app.tools.Base = function(overrides) {
          if(mouse.positionTotalDelta.x < 0) x += mouse.positionTotalDelta.x
          if(mouse.positionTotalDelta.y < 0) y += mouse.positionTotalDelta.y
 
-         return { x, y, width, height }
+         return {
+            x: Math.max(0, x),
+            y: Math.max(0, y),
+            width: Math.min(width, app.frames.width - x),
+            height: Math.min(height, app.frames.height - y) 
+         }
       }
    }
 

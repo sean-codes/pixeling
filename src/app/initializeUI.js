@@ -55,8 +55,8 @@ app.initializeUI = function() {
 
    app.ui.easel = new Easel({
       center: [
-         app.ui.canvas.bakedHTML,
-         app.ui.cursor.bakedHTML
+         app.ui.canvas,
+         app.ui.cursor
       ],
       onScale: (scale) => {
          app.ui.statusbar.updateStatus({

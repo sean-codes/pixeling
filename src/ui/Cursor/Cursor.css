@@ -1,3 +1,13 @@
-canvas.cursor {
+.ui.cursor {
+   position:absolute;
+   top:0;
+   left:0;
+   width:100%;
+   height:100%;
+}
+
+.ui.cursor canvas {
+   position:absolute;
    transform:translateX(-50%) translateY(-50%);
+   pointer-events:none;
 }

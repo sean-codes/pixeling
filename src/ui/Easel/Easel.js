@@ -94,13 +94,8 @@ class Easel extends Base  {
    }
 
    transformElements(element) {
-      for(var baked of this.center) {
-         var element = baked.element
-
-         element.style.left = this.centerX + '%'
-         element.style.top = this.centerY + '%'
-         element.style.transform =
-            `translateX(-50%) translateY(-50%) scale(${this.scale})`
+      for(var ui of this.center) {
+         ui.updateCanvasPositionAndScale(this.centerX, this.centerY, this.scale)
       }
    }
 
@@ -132,7 +127,7 @@ class Easel extends Base  {
             mouseleave: this.eventMouseup.bind(this),
             wheel: this.eventScroll.bind(this)
          },
-         append: this.center,
+         append: this.center.map((ui) => ui.bakedHTML),
          ingredients: [
             { name: 'indicatorHB', classes: ['indicator', 'horizontal'] },
             { name: 'indicatorHT', classes: ['indicator', 'horizontal', 'top'] },
