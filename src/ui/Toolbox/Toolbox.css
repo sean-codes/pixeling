@@ -3,6 +3,8 @@
    width: 40px;
    background: #151a1a;
    color:#FFF;
+   z-index:10;
+   position:relative;
 }
 
 .toolbox .tool {

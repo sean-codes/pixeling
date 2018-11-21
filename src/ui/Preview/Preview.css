@@ -8,6 +8,7 @@
    transition:all 0.1s;
    z-index:1;
    pointer-events:none;
+   z-index:5;
 }
 
 .ui.preview.hide {
