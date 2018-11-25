@@ -113,7 +113,7 @@ class Preview extends Base {
       for(var x = 0; x < spacesX; x++) {
          for(var y = 0; y < spacesY; y++) {
             ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'
-            if(counter % 2) ctx.fillRect(
+            if(counter % 2 == 0) ctx.fillRect(
                x*size*scale,
                y*size*scale,
                scale*size,

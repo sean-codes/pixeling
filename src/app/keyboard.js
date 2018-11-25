@@ -13,7 +13,7 @@ app.keyboard = {
 
       var modifiers = []
       if(e.altKey) modifiers.push('alt')
-      if(e.ctrlKey) modifiers.push('ctrl')
+      if(e.ctrlKey) modifiers.push('meta') // combining meta/ctrl for mac/win
       if(e.metaKey) modifiers.push('meta')
       if(e.shiftKey) modifiers.push('shift')
 
@@ -28,6 +28,7 @@ app.keyboard = {
          var match = keybindString == keydownString && key == keybind.key // lol weak :]
 
          if(match) {
+            console.log('matching', keybind.command)
             modifiers.length && e.preventDefault()
             app.command[keybind.command](keybind.info)
          }

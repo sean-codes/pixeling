@@ -55,7 +55,7 @@ app.config.keybinds = [
       command: 'selectAll'
    },
    {
-      modifiers: ['ctrl'],
+      modifiers: [],
       key: 'c',
       command: 'toggleColorMixer'
    },
@@ -65,22 +65,22 @@ app.config.keybinds = [
       command: 'redo'
    },
    {
-      modifiers: ['ctrl', 'shift'],
+      modifiers: ['meta', 'shift'],
       key: 'h',
       command: 'flipHorizontal'
    },
    {
-      modifiers: ['ctrl', 'shift'],
+      modifiers: ['meta', 'shift'],
       key: 'v',
       command: 'flipVertical'
    },
    {
-      modifiers: ['ctrl'],
+      modifiers: ['meta'],
       key: 's',
       command: 'export'
    },
    {
-      modifiers: ['ctrl'],
+      modifiers: ['meta'],
       key: 'o',
       command: 'openDialog'
    },
@@ -91,16 +91,6 @@ app.config.keybinds = [
    },
    {
       modifiers: ['meta'],
-      key: 'v',
-      command: 'paste'
-   },
-   {
-      modifiers: ['ctrl'],
-      key: 'c',
-      command: 'copy'
-   },
-   {
-      modifiers: ['ctrl'],
       key: 'v',
       command: 'paste'
    },

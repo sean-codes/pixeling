@@ -26,6 +26,8 @@ app.clipboard = {
    },
 
    pasteCopy(x, y, copy) {
+      //if(!copy || !copy.dimensions) return
+
       var image = app.frames.getCurrentFrame()
       for(var cx = 0; cx < copy.dimensions.width; cx++) {
          for(var cy = 0; cy < copy.dimensions.height; cy++) {

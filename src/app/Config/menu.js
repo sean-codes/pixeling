@@ -28,10 +28,10 @@ app.config.menu = [
         name: 'edit',
         items: [
            { label: 'back', to: 'home', transition: 'backward' },
-           { label: 'copy', hint: 'cmd-c' },
-           { label: 'paste', hint: 'cmd-v' },
-           { label: 'undo', hint: 'cmd-z', command: 'undo' },
-           { label: 'redo', hint: 'cmd-shift-z', command: 'redo' },
+           { label: 'copy', hint: 'ctrl-c' },
+           { label: 'paste', hint: 'ctrl-v' },
+           { label: 'undo', hint: 'ctrl-z', command: 'undo' },
+           { label: 'redo', hint: 'ctrl-shift-z', command: 'redo' },
            { label: 'crop', command: 'crop' },
            { label: 'canvas size', command: 'canvasDialog' },
            { label: 'flip', to: 'flip', transition: 'forward' }
