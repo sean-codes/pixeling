@@ -127,7 +127,9 @@ app.frames = {
 
          for(var x = 0; x < width; x++) {
             for(var y = 0; y < height; y++) {
-               newPixels[x][y] = oldPixels[x+startX][y+startY]
+               if(oldPixels[x+startX] && oldPixels[y+startY]) {
+                  newPixels[x][y] = oldPixels[x+startX][y+startY]
+               }
 
                newPixels[x][y].x = x
                newPixels[x][y].y = y
