@@ -103,7 +103,7 @@ app.command = {
       app.history.redo()
    },
 
-   flipHorizontal() {
+   flipHorizontal: function() {
       var image = app.frames.getCurrentFrame()
 
       var { x, y, width, height } = app.ui.cursor.selected
@@ -139,7 +139,7 @@ app.command = {
       }
    },
 
-   flipVertical() {
+   flipVertical: function() {
       var image = app.frames.getCurrentFrame()
 
       var { x, y, width, height } = app.ui.cursor.selected
@@ -183,17 +183,17 @@ app.command = {
       app.ui.menu.toggle()
    },
 
-   toggleColorMixer() {
+   toggleColorMixer: function() {
       app.ui.colorMixer.toggle()
    },
 
-   delete() {
+   delete: function() {
       if(app.ui.cursor.selected) {
          app.ui.cursor.update({ selected: undefined })
       }
    },
 
-   selectAll() {
+   selectAll: function() {
       var imageRect = app.frames.getImageRect()
       app.ui.toolbox.selectTool('select')
       app.ui.cursor.update({
@@ -208,23 +208,23 @@ app.command = {
       app.history.push()
    },
 
-   toggleColorMixer() {
+   toggleColorMixer: function() {
       app.ui.colorMixer.toggle()
    },
 
-   palletNextColor() {
+   palletNextColor: function() {
       app.ui.pallet.nextColor()
    },
 
-   palletPrevColor() {
+   palletPrevColor: function() {
       app.ui.pallet.prevColor()
    },
 
-   palletIncreaseBrush() {
+   palletIncreaseBrush: function() {
       app.ui.pallet.eventIncreaseBrushSize()
    },
 
-   palletDecreaseBrush() {
+   palletDecreaseBrush: function() {
       app.ui.pallet.eventDecreaseBrushSize()
    }
 }

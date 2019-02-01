@@ -79,13 +79,14 @@ class Frames extends Base {
       this.callDeleteFrame(frameID)
    }
 
-   setFrames(frames, current) {
+   setFrames(frames, current, selected) {
       var bakedReel = this.bakedHTML.find('reel')
       var needToRebuildHTML = frames.length != this.frames.length
       if(needToRebuildHTML) bakedReel.clear()
 
       this.currentFrame = current
       this.frames = frames
+      this.selected = selected
 
       for(var frameID in frames) {
          var frame = frames[frameID]
@@ -101,12 +102,12 @@ class Frames extends Base {
       }
    }
 
-   updateFrame(frameID, frame) {
+   updateFrame(frameID, frame, selected) {
       var eleCanvas = this.bakedHTML.ele('canvas_'+frameID)
-      this.drawFramePreview(eleCanvas, frame)
+      this.drawFramePreview(eleCanvas, frame, frameID)
    }
 
-   drawFramePreview(eleCanvas, frame) {
+   drawFramePreview(eleCanvas, frame, frameID) {
       var scale = this.size / Math.max(frame.width, frame.height)
       eleCanvas.width = frame.width * scale
       eleCanvas.height = frame.height * scale
@@ -122,6 +123,25 @@ class Frames extends Base {
                Math.floor(y*scale),
                Math.ceil(scale),
                Math.ceil(scale))
+         }
+      }
+
+      var thisFrameCouldHaveSelectedContet = frameID == this.currentFrame
+      var somethingIsSelected = this.selected.copy
+
+      if(thisFrameCouldHaveSelectedContet && somethingIsSelected) {
+         // draw selected (duplicated from preview)
+         for(var x = 0; x < this.selected.width; x++) {
+            for(var y = 0; y < this.selected.height; y++) {
+               var pixel = this.selected.copy.pixels[x][y]
+
+               ctx.fillStyle = pixel.colorString
+               ctx.fillRect(
+                  Math.floor((this.selected.x + x)*scale),
+                  Math.floor((this.selected.y + y)*scale),
+                  Math.ceil(scale),
+                  Math.ceil(scale))
+            }
          }
       }
    }

@@ -227,11 +227,11 @@ app.frames = {
       return `hsla(${hsla.h}, ${hsla.s}%, ${hsla.l}%, ${hsla.a})`
    },
 
-   getImageRect() {
+   getImageRect: function() {
       return { x: 0, y: 0, width: this.width, height: this.height}
    },
 
-   pixelID(x, y) {
+   pixelID: function(x, y) {
       return x + 'x' + y
    }
 }
