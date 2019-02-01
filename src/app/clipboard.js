@@ -2,7 +2,8 @@ app.clipboard = {
    store: {},
    selection: {},
    copy: function(area) {
-      this.store = app.clone(app.ui.cursor.selected.copy)
+      var store = JSON.stringify(app.ui.cursor.selected.copy)
+      localStorage.setItem('copy', store)
    },
 
    cut: function(area) {
@@ -19,7 +20,12 @@ app.clipboard = {
             app.ui.cursor.selected.y,
             app.ui.cursor.selected.copy)
       }
-      var copy = this.store
+
+      var copy = JSON.parse(localStorage.getItem('copy'))
+      if(!this.isASafeCopy(copy)) {
+         console.log('is not safe to paste');
+         return
+      }
 
       var selected = { ...copy.dimensions, copy }
       app.ui.cursor.update({ selected })
@@ -65,5 +71,16 @@ app.clipboard = {
       }
 
       return app.clone(copy)
+   },
+
+   isASafeCopy(copy) {
+      console.log(copy)
+      if (
+         copy.dimensions.x != null &&
+         copy.dimensions.y != null &&
+         copy.dimensions.width &&
+         copy.dimensions.height &&
+         copy.pixels.length
+      ) return true
    }
 }
