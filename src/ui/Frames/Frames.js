@@ -127,7 +127,7 @@ class Frames extends Base {
       }
 
       var thisFrameCouldHaveSelectedContet = frameID == this.currentFrame
-      var somethingIsSelected = this.selected.copy
+      var somethingIsSelected = this.selected && this.selected.copy
 
       if(thisFrameCouldHaveSelectedContet && somethingIsSelected) {
          // draw selected (duplicated from preview)
