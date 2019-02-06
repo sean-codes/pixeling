@@ -65,7 +65,7 @@ app.tools.select = new app.tools.Base({
       copyRect.sx = app.ui.cursor.selected ? app.ui.cursor.selected.sx : copyRect.x
       copyRect.sy = app.ui.cursor.selected ? app.ui.cursor.selected.sy : copyRect.y
 
-      var copyRectLargerThanAPixel = copyRect.width > 1 && copyRect.height > 1
+      var copyRectLargerThanAPixel = copyRect.width > 1 || copyRect.height > 1
       var copy = undefined
 
       if(copyRectLargerThanAPixel) {
