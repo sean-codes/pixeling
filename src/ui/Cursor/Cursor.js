@@ -185,7 +185,7 @@ class Cursor extends Base  {
    renderCursorModeSelect(dimensions) {
       // override dimensions to use 1px
       var cursorDimensions1px = { ...dimensions, width:1, height: 1 }
-      !this.canMoveSelected() && this.drawRectangleDashed(cursorDimensions1px)
+      !this.mouse.down && !this.canMoveSelected() && this.drawRectangleDashed(cursorDimensions1px)
 
       if(this.selected) {
          this.selected.copy && this.drawSelectedPixels()

@@ -48,13 +48,8 @@ app.tools.select = new app.tools.Base({
             app.ui.cursor.selected.y,
             app.ui.cursor.selected.copy)
 
-         // if(app.ui.cursor.selected.sx == app.ui.cursor.selected.x
-         // && app.ui.cursor.selected.sy== app.ui.cursor.selected.y ) {
-         //    app.history.undo()
-         // } else {
          app.ui.cursor.update({ selected: undefined })
          app.history.rewrite()
-         // }
       }
 
       app.ui.cursor.update({ selected: undefined })
