@@ -51,6 +51,11 @@ app.config.keybinds = [
    },
    {
       modifiers: ['meta'],
+      key: 'p',
+      command: 'togglePreviewLoop'
+   },
+   {
+      modifiers: ['meta'],
       key: 'a',
       command: 'selectAll'
    },
