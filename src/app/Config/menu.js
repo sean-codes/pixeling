@@ -50,7 +50,7 @@ app.config.menu = [
         items: [
            { label: 'back', to: 'home', transition: 'backward' },
            { label: 'toggle preview', command: 'togglePreview', hint: 'p' },
-           { label: 'loop', command: 'togglePreviewLoop' }
+           { label: 'loop', command: 'togglePreviewLoop', hint: 'ctrl-shift-p' }
         ]
      }
 ]

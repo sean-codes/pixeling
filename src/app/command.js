@@ -188,8 +188,9 @@ app.command = {
    },
 
    delete: function() {
-      if(app.ui.cursor.selected) {
+      if (app.ui.cursor.selected) {
          app.ui.cursor.update({ selected: undefined })
+         app.updateFrame()
          app.history.push()
       }
    },

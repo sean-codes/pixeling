@@ -50,7 +50,7 @@ app.config.keybinds = [
       command: 'togglePreview'
    },
    {
-      modifiers: ['meta'],
+      modifiers: ['meta', 'shift'],
       key: 'p',
       command: 'togglePreviewLoop'
    },

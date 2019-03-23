@@ -31,7 +31,7 @@ app.history = {
    },
 
    push: function() {
-      // removing the forward history
+      // add to history array
       this.point += 1
       this.store = this.store.slice(0, this.point)
 

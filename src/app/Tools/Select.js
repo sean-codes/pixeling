@@ -1,4 +1,6 @@
 app.tools.select = new app.tools.Base({
+   hasPushedHistory: false,
+
    select() {
       app.ui.cursor.update({ mode: 'select' })
    },
@@ -27,6 +29,7 @@ app.tools.select = new app.tools.Base({
 
    up(mouse) {
       if(mouse.dragging) {
+         this.hasPushedHistory = false
          return
       }
 
@@ -34,6 +37,11 @@ app.tools.select = new app.tools.Base({
    },
 
    moveCursorSelected(mouse) {
+      if (!this.hasPushedHistory) {
+         this.hasPushedHistory = true
+         app.history.push()
+      }
+
       app.ui.cursor.selected.x += mouse.positionDelta.x
       app.ui.cursor.selected.y += mouse.positionDelta.y
       app.ui.cursor.update()
@@ -65,7 +73,6 @@ app.tools.select = new app.tools.Base({
 
       if(copyRectLargerThanAPixel) {
          if(shouldCopy) {
-            app.history.push()
             copy = app.clipboard.getCopy(copyRect)
             app.frames.clearPixels(copyRect)
          }
