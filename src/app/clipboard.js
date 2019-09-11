@@ -12,8 +12,7 @@ app.clipboard = {
    },
 
    paste: function(x=0, y=0) {
-      //this.pasteCopy(x, y, this.store)
-
+      // drop what is within cursor
       if(app.ui.cursor.selected) {
          this.pasteCopy(
             app.ui.cursor.selected.x,
@@ -27,11 +26,13 @@ app.clipboard = {
          return
       }
 
+      // put the copy into the cursor
       var selected = { ...copy.dimensions, copy }
       app.ui.cursor.update({ selected })
+      app.updateFrame()
    },
 
-   pasteCopy(x, y, copy) {
+   pasteCopy: function(x, y, copy) {
       //if(!copy || !copy.dimensions) return
 
       var image = app.frames.getCurrentFrame()
