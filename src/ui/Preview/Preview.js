@@ -7,7 +7,9 @@ class Preview extends Base {
       this.looping = false
       this.currentFrame = 0
       this.loopInterval = 100
+      this.loopTimeout = undefined
       this.loopFrame = 0
+      this.frames = []
    }
 
    toggle() {
@@ -18,36 +20,35 @@ class Preview extends Base {
    togglePreviewLoop() {
       if(this.looping) {
          this.looping = false
+         clearTimeout(this.loopTimeout)
          this.setVisibleFrame(this.currentFrame)
       } else {
          this.looping = !this.looping
          this.loop()
       }
-
    }
 
    loop() {
       this.loopFrame += 1
-      if(this.loopFrame == this.frames.length) this.loopFrame = 0
+      if(this.loopFrame >= this.frames.length) this.loopFrame = 0
       this.setVisibleFrame(this.loopFrame)
 
-      this.looping && setTimeout(() => {
-         this.loop()
-      }, this.loopInterval)
+      if (this.looping) {
+         this.loopTimeout = setTimeout(() => {
+            this.loop()
+         }, this.loopInterval)
+      }
    }
 
    setVisibleFrame(idToSetCurrent) {
-      this.currentFrame = idToSetCurrent
       for(var frameID in this.frames) {
          var eleCanvas = this.bakedHTML.ele('frame_'+frameID)
          eleCanvas.classList.toggle('current', idToSetCurrent == frameID)
       }
    }
 
-   setFrames(frames, selected) {
-      if(frames.length <= this.loopCurrent) {
-         this.loopCurrent = 0
-      }
+   setFrames(currentFrame, frames, selected) {
+      this.currentFrame = currentFrame
       this.frames = frames
       var bakedReel = this.bakedHTML.find('reel')
       bakedReel.clear()

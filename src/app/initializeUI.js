@@ -1,6 +1,8 @@
 app.initializeUI = function() {
+
    app.ui = {}
 
+   // create all the ui components
    app.ui.layout = new Layout(document.body)
 
    app.ui.menu = new Menu({
@@ -102,6 +104,7 @@ app.initializeUI = function() {
 
    app.ui.preview = new Preview()
 
+   // append all the ui components
    app.ui.layout.appendUI(app.ui.menu.bakedHTML, 'sidebar')
    app.ui.layout.appendUI(app.ui.appbar.bakedHTML, 'top')
    app.ui.layout.appendUI(app.ui.statusbar.bakedHTML, 'bottom')
