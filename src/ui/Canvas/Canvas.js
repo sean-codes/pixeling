@@ -80,8 +80,8 @@ class Canvas extends Base  {
       var counter = 0
       for(var x = 0; x < spacesX; x++) {
          for(var y = 0; y < spacesY; y++) {
-            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.25)'
-            if(counter % 2 == 0) this.ctx.fillRect(
+            this.ctx.fillStyle = (counter % 2 == 0) ? '#DDD' : '#CCC'
+            this.ctx.fillRect(
                x*size*this.scale,
                y*size*this.scale,
                this.scale*size,

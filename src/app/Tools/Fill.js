@@ -23,7 +23,7 @@ app.tools.fill = new app.tools.Base({
          return
       }
       this.fillAdjecentPixels(pos, initialColor)
-      app.updateFrame()
+      app.updateFrames()
       app.history.push()
    },
 

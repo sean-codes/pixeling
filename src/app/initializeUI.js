@@ -86,18 +86,18 @@ app.initializeUI = function() {
          app.tools.select.unsetSelected()
          app.frames.addFrame()
          app.frames.currentFrame = app.frames.list.length - 1
-         app.updateFrame()
+         app.updateFrames()
          app.history.push()
       },
       selectFrame: (clickedFrameID) => {
          app.tools.select.unsetSelected()
          app.frames.currentFrame = clickedFrameID
-         app.updateFrame()
+         app.updateFrames()
       },
       deleteFrame: (deleteFrameID) => {
          app.tools.select.unsetSelected()
          app.frames.deleteFrame(deleteFrameID)
-         app.updateFrame()
+         app.updateFrames()
          app.history.push()
       }
    })

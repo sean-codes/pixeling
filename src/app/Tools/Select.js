@@ -45,7 +45,7 @@ app.tools.select = new app.tools.Base({
       app.ui.cursor.selected.x += mouse.positionDelta.x
       app.ui.cursor.selected.y += mouse.positionDelta.y
       app.ui.cursor.update()
-      app.updateFrame()
+      app.updateFrames()
    },
 
    unsetSelected() {
@@ -79,7 +79,7 @@ app.tools.select = new app.tools.Base({
 
          var selected = { ...copyRect, copy }
          app.ui.cursor.update({ selected })
-         app.updateFrame()
+         app.updateFrames()
       }
    },
 

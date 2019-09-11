@@ -29,7 +29,7 @@ app.clipboard = {
       // put the copy into the cursor
       var selected = { ...copy.dimensions, copy }
       app.ui.cursor.update({ selected })
-      app.updateFrame()
+      app.updateFrames()
    },
 
    pasteCopy: function(x, y, copy) {
@@ -49,7 +49,7 @@ app.clipboard = {
          }
       }
 
-      app.updateFrame()
+      app.updateFrames()
    },
 
    getCopy(area) {

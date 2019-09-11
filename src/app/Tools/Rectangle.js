@@ -31,7 +31,7 @@ app.tools.rectangle = new app.tools.Base({
          app.frames.drawPixel(pixel.x, pixel.y, app.ui.pallet.getColor())
       }
 
-      app.updateFrame()
+      app.updateFrames()
       app.history.push()
    },
 

@@ -32,7 +32,7 @@ app.tools.line = new app.tools.Base({
       for(var pixel of temporaryPixels) {
          app.frames.drawPixel(pixel.x, pixel.y, app.ui.pallet.getColor())
       }
-      app.updateFrame()
+      app.updateFrames()
       app.history.push()
    },
 

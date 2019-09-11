@@ -300,7 +300,6 @@ class Cursor extends Base  {
 
    updateScale(scale) {
       this.scale = this.initialScale * scale
-
       this.updateCanvas()
       this.renderCursor()
    }

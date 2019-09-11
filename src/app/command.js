@@ -31,7 +31,7 @@ app.command = {
       app.frames.create(options.width, options.height)
 
       app.ui.easel.centerCanvas()
-      app.updateFrame()
+      app.updateFrames()
       app.history.reset()
    },
 
@@ -55,7 +55,7 @@ app.command = {
          app.tools.select.unsetSelected()
          app.frames.cropCanvas(x, y, width, height)
 
-         app.updateFrame()
+         app.updateFrames()
 
          app.history.push()
       }
@@ -133,7 +133,7 @@ app.command = {
          }
       }
 
-      app.updateFrame()
+      app.updateFrames()
       if(!app.ui.cursor.selected) {
          app.history.push()
       }
@@ -173,7 +173,7 @@ app.command = {
          }
       }
 
-      app.updateFrame()
+      app.updateFrames()
       if(!app.ui.cursor.selected) {
          app.history.push()
       }
@@ -190,7 +190,7 @@ app.command = {
    delete: function() {
       if (app.ui.cursor.selected) {
          app.ui.cursor.update({ selected: undefined })
-         app.updateFrame()
+         app.updateFrames()
          app.history.push()
       }
    },
@@ -206,7 +206,7 @@ app.command = {
       })
       app.frames.clearPixels(imageRect)
 
-      app.updateFrame()
+      app.updateFrames()
       app.history.push()
    },
 

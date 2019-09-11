@@ -33,7 +33,7 @@ app.dialogs.Open = {
                   app.ui.dialogOpen.hide()
                   app.frames.load(image, data.frames.value)
                   app.history.reset()
-                  app.updateFrame()
+                  app.updateFrames()
                }
                image.src = e.target.result
             }

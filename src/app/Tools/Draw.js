@@ -30,7 +30,7 @@ app.tools.draw = new app.tools.Base({
       var pixels = this.pixelsBetweenPositions(positions)
       app.frames.drawPixels(pixels)
 
-      app.updateFrame()
+      app.updateFrames()
    },
 
    pixelsBetweenPositions(positions) {

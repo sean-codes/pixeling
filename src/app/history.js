@@ -16,7 +16,7 @@ app.history = {
       }
       app.frames.list = history.frames
       app.ui.cursor.update({ selected: undefined })
-      app.updateFrame()
+      app.updateFrames()
    },
 
    create: function() {

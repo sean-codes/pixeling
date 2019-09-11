@@ -28,6 +28,6 @@ app.tools.eraser = new app.tools.Base({
          width: app.ui.cursor.size,
          height: app.ui.cursor.size
       })
-      app.updateFrame()
+      app.updateFrames()
    },
 })
