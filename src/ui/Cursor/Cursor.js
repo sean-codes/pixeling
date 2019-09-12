@@ -38,6 +38,22 @@ class Cursor extends Base  {
       }
 
       this.updateCanvas()
+      this.setChangeInterval()
+   }
+
+   setChangeInterval() {
+      this.change = false
+      setInterval(() => {
+         if (this.change) {
+            this.change = false
+            if(this.mouse.down) {
+               this.mouse.positions.push(this.mouse.positionCurrent)
+               return this.onStroke(this.mouse)
+            }
+
+            this.onMove(this.mouse)
+         }
+      }, 1000/30)
    }
 
    eventMousedown(e, element) {
@@ -78,12 +94,7 @@ class Cursor extends Base  {
 
       this.mouse.positionLast = { x, y }
 
-      if(this.mouse.down) {
-         this.mouse.positions.push(this.mouse.positionCurrent)
-         return this.onStroke(this.mouse)
-      }
-
-      this.onMove(this.mouse)
+      this.change = true
    }
 
    eventMouseleave(e, element) {
@@ -282,8 +293,11 @@ class Cursor extends Base  {
    updateCanvas() {
       var cursorScale = this.scale
       this.canvas.style.cursor = this.getCursor()
-      this.canvas.width = this.imageWidth*cursorScale
-      this.canvas.height = this.imageHeight*cursorScale
+      if (this.canvas.width != this.imageWidth * cursorScale
+         || this.canvas.height != this.imageHeight * cursorScale) {
+            this.canvas.width = this.imageWidth*cursorScale
+            this.canvas.height = this.imageHeight*cursorScale
+      }
 
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
    }
