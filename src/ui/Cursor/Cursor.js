@@ -162,7 +162,8 @@ class Cursor extends Base  {
    }
 
    renderCursorModeRead(dimensions) {
-      var cursorDimensions1px = { ...dimensions, width:1, height: 1 }
+      var cursorDimensions1px = { width:1, height: 1 }
+      cursorDimensions1px = Object.assign(cursorDimensions1px, dimensions)
       this.drawCrosshair(cursorDimensions1px, '#FFF')
    }
 
@@ -195,7 +196,8 @@ class Cursor extends Base  {
 
    renderCursorModeSelect(dimensions) {
       // override dimensions to use 1px
-      var cursorDimensions1px = { ...dimensions, width:1, height: 1 }
+      var cursorDimensions1px = { width:1, height: 1 }
+      cursorDimensions1px = Object.assign(cursorDimensions1px, dimensions)
       !this.mouse.down && !this.canMoveSelected() && this.drawRectangleDashed(cursorDimensions1px)
 
       if(this.selected) {

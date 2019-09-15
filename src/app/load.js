@@ -85,7 +85,7 @@ app.load = function(options){
             js: { tag: 'script', attr: { src: file+breakCache } },
          }[fileType]
 
-         app.importing.push({ ...element })
+         app.importing.push(element)
       }
    }
    app.importingLength = app.importing.length

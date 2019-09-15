@@ -200,7 +200,10 @@ app.command = {
       app.ui.toolbox.selectTool('select')
       app.ui.cursor.update({
          selected: {
-            ...imageRect,
+            x: imageRect.x,
+            y: imageRect.y,
+            width: imageRect.width, 
+            height: imageRect.height,
             copy: app.clipboard.getCopy(imageRect)
          }
       })

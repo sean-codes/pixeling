@@ -10,7 +10,8 @@ app.tools.select = new app.tools.Base({
    },
 
    move(mouse) {
-      app.ui.cursor.update({ ...mouse.positionCurrent })
+      var updatedPosition = Object.assign({}, mouse.positionCurrent)
+      app.ui.cursor.update(updatedPosition)
    },
 
    down(mouse) {
@@ -77,7 +78,9 @@ app.tools.select = new app.tools.Base({
             app.frames.clearPixels(copyRect)
          }
 
-         var selected = { ...copyRect, copy }
+         var selected = { copy }
+         selected = Object.assign(selected, copyRect)
+         
          app.ui.cursor.update({ selected })
          app.updateFrames()
       }

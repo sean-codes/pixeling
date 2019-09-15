@@ -26,8 +26,13 @@ app.clipboard = {
          return
       }
 
-      // put the copy into the cursor
-      var selected = { ...copy.dimensions, copy }
+      var selected = {
+         x: copy.dimensions.x,
+         y: copy.dimensions.y,
+         width: copy.dimensions.width,
+         height: copy.dimensions.height,
+         copy
+      }
       app.ui.cursor.update({ selected })
       app.updateFrames()
    },
