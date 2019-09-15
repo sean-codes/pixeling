@@ -2,7 +2,10 @@ class Easel extends Base  {
    constructor(options) {
       super()
 
-      this.center = options.center
+      this.uiCanvas = options.uiCanvas
+      this.uiCursor = options.uiCursor
+
+      console.log(options)
 
       this.bakeHTML()
 
@@ -14,10 +17,10 @@ class Easel extends Base  {
       this.moving = false
       this.moveDampen = 2
 
-      this.scale = 1
+      this.scale = 10
       this.scaleMin = 0.1
-      this.scaleMax = 20
-      this.scaleDampen = 100
+      this.scaleMax = 100
+      this.scaleDampen = 1005
    }
 
    eventMousedown(e, element) {
@@ -55,11 +58,11 @@ class Easel extends Base  {
    }
 
    zoomIn() {
-      this.zoom(-0.1)
+      this.zoom(-1)
    }
 
    zoomOut() {
-      this.zoom(0.1)
+      this.zoom(1)
    }
 
    zoomReset() {
@@ -68,6 +71,7 @@ class Easel extends Base  {
    }
 
    zoom(amount) {
+      amount *= 100
       var newScale = this.scale - amount
       var newScaleMinMax = Math.min(this.scaleMax, Math.max(this.scaleMin, newScale))
       var newScaleRounded = Math.round(newScaleMinMax*100)/100
@@ -78,11 +82,13 @@ class Easel extends Base  {
 
    moveCanvas(moveX, moveY) {
       var easelElement = this.bakedHTML.ele('easel')
+      var canvasElement = this.bakedHTML.ele('canvas')
       this.centerX += (moveX / easelElement.clientWidth)*100
       this.centerY += (moveY / easelElement.clientHeight)*100
 
       this.transformIndicators()
-      this.transformElements()
+      this.uiCanvas.updateCanvasPositionAndScale(this.centerX, this.centerY, this.scale)
+      this.uiCursor.updateCanvasPositionAndScale(this.centerX/100, this.centerY/100, this.scale)
    }
 
    centerCanvas() {
@@ -90,13 +96,8 @@ class Easel extends Base  {
       this.centerY = 50
 
       this.transformIndicators()
-      this.transformElements()
-   }
-
-   transformElements(element) {
-      for(var ui of this.center) {
-         ui.updateCanvasPositionAndScale(this.centerX, this.centerY, this.scale)
-      }
+      this.uiCanvas.updateCanvasPositionAndScale(this.centerX, this.centerY, this.scale)
+      this.uiCursor.updateCanvasPositionAndScale(this.centerX/100, this.centerY/100, this.scale)
    }
 
    transformIndicators() {
@@ -127,7 +128,10 @@ class Easel extends Base  {
             mouseleave: this.eventMouseup.bind(this),
             wheel: this.eventScroll.bind(this)
          },
-         append: this.center.map((ui) => ui.bakedHTML),
+         append: [
+            this.uiCanvas.bakedHTML,
+            this.uiCursor.bakedHTML
+         ],
          ingredients: [
             { name: 'indicatorHB', classes: ['indicator', 'horizontal'] },
             { name: 'indicatorHT', classes: ['indicator', 'horizontal', 'top'] },

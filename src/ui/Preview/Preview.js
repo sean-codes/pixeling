@@ -47,7 +47,7 @@ class Preview extends Base {
       }
    }
 
-   setFrames(currentFrame, frames, selected) {
+   setFrames(frames, currentFrame, selected) {
       this.currentFrame = currentFrame
       this.frames = frames
       var bakedReel = this.bakedHTML.find('reel')
@@ -55,10 +55,8 @@ class Preview extends Base {
 
       for(var frameID in frames) {
          var frame = frames[frameID]
-
-         var bakedFrame = this.bake(this.recipeFrame(frameID))
+         var bakedFrame = this.bake(this.recipeFrame(frameID, frame.canvas))
          bakedReel.append(bakedFrame)
-
          this.updateFrame(frameID, frame, selected)
       }
    }
@@ -75,35 +73,14 @@ class Preview extends Base {
       eleCanvas.height = height
       eleReel.style.width = width + 'px'
       eleReel.style.height = height + 'px'
+      ctx.imageSmoothingEnabled = false
 
       this.drawCheckedBackground(ctx, scale)
-
-      for(var x = 0; x < frame.width; x++) {
-         for(var y = 0; y < frame.height; y++) {
-            var pixel = frame.pixels[x][y]
-            ctx.fillStyle = pixel.colorString
-            ctx.fillRect(
-               Math.floor(x*scale),
-               Math.floor(y*scale),
-               Math.ceil(scale),
-               Math.ceil(scale))
-         }
-      }
+      ctx.drawImage(frame.canvas, 0, 0, width, height)
 
       // selected, i know this function is dense :<
       if(frameID != this.currentFrame || !selected || !selected.copy) return
-      for(var x = 0; x < selected.width; x++) {
-         for(var y = 0; y < selected.height; y++) {
-            var pixel = selected.copy.pixels[x][y]
-
-            ctx.fillStyle = pixel.colorString
-            ctx.fillRect(
-               Math.floor((selected.x + x)*scale),
-               Math.floor((selected.y + y)*scale),
-               Math.ceil(scale),
-               Math.ceil(scale))
-         }
-      }
+      ctx.drawImage(selected.copy.canvas, selected.x*scale, selected.y*scale, selected.width * scale, selected.height * scale)
    }
 
    drawCheckedBackground(ctx, scale) {
@@ -139,7 +116,7 @@ class Preview extends Base {
       }
    }
 
-   recipeFrame(id) {
+   recipeFrame(id, canvas) {
       return {
          tag: 'canvas',
          name: 'frame_'+id

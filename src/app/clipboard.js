@@ -2,8 +2,12 @@ app.clipboard = {
    store: {},
    selection: {},
    copy: function(area) {
-      var store = JSON.stringify(app.ui.cursor.selected.copy)
-      localStorage.setItem('copy', store)
+      var store = {
+         dimensions: app.ui.cursor.selected.copy.dimensions,
+         imageData: app.ui.cursor.selected.copy.canvas.toDataURL()
+      }
+
+      localStorage.setItem('copy', JSON.stringify(store))
    },
 
    cut: function(area) {
@@ -12,6 +16,12 @@ app.clipboard = {
    },
 
    paste: function(x=0, y=0) {
+      var copy = JSON.parse(localStorage.getItem('copy'))
+      if(!this.isASafeCopy(copy)) {
+         console.log('is not safe to paste');
+         return
+      }
+
       // drop what is within cursor
       if(app.ui.cursor.selected) {
          this.pasteCopy(
@@ -20,44 +30,49 @@ app.clipboard = {
             app.ui.cursor.selected.copy)
       }
 
-      var copy = JSON.parse(localStorage.getItem('copy'))
-      if(!this.isASafeCopy(copy)) {
-         console.log('is not safe to paste');
-         return
-      }
+      // load in the copy form localstorage
+      var copyImg = document.createElement('img')
+      copyImg.src = copy.imageData
+      copyImg.onload = () => {
+         // paste the item
+         var copyCanvas = document.createElement('canvas')
+         copyCanvas.width = copy.dimensions.width
+         copyCanvas.height = copy.dimensions.height
+         var copyCtx = copyCanvas.getContext('2d')
+         copyCtx.drawImage(copyImg, 0, 0)
 
-      var selected = {
-         x: copy.dimensions.x,
-         y: copy.dimensions.y,
-         width: copy.dimensions.width,
-         height: copy.dimensions.height,
-         copy
+         var selected = {
+            x: 0, y: 0,
+            width: copy.dimensions.width,
+            height: copy.dimensions.height,
+            copy: {
+               dimensions: {
+                  x: 0, y: 0,
+                  width: copy.dimensions.width,
+                  height: copy.dimensions.height,
+               },
+               canvas: copyCanvas,
+               ctx: copyCtx
+            }
+         }
+
+         app.ui.cursor.update({ selected })
+         app.updateFrames()
       }
-      app.ui.cursor.update({ selected })
-      app.updateFrames()
    },
 
    pasteCopy: function(x, y, copy) {
-      //if(!copy || !copy.dimensions) return
-
-      var image = app.frames.getCurrentFrame()
-      for(var cx = 0; cx < copy.dimensions.width; cx++) {
-         for(var cy = 0; cy < copy.dimensions.height; cy++) {
-            var pasteX = cx + x
-            var pasteY = cy + y
-            copy.pixels[cx][cy].x = pasteX
-            copy.pixels[cx][cy].y = pasteY
-            if(image.pixels[pasteX] && image.pixels[pasteX][pasteY]) {
-               var copyPixel = copy.pixels[cx][cy]
-               app.frames.drawPixel(pasteX, pasteY, copyPixel.color)
-            }
-         }
-      }
+      var frame = app.frames.getCurrentFrame()
+      frame.ctx.drawImage(copy.canvas, x, y)
 
       app.updateFrames()
    },
 
-   getCopy(area) {
+   getCopy: function(area) {
+      var copyCanvas = document.createElement('canvas')
+      copyCanvas.width = area.width
+      copyCanvas.height = area.height
+
       var copy = {
          dimensions: {
             x: 0,
@@ -65,28 +80,22 @@ app.clipboard = {
             width: area.width,
             height: area.height
          },
-         pixels: []
+         canvas: copyCanvas,
+         ctx: copyCanvas.getContext('2d')
       }
-
-      var image = app.frames.getCurrentFrame()
-      for(var x = 0; x < area.width; x++) {
-         copy.pixels[x] = []
-         for(var y = 0; y < area.height; y++) {
-            copy.pixels[x][y] = image.pixels[area.x+x][area.y+y]
-         }
-      }
-
-      return app.clone(copy)
+      copy.ctx.imageSmoothingEnabled = false
+      var frame = app.frames.getCurrentFrame()
+      copy.ctx.drawImage(frame.canvas, area.x, area.y, area.width, area.height, 0, 0, area.width, area.height)
+      return copy
    },
 
-   isASafeCopy(copy) {
-      console.log(copy)
+   isASafeCopy: function(copy) {
       if (
          copy.dimensions.x != null &&
          copy.dimensions.y != null &&
          copy.dimensions.width &&
          copy.dimensions.height &&
-         copy.pixels.length
+         copy.imageData
       ) return true
    }
 }

@@ -50,6 +50,7 @@ app.command = {
    },
 
    crop: function() {
+      console.log('cropiing')
       if(app.ui.cursor.selected) {
          var { x, y, width, height } = app.ui.cursor.selected
          app.tools.select.unsetSelected()
@@ -83,7 +84,7 @@ app.command = {
    copy: function() {
       var selected = app.ui.cursor.selected
       if(selected) {
-         var copy = app.clipboard.copy(selected)
+         app.clipboard.copy(selected)
       }
    },
 
@@ -202,7 +203,7 @@ app.command = {
          selected: {
             x: imageRect.x,
             y: imageRect.y,
-            width: imageRect.width, 
+            width: imageRect.width,
             height: imageRect.height,
             copy: app.clipboard.getCopy(imageRect)
          }

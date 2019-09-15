@@ -3,7 +3,7 @@ app.frames = {
    currentFrame: 0,
    width: 48,
    height: 32,
-   ctx: document.createElement('canvas').getContext('2d'),
+
    getCurrentFrame: function() {
       return this.list[this.currentFrame]
    },
@@ -17,27 +17,12 @@ app.frames = {
       var frameHeight = image.height
       this.create(frameWidth, frameHeight)
 
-      // loop through new image pixels
-      var canvas = document.createElement('canvas')
-      canvas.width = image.width
-      canvas.height = image.height
+      this.list[0].ctx.drawImage(image, 0, 0, frameWidth, frameHeight)
 
-      var ctx = canvas.getContext('2d')
-      ctx.drawImage(image, 0, 0)
-
-      for(var offset = 0; offset < frames; offset++) {
-         if(offset){
-            this.addFrame()
-            this.currentFrame = this.list.length-1
-         }
-
-         for(var x = 0; x < frameWidth; x++) {
-            for(var y = 0; y < frameHeight; y++) {
-               var pixelData = ctx.getImageData(x+(offset*frameWidth), y, 1, 1).data
-               var hslaColor = this.rgbaToHsla(...pixelData)
-               this.drawPixel(x, y, hslaColor)
-            }
-         }
+      for(var offset = 1; offset < frames; offset++) {
+         this.addFrame()
+         this.currentFrame = 0
+         this.list[offset].ctx.drawImage(image, frameWidth*offset, frameHeight*offset, frameWidth, frameHeight)
       }
    },
 
@@ -50,13 +35,7 @@ app.frames = {
       var offX = 0
 
       for(var frame of this.list) {
-         for(var x = 0; x < frame.width; x++) {
-            for(var y = 0; y < frame.height; y++) {
-               var pixel = frame.pixels[x][y]
-               ctx.fillStyle = this.hslaToString(pixel.color)
-               ctx.fillRect(pixel.x + offX, pixel.y, 1, 1)
-            }
-         }
+         ctx.drawImage(frame.canvas, offX, 0)
          offX += frame.width
       }
 
@@ -72,10 +51,15 @@ app.frames = {
    },
 
    addFrame: function() {
+      var canvas = document.createElement('canvas')
+      canvas.width = this.width
+      canvas.height = this.height
+
       var frame = {
          width: this.width,
          height: this.height,
-         pixels: this.createPixelsArray(this.width, this.height)
+         canvas: canvas,
+         ctx: canvas.getContext('2d')
       }
 
       this.list.push(frame)
@@ -122,23 +106,15 @@ app.frames = {
 
    cropCanvas: function(startX, startY, width, height) {
       for(var frame of this.list) {
-         var oldPixels = app.clone(frame.pixels)
-         var newPixels = this.createPixelsArray(width, height)
-
-         for(var x = 0; x < width; x++) {
-            for(var y = 0; y < height; y++) {
-               if(oldPixels[x+startX] && oldPixels[x+startX][y+startY]) {
-                  newPixels[x][y] = oldPixels[x+startX][y+startY]
-               }
-
-               newPixels[x][y].x = x
-               newPixels[x][y].y = y
-            }
-         }
-
-         frame.pixels = newPixels
+         var oldCanvas = frame.canvas
+         frame.canvas = document.createElement('canvas')
+         frame.ctx = frame.canvas.getContext('2d')
+         frame.canvas.width = width
+         frame.canvas.height = height
          frame.width = width
          frame.height = height
+
+         frame.ctx.drawImage(oldCanvas, 0, 0)
       }
 
       this.width = width
@@ -152,19 +128,14 @@ app.frames = {
    },
 
    drawPixel: function(x, y, color) {
-      var image = this.getCurrentFrame()
-      if(!image.pixels[x] || !image.pixels[x][y]) return
-
-      var pixel = image.pixels[x][y]
-      pixel.color = this.addHSLColor(pixel.color, color)
-      pixel.colorString = this.hslaToString(pixel.color)
+      var frame = this.getCurrentFrame()
+      frame.ctx.fillStyle = this.hslaToString(color)
+      frame.ctx.fillRect(x, y, 1, 1)
    },
 
    clearPixels: function(area) {
-      var image = this.getCurrentFrame()
-      this.loopPixels((pixel) => {
-         image.pixels[pixel.x][pixel.y] = this.createPixel(pixel.x, pixel.y)
-      }, area.x, area.y, area.width, area.height)
+      var frame = this.getCurrentFrame()
+      frame.ctx.clearRect(area.x, area.y, area.width, area.height)
    },
 
    loopPixels: function(run, areaX=0, areaY=0, width=this.width, height=this.height) {
@@ -233,5 +204,12 @@ app.frames = {
 
    pixelID: function(x, y) {
       return x + 'x' + y
+   },
+
+   readPixel: function(frame, x, y) {
+      // console.log('readingPixel', frame, x, y)
+      var pixelData = frame.ctx.getImageData(x, y, 1, 1)
+      // console.log('pixelData', pixelData)
+      return this.rgbaToHsla(pixelData.data[0], pixelData.data[1], pixelData.data[2], pixelData.data[3])
    }
 }

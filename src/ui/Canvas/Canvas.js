@@ -2,7 +2,7 @@ class Canvas extends Base  {
    constructor(options) {
       super()
 
-      this.initialScale = 10
+      this.initialScale = 1
       this.scale = this.initialScale
 
       this.frames = []
@@ -33,11 +33,7 @@ class Canvas extends Base  {
          var frame = this.frames[start]
          this.ctx.globalAlpha = opacity
 
-         for(var x = 0; x < frame.width; x++) {
-            for(var y = 0; y < frame.height; y++) {
-               this.drawPixel(frame.pixels[x][y])
-            }
-         }
+         this.ctx.drawImage(frame.canvas, 0, 0)
          start += 1
          currentDistance += 1
       }
@@ -46,9 +42,10 @@ class Canvas extends Base  {
 
    resetCanvas() {
       var frame = this.frames[this.currentFrame]
-      this.canvas.width = frame.width*this.scale
-      this.canvas.height = frame.height*this.scale
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+      this.canvas.width = frame.width
+      this.canvas.height = frame.height
+      this.canvas.style.width = (frame.width) + 'px'
+      this.canvas.style.height = (frame.height) + 'px'
       this.drawCheckerBoard()
    }
 

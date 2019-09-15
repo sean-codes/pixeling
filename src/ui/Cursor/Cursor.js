@@ -7,6 +7,10 @@ class Cursor extends Base  {
       this.canvas = this.bakedHTML.ele('canvas')
       this.ctx = this.canvas.getContext('2d')
 
+      this.easelCanvas = {
+         x: 0, y: 0, width: 32, height: 32, scale: 1
+      }
+
       this.imageWidth = 32
       this.imageHeight = 32
 
@@ -15,14 +19,15 @@ class Cursor extends Base  {
       this.width = 1
       this.height = 1
       this.scale = 1
-      this.easelScale = 1
       this.size = 1
       this.selected = undefined
       this.color = '#000'
       this.mode = 'stroke'
 
-      this.initialScale = 10
-      this.scale = this.initialScale
+      this.cursorScale = 10
+      this.scale = 1
+
+
       this.onDown = options.onDown || function(){}
       this.onMove = options.onMove || function(){}
       this.onStroke = options.onStroke || function(){}
@@ -109,18 +114,18 @@ class Cursor extends Base  {
    }
 
    getMouseEventPosition(e) {
-      var eleCursor = this.bakedHTML.ele('cursor')
-      var eleCanvas = this.bakedHTML.ele('canvas')
+      var eleCursor = this.bakedHTML.ele('canvas')
+      var easelCanvas = this.easelCanvas
 
-      var rectCursor = eleCursor.getBoundingClientRect()
-      var rectCanvas = eleCanvas.getBoundingClientRect()
+      var easelCanvasX = easelCanvas.xPercent * eleCursor.clientWidth - easelCanvas.width/2
+      var easelCanvasY = easelCanvas.yPercent * eleCursor.clientHeight - easelCanvas.height/2
 
-      var rawX = -(rectCanvas.x - rectCursor.x) + e.offsetX // just swap the order...
-      var rawY = -(rectCanvas.y - rectCursor.y) + e.offsetY // never! :]
+      var xPercent = (e.offsetX - easelCanvasX) / easelCanvas.width
+      var yPercent = (e.offsetY - easelCanvasY) / easelCanvas.height
 
-      var x = Math.floor(rawX / this.scale / this.easelScale)
-      var y = Math.floor(rawY / this.scale / this.easelScale)
-
+      var x = Math.floor(xPercent * this.imageWidth)
+      var y = Math.floor(yPercent * this.imageHeight)
+      // console.log('mouse pos', x, y, e.offsetY)
       return { x, y }
    }
 
@@ -208,20 +213,14 @@ class Cursor extends Base  {
 
    drawSelectedPixels() {
       var copy = this.selected.copy
+      var { x, y, width, height} = this.scaleDimensions({
+         x: this.selected.x,
+         y: this.selected.y,
+         width: copy.dimensions.width,
+         height: copy.dimensions.height
+      })
 
-      for(var x = 0; x < copy.dimensions.width; x++) {
-         for(var y = 0; y < copy.dimensions.height; y++) {
-            var pixel = copy.pixels[x][y]
-            var pixelDimensions = {
-               x: this.selected.x + x,
-               y: this.selected.y + y,
-               width: 1,
-               height: 1
-            }
-
-            this.drawRectangleFilled(pixelDimensions, pixel.colorString)
-         }
-      }
+      this.ctx.drawImage(copy.canvas, x, y, width, height)
    }
 
    drawRectangleFilled(dimensions, color) {
@@ -274,17 +273,6 @@ class Cursor extends Base  {
       this.ctx.lineWidth = 1
    }
 
-   scaleDimensions(dimensions) {
-      var { x, y, width, height } = dimensions
-
-      return {
-         x: Math.floor(x*this.scale),
-         y: Math.floor(y*this.scale),
-         width: Math.ceil(width*this.scale),
-         height: Math.ceil(height*this.scale)
-      }
-   }
-
    updateImage(image) {
       this.imageWidth = image.width
       this.imageHeight = image.height
@@ -293,31 +281,46 @@ class Cursor extends Base  {
    }
 
    updateCanvas() {
-      var cursorScale = this.scale
       this.canvas.style.cursor = this.getCursor()
-      if (this.canvas.width != this.imageWidth * cursorScale
-         || this.canvas.height != this.imageHeight * cursorScale) {
-            this.canvas.width = this.imageWidth*cursorScale
-            this.canvas.height = this.imageHeight*cursorScale
-      }
+      this.canvas.width = this.canvas.clientWidth
+      this.canvas.height = this.canvas.clientHeight
+      this.ctx.imageSmoothingEnabled = false
 
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
    }
 
-   updateCanvasPositionAndScale(x, y, scale) {
-      this.easelScale = scale
-      var eleCanvas = this.bakedHTML.ele('canvas')
-
-      eleCanvas.style.left = x + '%'
-      eleCanvas.style.top = y + '%'
-      eleCanvas.style.transform =
-         `translateX(-50%) translateY(-50%) scale(${scale})`
-   }
-
    updateScale(scale) {
-      this.scale = this.initialScale * scale
+      this.scale = scale
       this.updateCanvas()
       this.renderCursor()
+   }
+
+   updateCanvasPositionAndScale(xPercent, yPercent, scale) {
+      this.easelCanvas = {
+         xPercent: xPercent,
+         yPercent: yPercent,
+         width: scale * this.imageWidth,
+         height: scale * this.imageHeight,
+         scale: scale
+      }
+
+      this.update()
+   }
+
+   scaleDimensions(dimensions) {
+      var { x, y, width, height } = dimensions
+
+      var eleCursor = this.bakedHTML.ele('canvas')
+      var easelCanvas = this.easelCanvas
+      var easelCanvasX = this.easelCanvas.xPercent * eleCursor.clientWidth - this.easelCanvas.width/2
+      var easelCanvasY = this.easelCanvas.yPercent * eleCursor.clientHeight - this.easelCanvas.height/2
+
+      return {
+         x: Math.floor(easelCanvasX + (x * this.easelCanvas.scale)),
+         y: Math.floor(easelCanvasY + (y * this.easelCanvas.scale)),
+         width: Math.ceil(width*this.easelCanvas.scale),
+         height: Math.ceil(height*this.easelCanvas.scale)
+      }
    }
 
    recipe() {

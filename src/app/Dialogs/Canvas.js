@@ -31,6 +31,7 @@ app.dialogs.Canvas = {
             app.frames.setCanvasSize(width, height)
 
             app.updateFrames()
+            app.ui.easel.centerCanvas()
          }
       },
       {

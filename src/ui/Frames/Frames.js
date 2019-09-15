@@ -9,6 +9,7 @@ class Frames extends Base {
 
       this.size = 80
       this.frames = []
+      this.framesLength = 0
       this.framesOffsetX = 0
       this.mouse = {
          down: false,
@@ -80,8 +81,9 @@ class Frames extends Base {
    }
 
    setFrames(frames, current, selected) {
+
       var bakedReel = this.bakedHTML.find('reel')
-      var needToRebuildHTML = frames.length != this.frames.length
+      var needToRebuildHTML = this.framesLength != frames.length
       if(needToRebuildHTML) bakedReel.clear()
 
       this.currentFrame = current
@@ -100,6 +102,8 @@ class Frames extends Base {
          eleFrame.classList.toggle('current', frameID == current)
          this.updateFrame(frameID, frame)
       }
+
+      this.framesLength = this.frames.length
    }
 
    updateFrame(frameID, frame, selected) {
@@ -109,40 +113,26 @@ class Frames extends Base {
 
    drawFramePreview(eleCanvas, frame, frameID) {
       var scale = this.size / Math.max(frame.width, frame.height)
-      eleCanvas.width = frame.width * scale
-      eleCanvas.height = frame.height * scale
+      eleCanvas.width = frame.width
+      eleCanvas.height = frame.height
+
+      if (frame.width >= frame.height) {
+         eleCanvas.style.width = '100%'
+         eleCanvas.style.height = 'auto'
+      } else {
+         eleCanvas.style.width = 'auto'
+         eleCanvas.style.height = '100%'
+      }
 
       var ctx = eleCanvas.getContext('2d')
       this.drawCheckedBackground(ctx, scale)
-      for(var x = 0; x < frame.width; x++) {
-         for(var y = 0; y < frame.height; y++) {
-            var pixel = frame.pixels[x][y]
-            ctx.fillStyle = pixel.colorString
-            ctx.fillRect(
-               Math.floor(x*scale),
-               Math.floor(y*scale),
-               Math.ceil(scale),
-               Math.ceil(scale))
-         }
-      }
+      ctx.drawImage(frame.canvas, 0, 0)
 
       var thisFrameCouldHaveSelectedContet = frameID == this.currentFrame
       var somethingIsSelected = this.selected && this.selected.copy
 
       if(thisFrameCouldHaveSelectedContet && somethingIsSelected) {
-         // draw selected (duplicated from preview)
-         for(var x = 0; x < this.selected.width; x++) {
-            for(var y = 0; y < this.selected.height; y++) {
-               var pixel = this.selected.copy.pixels[x][y]
-
-               ctx.fillStyle = pixel.colorString
-               ctx.fillRect(
-                  Math.floor((this.selected.x + x)*scale),
-                  Math.floor((this.selected.y + y)*scale),
-                  Math.ceil(scale),
-                  Math.ceil(scale))
-            }
-         }
+         ctx.drawImage(this.selected.copy.canvas, this.selected.x, this.selected.y, this.selected.width, this.selected.height)
       }
    }
 

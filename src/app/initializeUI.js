@@ -24,7 +24,7 @@ app.initializeUI = function() {
       status: {
          color: '[ hsla() ]',
          pos: '[ pos: 0, 0 ]',
-         scale: '[ scale: 1x ]',
+         scale: '[ scale: 10x ]',
       }
    })
 
@@ -56,10 +56,8 @@ app.initializeUI = function() {
    app.ui.canvas = new Canvas()
 
    app.ui.easel = new Easel({
-      center: [
-         app.ui.canvas,
-         app.ui.cursor
-      ],
+      uiCanvas: app.ui.canvas,
+      uiCursor: app.ui.cursor,
       onScale: (scale) => {
          app.ui.statusbar.updateStatus({
             scale: `[ scale: ${scale}x ]`

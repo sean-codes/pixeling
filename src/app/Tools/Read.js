@@ -5,16 +5,13 @@ app.tools.read = new app.tools.Base({
    },
 
    down(mouse) {
-      var image = app.frames.getCurrentFrame()
+      var frame = app.frames.getCurrentFrame()
       var x = mouse.positionCurrent.x
       var y = mouse.positionCurrent.y
 
-      var pixel = image.pixels[x][y]
-      var color = pixel.color
-
-      if(color.h || color.s || color.l || color.a) {
-         app.ui.pallet.setColor(color)
-      }
+      var color = app.frames.readPixel(frame, x, y)
+      console.log('reading color', color)
+      app.ui.pallet.setColor(color)
    },
 
    move(mouse) {

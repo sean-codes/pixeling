@@ -9,25 +9,62 @@ app.history = {
    },
 
    load: function() {
-      var history = JSON.parse(this.store[this.point])
+      var history = this.store[this.point]
+
+      console.log('loading history', history)
       // app.ui.toolbox.selectTool(history.tool)
       if(app.frames.list.length != history.frames.length) {
          app.frames.currentFrame = history.currentFrame
       }
-      app.frames.list = history.frames
+
+      app.frames.width = history.width
+      app.frames.height = history.height
+
+      app.frames.list = history.frames.map((frame) => {
+         var canvas = document.createElement('canvas')
+         canvas.width = history.width
+         canvas.height = history.height
+         var ctx = canvas.getContext('2d')
+
+         ctx.putImageData(frame.imageData, 0, 0)
+
+         return {
+            width: history.width,
+            height: history.height,
+            canvas: canvas,
+            ctx: ctx
+         }
+      })
+
+      console.log(app.frames.list)
+
       app.ui.cursor.update({ selected: undefined })
       app.updateFrames()
    },
 
    create: function() {
       // add tool, select, image
-      return JSON.stringify({
+      var selected = app.ui.cursor.selected ? {
+         x: app.ui.cursor.selected.x,
+         y: app.ui.cursor.selected.y,
+         width: app.ui.cursor.selected.width,
+         height: app.ui.cursor.selected.height
+      } : undefined
+
+      var history = {
          id: Math.random(),
-         //tool: app.ui.toolbox.currentTool.name,
-         selected: app.ui.cursor.selected,
-         frames: app.frames.list,
-         currentFrame: app.frames.currentFrame
-      })
+         currentFrame: app.frames.currentFrame,
+         selected: selected,
+         width: app.frames.width,
+         height: app.frames.height,
+         frames: app.frames.list.map((frame) => {
+            return {
+               imageData: frame.ctx.getImageData(0, 0, frame.width, frame.height)
+            }
+         })
+      }
+
+      return history
    },
 
    push: function() {

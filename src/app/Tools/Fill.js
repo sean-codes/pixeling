@@ -14,20 +14,17 @@ app.tools.fill = new app.tools.Base({
    down(mouse) {
       var frame = app.frames.getCurrentFrame()
       var pos = mouse.positionCurrent
-      var pixel = frame.pixels[pos.x][pos.y]
-      var initialColor = app.clone(pixel.color)
-      app.frames.drawPixel(pos.x, pos.y, app.ui.pallet.color)
+      var initialColor = app.frames.readPixel(frame, pos.x, pos.y)
 
-      // if the color delta is not really changed
-      if(this.colorsCloseEnough(initialColor, pixel.color)){
-         return
-      }
-      this.fillAdjecentPixels(pos, initialColor)
+      app.frames.drawPixel(pos.x, pos.y, app.ui.pallet.color)
+      // need to come back and fix this is really not performat
+      this.fillAdjecentPixels(pos, initialColor, {})
+
       app.updateFrames()
       app.history.push()
    },
 
-   fillAdjecentPixels(pos, color) {
+   fillAdjecentPixels(pos, color, checked) {
       // sort of dangerous
       // thinking we search top right bottom left and curse
       // might run into a infinite
@@ -39,15 +36,20 @@ app.tools.fill = new app.tools.Base({
          right: { x: pos.x + 1, y: pos.y }
       }
 
-      var image = app.frames.getCurrentFrame()
+      var frame = app.frames.getCurrentFrame()
       for(var positionName in positions) {
          var position = positions[positionName]
-         if(position.x < 0 || position.x == image.width) continue
-         if(position.y < 0 || position.y == image.height) continue
-         var pixelAtAdj = image.pixels[position.x][position.y]
-         if(this.colorsCloseEnough(color, pixelAtAdj.color)) {
+         if(position.x < 0 || position.x == frame.width) continue
+         if(position.y < 0 || position.y == frame.height) continue
+         if(checked[position.x + '-' + position.y]) continue
+
+         checked[position.x + '-' + position.y] = true
+
+         var pixelAtAdj = app.frames.readPixel(frame, position.x, position.y)
+
+         if(this.colorsCloseEnough(color, pixelAtAdj)) {
             app.frames.drawPixel(position.x, position.y, app.ui.pallet.color)
-            this.fillAdjecentPixels(position, color)
+            this.fillAdjecentPixels(position, color, checked)
          }
       }
    },
