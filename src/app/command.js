@@ -197,21 +197,8 @@ app.command = {
    },
 
    selectAll: function() {
-      var imageRect = app.frames.getImageRect()
       app.ui.toolbox.selectTool('select')
-      app.ui.cursor.update({
-         selected: {
-            x: imageRect.x,
-            y: imageRect.y,
-            width: imageRect.width,
-            height: imageRect.height,
-            copy: app.clipboard.getCopy(imageRect)
-         }
-      })
-      app.frames.clearPixels(imageRect)
-
-      app.updateFrames()
-      app.history.push()
+      app.tools.select.selectAll()
    },
 
    toggleColorMixer: function() {

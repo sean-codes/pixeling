@@ -3,6 +3,8 @@ app.frames = {
    currentFrame: 0,
    width: 48,
    height: 32,
+   temporaryCanvas: document.createElement('canvas'),
+   moveCanvas: document.createElement('canvas'),
 
    getCurrentFrame: function() {
       return this.list[this.currentFrame]
@@ -54,12 +56,13 @@ app.frames = {
       var canvas = document.createElement('canvas')
       canvas.width = this.width
       canvas.height = this.height
-
+      var ctx = canvas.getContext('2d')
+      ctx.imageSmoothingEnabled = false
       var frame = {
          width: this.width,
          height: this.height,
          canvas: canvas,
-         ctx: canvas.getContext('2d')
+         ctx: ctx
       }
 
       this.list.push(frame)
@@ -138,16 +141,6 @@ app.frames = {
       frame.ctx.clearRect(area.x, area.y, area.width, area.height)
    },
 
-   loopPixels: function(run, areaX=0, areaY=0, width=this.width, height=this.height) {
-      var image = this.getCurrentFrame()
-
-      for(var x = areaX; x < areaX+width; x++) {
-         for(var y = areaY; y < areaY+height; y++) {
-            image.pixels[x] && image.pixels[x][y] && run(image.pixels[x][y])
-         }
-      }
-   },
-
    addHSLColor: function(original, target) {
       // could not really figure this one out
       // will cheat for now :]
@@ -211,5 +204,31 @@ app.frames = {
       var pixelData = frame.ctx.getImageData(x, y, 1, 1)
       // console.log('pixelData', pixelData)
       return this.rgbaToHsla(pixelData.data[0], pixelData.data[1], pixelData.data[2], pixelData.data[3])
+   },
+
+   setTemporary: function() {
+      var frame = this.getCurrentFrame()
+      this.temporaryCanvas.width = frame.width
+      this.temporaryCanvas.height = frame.height
+      this.temporaryCanvas.getContext('2d').drawImage(frame.canvas, 0, 0)
+   },
+
+   restoreTemporary: function() {
+      var frame = this.getCurrentFrame()
+      frame.ctx.clearRect(0, 0, frame.width, frame.height)
+      frame.ctx.drawImage(this.temporaryCanvas, 0, 0)
+   },
+
+   movePixelArea: function(from, to) {
+      var frame = this.getCurrentFrame()
+      this.moveCanvas.width = from.width
+      this.moveCanvas.height = from.height
+      this.moveCanvas.getContext('2d').drawImage(
+         frame.canvas,
+         from.x, from.y, from.width, from.height,
+         0, 0, from.width, from.height)
+
+      frame.ctx.clearRect(from.x, from.y, from.width, from.height)
+      frame.ctx.drawImage(this.moveCanvas, to.x, to.y)
    }
 }

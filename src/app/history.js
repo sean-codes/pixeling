@@ -11,8 +11,6 @@ app.history = {
    load: function() {
       var history = this.store[this.point]
 
-      console.log('loading history', history)
-      // app.ui.toolbox.selectTool(history.tool)
       if(app.frames.list.length != history.frames.length) {
          app.frames.currentFrame = history.currentFrame
       }

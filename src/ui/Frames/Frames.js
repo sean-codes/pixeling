@@ -125,36 +125,16 @@ class Frames extends Base {
       }
 
       var ctx = eleCanvas.getContext('2d')
-      this.drawCheckedBackground(ctx, scale)
       ctx.drawImage(frame.canvas, 0, 0)
 
       var thisFrameCouldHaveSelectedContet = frameID == this.currentFrame
       var somethingIsSelected = this.selected && this.selected.copy
 
       if(thisFrameCouldHaveSelectedContet && somethingIsSelected) {
-         ctx.drawImage(this.selected.copy.canvas, this.selected.x, this.selected.y, this.selected.width, this.selected.height)
+         ctx.drawImage(this.selected.copy, this.selected.x, this.selected.y, this.selected.width, this.selected.height)
       }
    }
 
-   drawCheckedBackground(ctx, scale) {
-      var size = 16
-      var spacesX = Math.ceil(ctx.canvas.width / (size*scale))
-      var spacesY = Math.ceil(ctx.canvas.height / (size*scale))
-      var counter = 0
-      for(var x = 0; x < spacesX; x++) {
-         for(var y = 0; y < spacesY; y++) {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'
-            if(counter % 2) ctx.fillRect(
-               x*size*scale,
-               y*size*scale,
-               scale*size,
-               scale*size
-            )
-            counter += 1
-         }
-         if(spacesY % 2 == 0) counter += 1
-      }
-   }
 
    scrollFrames(x) {
       var eleFrames = this.bakedHTML.ele('frames')

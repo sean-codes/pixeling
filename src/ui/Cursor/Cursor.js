@@ -43,22 +43,6 @@ class Cursor extends Base  {
       }
 
       this.updateCanvas()
-      this.setChangeInterval()
-   }
-
-   setChangeInterval() {
-      this.change = false
-      setInterval(() => {
-         if (this.change) {
-            this.change = false
-            if(this.mouse.down) {
-               this.mouse.positions.push(this.mouse.positionCurrent)
-               return this.onStroke(this.mouse)
-            }
-
-            this.onMove(this.mouse)
-         }
-      }, 1000/30)
    }
 
    eventMousedown(e, element) {
@@ -71,7 +55,7 @@ class Cursor extends Base  {
       this.mouse.positionLast = this.getMouseEventPosition(e)
       this.mouse.positionDelta = { x: 0, y: 0 }
       this.mouse.positionTotalDelta = { x: 0, y: 0 }
-      this.mouse.positions = [ this.mouse.positionStart ]
+      this.mouse.positions = [ this.mouse.positionStart ] // pls roll over 0 to make a line
 
       this.onDown(this.mouse)
    }
@@ -99,7 +83,12 @@ class Cursor extends Base  {
 
       this.mouse.positionLast = { x, y }
 
-      this.change = true
+      if(this.mouse.down) {
+         this.mouse.positions.push(this.mouse.positionCurrent)
+         return this.onStroke(this.mouse)
+      }
+
+      this.onMove(this.mouse)
    }
 
    eventMouseleave(e, element) {
@@ -135,12 +124,15 @@ class Cursor extends Base  {
    }
 
    canMoveSelected() {
+      if (!this.selected) return false
+
       var mx = this.mouse.positionCurrent.x
       var my = this.mouse.positionCurrent.y
 
+      var select = this.selected
       return this.selected
-         && this.selected.x <= mx && this.selected.x + this.selected.width > mx
-         && this.selected.y <= my && this.selected.y + this.selected.height > my
+         && select.x <= mx && select.x + select.width > mx
+         && select.y <= my && select.y + select.height > my
    }
 
    update(options) {
@@ -148,6 +140,40 @@ class Cursor extends Base  {
 
       this.updateCanvas()
       this.renderCursor()
+   }
+
+   updateImage(image) {
+      this.imageWidth = image.width
+      this.imageHeight = image.height
+
+      this.update()
+   }
+
+   updateCanvas() {
+      this.canvas.style.cursor = this.getCursor()
+      this.canvas.width = this.canvas.clientWidth
+      this.canvas.height = this.canvas.clientHeight
+      this.ctx.imageSmoothingEnabled = false
+
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+   }
+
+   updateScale(scale) {
+      this.scale = scale
+      this.updateCanvas()
+      this.renderCursor()
+   }
+
+   updateCanvasPositionAndScale(xPercent, yPercent, scale) {
+      this.easelCanvas = {
+         xPercent: xPercent,
+         yPercent: yPercent,
+         width: scale * this.imageWidth,
+         height: scale * this.imageHeight,
+         scale: scale
+      }
+
+      this.update()
    }
 
    renderCursor() {
@@ -201,26 +227,16 @@ class Cursor extends Base  {
 
    renderCursorModeSelect(dimensions) {
       // override dimensions to use 1px
-      var cursorDimensions1px = { width:1, height: 1 }
+      var cursorDimensions1px = { width: 1, height: 1 }
       cursorDimensions1px = Object.assign(cursorDimensions1px, dimensions)
-      !this.mouse.down && !this.canMoveSelected() && this.drawRectangleDashed(cursorDimensions1px)
+
+      if(!this.mouse.down && !this.canMoveSelected()) {
+         this.drawRectangleDashed(cursorDimensions1px)
+      }
 
       if(this.selected) {
-         this.selected.copy && this.drawSelectedPixels()
          this.drawRectangleDashed(this.selected)
       }
-   }
-
-   drawSelectedPixels() {
-      var copy = this.selected.copy
-      var { x, y, width, height} = this.scaleDimensions({
-         x: this.selected.x,
-         y: this.selected.y,
-         width: copy.dimensions.width,
-         height: copy.dimensions.height
-      })
-
-      this.ctx.drawImage(copy.canvas, x, y, width, height)
    }
 
    drawRectangleFilled(dimensions, color) {
@@ -271,40 +287,6 @@ class Cursor extends Base  {
       this.ctx.strokeRect(x+lineWidth/2, y+lineWidth/2, width-lineWidth, height-lineWidth)
       this.ctx.setLineDash([0])
       this.ctx.lineWidth = 1
-   }
-
-   updateImage(image) {
-      this.imageWidth = image.width
-      this.imageHeight = image.height
-
-      this.update()
-   }
-
-   updateCanvas() {
-      this.canvas.style.cursor = this.getCursor()
-      this.canvas.width = this.canvas.clientWidth
-      this.canvas.height = this.canvas.clientHeight
-      this.ctx.imageSmoothingEnabled = false
-
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-   }
-
-   updateScale(scale) {
-      this.scale = scale
-      this.updateCanvas()
-      this.renderCursor()
-   }
-
-   updateCanvasPositionAndScale(xPercent, yPercent, scale) {
-      this.easelCanvas = {
-         xPercent: xPercent,
-         yPercent: yPercent,
-         width: scale * this.imageWidth,
-         height: scale * this.imageHeight,
-         scale: scale
-      }
-
-      this.update()
    }
 
    scaleDimensions(dimensions) {

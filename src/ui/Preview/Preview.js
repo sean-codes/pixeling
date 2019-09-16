@@ -80,7 +80,7 @@ class Preview extends Base {
 
       // selected, i know this function is dense :<
       if(frameID != this.currentFrame || !selected || !selected.copy) return
-      ctx.drawImage(selected.copy.canvas, selected.x*scale, selected.y*scale, selected.width * scale, selected.height * scale)
+      ctx.drawImage(selected.copy, selected.x*scale, selected.y*scale, selected.width * scale, selected.height * scale)
    }
 
    drawCheckedBackground(ctx, scale) {

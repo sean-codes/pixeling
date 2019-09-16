@@ -18,9 +18,10 @@ class Easel extends Base  {
       this.moveDampen = 2
 
       this.scale = 10
+
       this.scaleMin = 0.1
       this.scaleMax = 100
-      this.scaleDampen = 1005
+      this.scaleDampen = 10
    }
 
    eventMousedown(e, element) {
@@ -71,12 +72,12 @@ class Easel extends Base  {
    }
 
    zoom(amount) {
-      amount *= 100
       var newScale = this.scale - amount
       var newScaleMinMax = Math.min(this.scaleMax, Math.max(this.scaleMin, newScale))
       var newScaleRounded = Math.round(newScaleMinMax*100)/100
       this.scale = newScaleRounded
-      this.moveCanvas(0, 0)
+      console.log('how much should i move canvas', amount, (50 - this.centerX) * amount)
+      this.setCanvas(this.centerX, this.centerY)
       this.onScale(newScaleRounded)
    }
 
@@ -85,6 +86,15 @@ class Easel extends Base  {
       var canvasElement = this.bakedHTML.ele('canvas')
       this.centerX += (moveX / easelElement.clientWidth)*100
       this.centerY += (moveY / easelElement.clientHeight)*100
+
+      this.transformIndicators()
+      this.uiCanvas.updateCanvasPositionAndScale(this.centerX, this.centerY, this.scale)
+      this.uiCursor.updateCanvasPositionAndScale(this.centerX/100, this.centerY/100, this.scale)
+   }
+
+   setCanvas(centerX, centerY) {
+      this.centerX = centerX
+      this.centerY = centerY
 
       this.transformIndicators()
       this.uiCanvas.updateCanvasPositionAndScale(this.centerX, this.centerY, this.scale)

@@ -12,6 +12,7 @@ class Canvas extends Base  {
 
       this.canvas = this.bakedHTML.ele('canvas')
       this.ctx = this.canvas.getContext('2d')
+      this.selected = undefined
    }
 
    setFrames(currentFrame, frames) {
@@ -20,6 +21,11 @@ class Canvas extends Base  {
 
       this.resetCanvas()
       this.drawImage()
+   }
+
+   setSelected(selected) {
+      this.selected = selected
+      this.drawSelected()
    }
 
    drawImage() {
@@ -55,6 +61,14 @@ class Canvas extends Base  {
 
       for(var pixel of temporaryPixels) {
          this.drawPixel(pixel)
+      }
+   }
+
+   drawSelected() {
+      var { selected } = this
+      if (selected) {
+         console.log(selected)
+         this.ctx.drawImage(selected.copy, selected.x, selected.y)
       }
    }
 

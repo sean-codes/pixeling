@@ -1,9 +1,14 @@
 // include everything
 var app = {}
 
+// for splitting key/value pairs
 app.clone = function(object) {
    return JSON.parse(JSON.stringify(object))
 }
+
+// for operating
+app.tempCanvas = document.createElement('canvas')
+app.tempCtx = app.tempCanvas.getContext('2d')
 
 app.imports = {
    js: [
