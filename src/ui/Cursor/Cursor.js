@@ -67,6 +67,11 @@ class Cursor extends Base  {
       // if same pixel skip (mouse did move but in same pixel)
       if(samePosition) return
 
+      this.mouse.positionLast = {
+         x: this.mouse.positionCurrent.x || x,
+         y: this.mouse.positionCurrent.y || y
+      }
+
       this.mouse.positionCurrent = { x, y }
       this.mouse.positionDelta = {
          x: x - this.mouse.positionLast.x,
@@ -78,7 +83,6 @@ class Cursor extends Base  {
          y: y - this.mouse.positionStart.y
       }
 
-      this.mouse.positionLast = { x, y }
 
       if(this.mouse.down) {
          this.mouse.positions.push(this.mouse.positionCurrent)

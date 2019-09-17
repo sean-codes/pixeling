@@ -101,8 +101,22 @@ app.frames = new class Frames {
       this.dimensions.height = height
    }
 
+   clearBetween([p1, p2]) {
+      var pixels = app.util.pixelsBetweenPoints(p1, p2)
+      for (var pixel of pixels) {
+         console.log('clearing', pixel)
+         this.clear({
+            x: pixel.x - Math.floor(app.cursorSize/2),
+            y: pixel.y - Math.floor(app.cursorSize/2),
+            width: app.cursorSize,
+            height: app.cursorSize
+         })
+      }
+   }
+
    clear(area) {
       var frame = this.getCurrentFrame()
+      console.log('clearing area', area)
       frame.ctx.clearRect(area.x, area.y, area.width, area.height)
    }
 
@@ -152,9 +166,9 @@ app.frames = new class Frames {
    }
 
    readPixel(x, y) {
-      var frame = this.list[this.currentFrame]
+      var frame = this.getCurrentFrame()
       var pixelData = frame.ctx.getImageData(x, y, 1, 1)
-      // console.log('pixelData', pixelData)
+      console.log('pixelData', pixelData)
       return app.util.rgbaToHsla(pixelData.data[0], pixelData.data[1], pixelData.data[2], pixelData.data[3])
    }
 

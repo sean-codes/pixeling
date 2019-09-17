@@ -9,8 +9,7 @@ app.tools.read = new app.tools.Base({
       var x = mouse.positionCurrent.x
       var y = mouse.positionCurrent.y
 
-      var color = app.frames.readPixel(frame, x, y)
-      console.log('reading color', color)
+      var color = app.frames.readPixel(x, y)
       app.ui.pallet.setColor(color)
    },
 
@@ -21,9 +20,4 @@ app.tools.read = new app.tools.Base({
    stroke(mouse) {
       app.ui.cursor.update(mouse.positionCurrent)
    },
-
-   choose(position) {
-      console.log('read pixel')
-
-   }
 })

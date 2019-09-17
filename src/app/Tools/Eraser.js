@@ -5,7 +5,7 @@ app.tools.eraser = new app.tools.Base({
    },
 
    down(mouse) {
-      this.erase(mouse.positionStart)
+      this.erase(mouse)
    },
 
    up(mouse) {
@@ -18,16 +18,16 @@ app.tools.eraser = new app.tools.Base({
 
    stroke(mouse) {
       app.ui.cursor.update(mouse.positionCurrent)
-      this.erase(mouse.positionCurrent)
+      this.erase(mouse)
    },
 
-   erase(position) {
-      app.frames.clear({
-         x: Math.ceil(position.x - app.ui.cursor.size/2),
-         y: Math.ceil(position.y - app.ui.cursor.size/2),
-         width: app.ui.cursor.size,
-         height: app.ui.cursor.size
-      })
+   erase(mouse) {
+      console.log(mouse.positionLast, mouse.positionCurrent)
+      app.frames.clearBetween([
+         mouse.positionLast,
+         mouse.positionCurrent
+      ])
+
       app.updateFrames()
    },
 })
