@@ -1,10 +1,10 @@
 app.util = {
    hslaToRgba(h, s, l, a) {
-      app.tempCtx.clearRect(0, 0, 1, 1)
-      app.tempCtx.fillStyle = this.hslaToString({ h, s, l, a})
-      app.tempCtx.fillRect(0, 0, 1, 1)
+      app.scratchCtx.clearRect(0, 0, 1, 1)
+      app.scratchCtx.fillStyle = this.hslaToString({ h, s, l, a})
+      app.scratchCtx.fillRect(0, 0, 1, 1)
 
-      var [r, g, b, a] = app.tempCtx.getImageData(0, 0, 1, 1).data
+      var [r, g, b, a] = app.scratchCtx.getImageData(0, 0, 1, 1).data
       return {r, g, b, a}
    },
 

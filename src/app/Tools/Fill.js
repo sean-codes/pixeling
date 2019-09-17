@@ -14,42 +14,42 @@ app.tools.fill = new app.tools.Base({
    down(mouse) {
       var frame = app.frames.getCurrentFrame()
       var pos = mouse.positionCurrent
-      var initialColor = app.frames.readPixel(frame, pos.x, pos.y)
+      var initialColor = app.frames.readPixel(pos.x, pos.y)
 
-      app.frames.drawPixel(pos.x, pos.y, app.ui.pallet.color)
-      // need to come back and fix this is really not performat
-      this.fillAdjecentPixels(pos, initialColor, {})
+      var initialColorRgba = app.util.hslaToRgba(initialColor.h, initialColor.s, initialColor.l, initialColor.a)
+
+      this.fillAdjecentPixels(pos, initialColorRgba)
 
       app.updateFrames()
       app.history.push()
    },
 
-   fillAdjecentPixels(pos, color, checked) {
-      // sort of dangerous
-      // thinking we search top right bottom left and curse
-      // might run into a infinite
-      // possibly we check if the pixel hasnt been painted. dont curse that
-      var positions = {
-         top: { x: pos.x, y: pos.y - 1 },
-         bottom: { x: pos.x, y: pos.y + 1 },
-         left: { x: pos.x - 1, y: pos.y },
-         right: { x: pos.x + 1, y: pos.y }
-      }
+   fillAdjecentPixels(pos, color) {
+      var checked = {}
+      var unconfirmed = [ pos ]
 
       var frame = app.frames.getCurrentFrame()
-      for(var positionName in positions) {
-         var position = positions[positionName]
-         if(position.x < 0 || position.x == frame.width) continue
-         if(position.y < 0 || position.y == frame.height) continue
-         if(checked[position.x + '-' + position.y]) continue
+      var frameImageData = frame.ctx.getImageData(0, 0, app.frames.width, app.frames.height)
 
-         checked[position.x + '-' + position.y] = true
+      while (unconfirmed.length) {
+         var pos = unconfirmed.shift()
 
-         var pixelAtAdj = app.frames.readPixel(frame, position.x, position.y)
+         if(pos.x < 0 || pos.x >= app.frames.width) continue
+         if(pos.y < 0 || pos.y >= app.frames.height) continue
+         if(checked[pos.x + '-' + pos.y]) continue
 
-         if(this.colorsCloseEnough(color, pixelAtAdj)) {
-            app.frames.drawPixel(position.x, position.y, app.ui.pallet.color)
-            this.fillAdjecentPixels(position, color, checked)
+         checked[pos.x + '-' + pos.y] = true
+
+         var i = (pos.y * (app.frames.width * 4)) + (pos.x * 4)
+         var [r, g, b, a] = frameImageData.data.slice(i, i + 4)
+
+         if (r == color.r && g == color.g && b == color.b && a == color.a) {
+            frame.ctx.fillStyle = app.colorString
+            frame.ctx.fillRect(pos.x, pos.y, 1, 1)
+            unconfirmed.push({ x: pos.x, y: pos.y - 1 })
+            unconfirmed.push({ x: pos.x, y: pos.y + 1 })
+            unconfirmed.push({ x: pos.x - 1, y: pos.y })
+            unconfirmed.push({ x: pos.x + 1, y: pos.y })
          }
       }
    },

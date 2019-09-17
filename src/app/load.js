@@ -12,8 +12,8 @@ app.clone = function(object) {
 }
 
 // for operating
-app.tempCanvas = document.createElement('canvas')
-app.tempCtx = app.tempCanvas.getContext('2d')
+app.scratchCanvas = document.createElement('canvas')
+app.scratchCtx = app.scratchCanvas.getContext('2d')
 
 app.imports = {
    js: [

@@ -52,7 +52,7 @@ class Canvas extends Base  {
       this.canvas.height = app.frames.height
       this.canvas.style.width = (app.frames.width) + 'px'
       this.canvas.style.height = (app.frames.height) + 'px'
-      // this.drawCheckerBoard()
+      this.drawCheckerBoard()
    }
 
    drawTemporary(temporaryCanvas) {
@@ -65,7 +65,6 @@ class Canvas extends Base  {
    drawSelected() {
       var { selected } = this
       if (selected) {
-         console.log(selected)
          this.ctx.drawImage(selected.copy, selected.x, selected.y)
       }
    }

@@ -69,9 +69,9 @@ app.initializeUI = function() {
    app.ui.pallet = new Pallet({
       mixer: app.ui.colorMixer,
       onChangeColor: (color) => {
-         app.rgba = app.util.hslaToRgba(color.h, color.s, color.l, color.a)
-
          var colorString = app.util.hslaToString(color)
+         app.rgba = app.util.hslaToRgba(color.h, color.s, color.l, color.a)
+         app.colorString = colorString
          app.ui.statusbar.updateStatus({ color: `[ color: ${colorString} ]` })
          app.ui.cursor.update({ color: colorString })
       },
