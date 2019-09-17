@@ -52,7 +52,7 @@ class Canvas extends Base  {
       this.canvas.height = app.frames.height
       this.canvas.style.width = (app.frames.width) + 'px'
       this.canvas.style.height = (app.frames.height) + 'px'
-      this.drawCheckerBoard()
+      // this.drawCheckerBoard()
    }
 
    drawTemporary(temporaryCanvas) {

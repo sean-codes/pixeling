@@ -6,7 +6,7 @@ app.frames = new class Frames {
       // for drawing / stamping
       this.temporaryCanvas = document.createElement('canvas')
       this.temporaryCtx = this.temporaryCanvas.getContext('2d')
-
+      this.temporaryImageData = this.temporaryCtx.getImageData(0, 0, this.temporaryCanvas.width, this.temporaryCanvas.height)
       this.width = 0
       this.height = 0
    }
@@ -127,6 +127,7 @@ app.frames = new class Frames {
 
    temporaryClear() {
       this.temporaryCtx.clearRect(0, 0, this.width, this.height)
+      this.temporaryImageData = this.temporaryCtx.getImageData(0, 0, app.frames.width, app.frames.height)
    }
 
    temporaryAddPixels(positions) {
@@ -138,8 +139,8 @@ app.frames = new class Frames {
       var size = app.cursorSize
       var pixels = app.util.pixelsBetweenPoints(p1, p2)
 
-      var temporaryImageData = app.frames.temporaryCtx.getImageData(0, 0, app.frames.width, app.frames.height)
-
+      // var temporaryImageData = this.temporaryCtx.getImageData(0, 0, app.frames.width, app.frames.height)
+      var temporaryImageData = this.temporaryImageData
       for (var pixel of pixels) {
          var xStart = pixel.x - Math.floor(size/2)
          var xEnd = xStart + size
@@ -161,14 +162,21 @@ app.frames = new class Frames {
          }
       }
 
-      app.frames.temporaryCtx.putImageData(temporaryImageData, 0, 0)
+      // its possible to apply only that changed pixels
+      var minX = Math.min(p1.x, p2.x) - app.cursorSize
+      var minY = Math.min(p1.y, p2.y) - app.cursorSize
+      var maxX = Math.max(p1.x, p2.x) + app.cursorSize * 2
+      var maxY = Math.max(p1.y, p2.y) + app.cursorSize * 2
+      var width = maxX - minX
+      var height = maxY - minY
+
+      app.frames.temporaryCtx.putImageData(temporaryImageData, 0, 0, minX, minY, width, height)
       console.log(Date.now() - time + 'ms')
    }
 
    readPixel(x, y) {
       var frame = this.getCurrentFrame()
       var pixelData = frame.ctx.getImageData(x, y, 1, 1)
-      console.log('pixelData', pixelData)
       return app.util.rgbaToHsla(pixelData.data[0], pixelData.data[1], pixelData.data[2], pixelData.data[3])
    }
 
