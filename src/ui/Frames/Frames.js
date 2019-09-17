@@ -81,7 +81,6 @@ class Frames extends Base {
    }
 
    setFrames(frames, current, selected) {
-
       var bakedReel = this.bakedHTML.find('reel')
       var needToRebuildHTML = this.framesLength != frames.length
       if(needToRebuildHTML) bakedReel.clear()
@@ -113,10 +112,10 @@ class Frames extends Base {
 
    drawFramePreview(eleCanvas, frame, frameID) {
       var scale = this.size / Math.max(frame.width, frame.height)
-      eleCanvas.width = frame.width
-      eleCanvas.height = frame.height
+      eleCanvas.width = app.frames.width
+      eleCanvas.height = app.frames.height
 
-      if (frame.width >= frame.height) {
+      if (app.frames.width >= app.frames.height) {
          eleCanvas.style.width = '100%'
          eleCanvas.style.height = 'auto'
       } else {

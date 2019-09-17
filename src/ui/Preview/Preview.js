@@ -66,9 +66,9 @@ class Preview extends Base {
       var eleCanvas = this.bakedHTML.ele('frame_'+frameID)
 
       var ctx = eleCanvas.getContext('2d')
-      var scale = this.size / Math.max(frame.width, frame.height)
-      var width = frame.width * scale
-      var height = frame.height * scale
+      var scale = this.size / Math.max(app.frames.width, app.frames.height)
+      var width = app.frames.width * scale
+      var height = app.frames.height * scale
       eleCanvas.width = width
       eleCanvas.height = height
       eleReel.style.width = width + 'px'

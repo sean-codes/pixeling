@@ -20,7 +20,7 @@ class Canvas extends Base  {
       this.currentFrame = currentFrame
 
       this.resetCanvas()
-      this.drawImage()
+      this.drawFrame()
    }
 
    setSelected(selected) {
@@ -28,7 +28,7 @@ class Canvas extends Base  {
       this.drawSelected()
    }
 
-   drawImage() {
+   drawFrame() {
       // a bit all over the place. i need a nap
       var start = Math.max(0, this.currentFrame - this.onion)
       var totalDistance = (this.currentFrame - start + 1)
@@ -48,20 +48,18 @@ class Canvas extends Base  {
 
    resetCanvas() {
       var frame = this.frames[this.currentFrame]
-      this.canvas.width = frame.width
-      this.canvas.height = frame.height
-      this.canvas.style.width = (frame.width) + 'px'
-      this.canvas.style.height = (frame.height) + 'px'
+      this.canvas.width = app.frames.width
+      this.canvas.height = app.frames.height
+      this.canvas.style.width = (app.frames.width) + 'px'
+      this.canvas.style.height = (app.frames.height) + 'px'
       this.drawCheckerBoard()
    }
 
-   temporaryPixels(temporaryPixels) {
+   drawTemporary(temporaryCanvas) {
       this.resetCanvas()
-      this.drawImage()
+      this.drawFrame()
 
-      for(var pixel of temporaryPixels) {
-         this.drawPixel(pixel)
-      }
+      this.ctx.drawImage(temporaryCanvas, 0, 0)
    }
 
    drawSelected() {
@@ -86,8 +84,8 @@ class Canvas extends Base  {
       var frame = this.frames[this.currentFrame]
 
       var size = 16
-      var spacesX = Math.ceil(frame.width / size)
-      var spacesY = Math.ceil(frame.height / size)
+      var spacesX = Math.ceil(app.frames.width / size)
+      var spacesY = Math.ceil(app.frames.height / size)
       var counter = 0
       for(var x = 0; x < spacesX; x++) {
          for(var y = 0; y < spacesY; y++) {
@@ -116,7 +114,7 @@ class Canvas extends Base  {
    updateScale(scale) {
       this.scale = this.initialScale * scale
       this.resetCanvas()
-      this.drawImage()
+      this.drawFrame()
    }
 
    recipe() {

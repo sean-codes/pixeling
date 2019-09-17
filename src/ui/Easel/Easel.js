@@ -5,8 +5,6 @@ class Easel extends Base  {
       this.uiCanvas = options.uiCanvas
       this.uiCursor = options.uiCursor
 
-      console.log(options)
-
       this.bakeHTML()
 
       this.onScale = options.onScale || function(){}
@@ -75,10 +73,16 @@ class Easel extends Base  {
       var newScale = this.scale - amount
       var newScaleMinMax = Math.min(this.scaleMax, Math.max(this.scaleMin, newScale))
       var newScaleRounded = Math.round(newScaleMinMax*100)/100
-      this.scale = newScaleRounded
-      console.log('how much should i move canvas', amount, (50 - this.centerX) * amount)
-      this.setCanvas(this.centerX, this.centerY)
-      this.onScale(newScaleRounded)
+
+      this.setScale(newScaleRounded)
+   }
+
+   setScale(scale) {
+      this.scale = scale
+      this.onScale(this.scale)
+
+      this.uiCanvas.updateCanvasPositionAndScale(this.centerX, this.centerY, this.scale)
+      this.uiCursor.updateCanvasPositionAndScale(this.centerX/100, this.centerY/100, this.scale)
    }
 
    moveCanvas(moveX, moveY) {
@@ -108,6 +112,18 @@ class Easel extends Base  {
       this.transformIndicators()
       this.uiCanvas.updateCanvasPositionAndScale(this.centerX, this.centerY, this.scale)
       this.uiCursor.updateCanvasPositionAndScale(this.centerX/100, this.centerY/100, this.scale)
+   }
+
+   fitCanvas() {
+      // easel space
+      var easelElement = this.bakedHTML.ele('easel')
+      var canvasElement = this.bakedHTML.ele('canvas')
+
+      var easelRect = easelElement.getBoundingClientRect()
+      var canvasRect = canvasElement.getBoundingClientRect()
+
+      var scale = (easelRect.height - 30) / canvasRect.height * 10
+      this.setScale(scale)
    }
 
    transformIndicators() {

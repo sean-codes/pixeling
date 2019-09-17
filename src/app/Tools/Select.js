@@ -53,18 +53,28 @@ app.tools.select = new app.tools.Base({
    },
 
    selectAll() {
-      var imageRect = app.frames.getImageRect()
+      var rect = {
+         x: 0,
+         y: 0,
+         width: app.frames.width,
+         height: app.frames.height
+      }
       app.ui.cursor.update({
          selected: {
-            x: imageRect.x,
-            y: imageRect.y,
-            width: imageRect.width,
-            height: imageRect.height,
-            copy: app.clipboard.getCopy(imageRect)
+            x: rect.x,
+            y: rect.y,
+            width: rect.width,
+            height: rect.height,
+            copy: app.clipboard.getCopy(rect)
          }
       })
 
-      app.frames.setTemporary()
+      app.frames.clear({
+         x: 0, y: 0,
+         width: app.frames.width,
+         height: app.frames.height
+      })
+      app.updateFrames()
    },
 
    setSelected(mouse) {
@@ -92,9 +102,7 @@ app.tools.select = new app.tools.Base({
          selected.copy = app.clipboard.getCopy(selected)
 
          // pull that copy off
-         var frame = app.frames.getCurrentFrame()
-         frame.ctx.clearRect(selected.x, selected.y, selected.width, selected.height)
-
+         app.frames.clear(selected)
          app.updateFrames()
       }
    },

@@ -11,9 +11,6 @@ class Cursor extends Base  {
          x: 0, y: 0, width: 32, height: 32, scale: 1
       }
 
-      this.imageWidth = 32
-      this.imageHeight = 32
-
       this.x = 0
       this.y = 0
       this.width = 1
@@ -112,8 +109,8 @@ class Cursor extends Base  {
       var xPercent = (e.offsetX - easelCanvasX) / easelCanvas.width
       var yPercent = (e.offsetY - easelCanvasY) / easelCanvas.height
 
-      var x = Math.floor(xPercent * this.imageWidth)
-      var y = Math.floor(yPercent * this.imageHeight)
+      var x = Math.floor(xPercent * app.frames.width)
+      var y = Math.floor(yPercent * app.frames.height)
       // console.log('mouse pos', x, y, e.offsetY)
       return { x, y }
    }
@@ -143,9 +140,6 @@ class Cursor extends Base  {
    }
 
    updateImage(image) {
-      this.imageWidth = image.width
-      this.imageHeight = image.height
-
       this.update()
    }
 
@@ -168,8 +162,8 @@ class Cursor extends Base  {
       this.easelCanvas = {
          xPercent: xPercent,
          yPercent: yPercent,
-         width: scale * this.imageWidth,
-         height: scale * this.imageHeight,
+         width: scale * app.frames.width,
+         height: scale * app.frames.height,
          scale: scale
       }
 

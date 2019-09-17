@@ -18,27 +18,16 @@ app.tools.line = new app.tools.Base({
 
       var start = mouse.positionStart
       var end = mouse.positionCurrent
-      var temporaryPixels = this.buildTemporaryPixels(start, end)
-      app.ui.canvas.temporaryPixels(temporaryPixels)
+      app.frames.temporaryClear()
+      app.frames.temporaryAddPixels([start, end])
+      app.updateTemporary()
    },
 
    up(mouse) {
       app.ui.cursor.update(mouse.positionCurrent)
 
-      var start = mouse.positionStart
-      var end = mouse.positionCurrent
-      var temporaryPixels = this.buildTemporaryPixels(start, end)
-
-      for(var pixel of temporaryPixels) {
-         app.frames.drawPixel(pixel.x, pixel.y, app.ui.pallet.getColor())
-      }
+      app.frames.temporaryApply()
       app.updateFrames()
       app.history.push()
    },
-
-   buildTemporaryPixels(start, end) {
-      var size = app.ui.cursor.size
-      return this.utility.pixelsBetweenPoints(start, end, size)
-   },
-
 })

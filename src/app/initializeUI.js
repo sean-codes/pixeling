@@ -69,11 +69,14 @@ app.initializeUI = function() {
    app.ui.pallet = new Pallet({
       mixer: app.ui.colorMixer,
       onChangeColor: (color) => {
-         var colorString = app.frames.hslaToString(color)
+         app.rgba = app.util.hslaToRgba(color.h, color.s, color.l, color.a)
+
+         var colorString = app.util.hslaToString(color)
          app.ui.statusbar.updateStatus({ color: `[ color: ${colorString} ]` })
          app.ui.cursor.update({ color: colorString })
       },
       onChangeSize: (size) => {
+         app.cursorSize = size
          app.ui.cursor.update({ size })
       }
    })

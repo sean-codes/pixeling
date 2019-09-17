@@ -30,8 +30,9 @@ app.command = {
    create: function(options) {
       app.frames.create(options.width, options.height)
 
-      app.ui.easel.centerCanvas()
       app.updateFrames()
+      app.ui.easel.centerCanvas()
+      app.ui.easel.fitCanvas()
       app.history.reset()
    },
 

@@ -11,3 +11,7 @@ app.updateFrames = function() {
    app.ui.preview.setVisibleFrame(frameID)
    app.ui.frames.setFrames(frames, frameID, app.ui.cursor.selected)
 }
+
+app.updateTemporary = function() {
+   app.ui.canvas.drawTemporary(app.frames.temporaryCanvas)
+}

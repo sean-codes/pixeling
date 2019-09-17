@@ -4,11 +4,18 @@ app.tools.draw = new app.tools.Base({
    },
 
    down(mouse) {
-      this.temp(mouse.positions)
+      this.pixels = []
+      this.uniquePixels = {}
+
+      app.frames.temporaryClear()
+      app.frames.temporaryAddPixels(mouse.positions)
+      app.updateTemporary()
    },
 
    up(mouse) {
-      this.draw(mouse.positions)
+      app.frames.temporaryAddPixels(mouse.positions)
+      app.frames.temporaryApply()
+      app.updateFrames()
       app.history.push()
    },
 
@@ -18,30 +25,8 @@ app.tools.draw = new app.tools.Base({
 
    stroke(mouse) {
       app.ui.cursor.update(mouse.positionCurrent)
-      this.temp(mouse.positions)
+
+      app.frames.temporaryAddPixels(mouse.positions)
+      app.updateTemporary()
    },
-
-   temp(positions) {
-      var pixels = this.pixelsBetweenPositions(positions)
-      app.ui.canvas.temporaryPixels(pixels)
-   },
-
-   draw(positions) {
-      var pixels = this.pixelsBetweenPositions(positions)
-      app.frames.drawPixels(pixels)
-
-      app.updateFrames()
-   },
-
-   pixelsBetweenPositions(positions) {
-      var size = app.ui.cursor.size
-      var pixels = []
-      var lastPos = positions[0]
-      for(var position of positions) {
-         pixels.push(...this.utility.pixelsBetweenPoints(lastPos, position, size))
-         lastPos = position
-      }
-
-      return this.utility.removeCollidingPixels(pixels)
-   }
 })

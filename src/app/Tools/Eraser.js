@@ -22,7 +22,7 @@ app.tools.eraser = new app.tools.Base({
    },
 
    erase(position) {
-      app.frames.clearPixels({
+      app.frames.clear({
          x: Math.ceil(position.x - app.ui.cursor.size/2),
          y: Math.ceil(position.y - app.ui.cursor.size/2),
          width: app.ui.cursor.size,

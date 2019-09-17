@@ -57,7 +57,7 @@ app.history = {
          height: app.frames.height,
          frames: app.frames.list.map((frame) => {
             return {
-               imageData: frame.ctx.getImageData(0, 0, frame.width, frame.height)
+               imageData: frame.ctx.getImageData(0, 0, app.frames.width, app.frames.height)
             }
          })
       }
