@@ -13,8 +13,6 @@ class Cursor extends Base  {
 
       this.x = 0
       this.y = 0
-      this.width = 1
-      this.height = 1
       this.scale = 1
       this.size = 1
       this.selected = undefined
@@ -24,6 +22,8 @@ class Cursor extends Base  {
       this.cursorScale = 10
       this.scale = 1
 
+      this.frameWidth = 1
+      this.frameHeight = 1
 
       this.onDown = options.onDown || function(){}
       this.onMove = options.onMove || function(){}
@@ -105,16 +105,15 @@ class Cursor extends Base  {
 
    getMouseEventPosition(e) {
       var eleCursor = this.bakedHTML.ele('canvas')
-      var easelCanvas = this.easelCanvas
 
-      var easelCanvasX = easelCanvas.xPercent * eleCursor.clientWidth - easelCanvas.width/2
-      var easelCanvasY = easelCanvas.yPercent * eleCursor.clientHeight - easelCanvas.height/2
+      var easelCanvasX = this.easelCanvas.xPercent * eleCursor.clientWidth - this.easelCanvas.width/2
+      var easelCanvasY = this.easelCanvas.yPercent * eleCursor.clientHeight - this.easelCanvas.height/2
 
-      var xPercent = (e.offsetX - easelCanvasX) / easelCanvas.width
-      var yPercent = (e.offsetY - easelCanvasY) / easelCanvas.height
+      var xPercent = (e.offsetX - easelCanvasX) / this.easelCanvas.width
+      var yPercent = (e.offsetY - easelCanvasY) / this.easelCanvas.height
 
-      var x = Math.floor(xPercent * app.frames.width)
-      var y = Math.floor(yPercent * app.frames.height)
+      var x = Math.floor(xPercent * this.frameWidth)
+      var y = Math.floor(yPercent * this.frameHeight)
       // console.log('mouse pos', x, y, e.offsetY)
       return { x, y }
    }
@@ -136,15 +135,17 @@ class Cursor extends Base  {
          && select.y <= my && select.y + select.height > my
    }
 
+   updateFrames({ width, height }) {
+      this.frameWidth = width
+      this.frameHeight = height
+      this.update()
+   }
+
    update(options) {
       for(var option in options) this[option] = options[option]
 
       this.updateCanvas()
       this.renderCursor()
-   }
-
-   updateImage(image) {
-      this.update()
    }
 
    updateCanvas() {
@@ -166,8 +167,8 @@ class Cursor extends Base  {
       this.easelCanvas = {
          xPercent: xPercent,
          yPercent: yPercent,
-         width: scale * app.frames.width,
-         height: scale * app.frames.height,
+         width: scale * this.frameWidth,
+         height: scale * this.frameHeight,
          scale: scale
       }
 

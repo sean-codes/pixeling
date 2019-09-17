@@ -36,6 +36,7 @@ app.dialogs.Open = {
                   app.history.reset()
                   app.updateFrames()
                   app.ui.easel.centerCanvas()
+                  app.ui.easel.fitCanvas()
                }
                image.src = e.target.result
             }

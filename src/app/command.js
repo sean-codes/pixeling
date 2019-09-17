@@ -58,6 +58,7 @@ app.command = {
          app.frames.crop(x, y, width, height)
 
          app.updateFrames()
+
          app.ui.easel.centerCanvas()
          app.ui.easel.fitCanvas()
          app.history.push()

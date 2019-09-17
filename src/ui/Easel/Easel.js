@@ -5,6 +5,9 @@ class Easel extends Base  {
       this.uiCanvas = options.uiCanvas
       this.uiCursor = options.uiCursor
 
+      this.frameWidth = 0
+      this.frameHeight = 0
+
       this.bakeHTML()
 
       this.onScale = options.onScale || function(){}
@@ -117,12 +120,8 @@ class Easel extends Base  {
    fitCanvas() {
       // easel space
       var easelElement = this.bakedHTML.ele('easel')
-      var canvasElement = this.bakedHTML.ele('canvas')
-
       var easelRect = easelElement.getBoundingClientRect()
-      var canvasRect = canvasElement.getBoundingClientRect()
-
-      var scale = (easelRect.height - 30) / canvasRect.height * 10
+      var scale = Math.floor((easelRect.height - 40) / this.frameHeight * 100)/100
       this.setScale(scale)
    }
 
@@ -141,6 +140,11 @@ class Easel extends Base  {
       htmlIndicatorHorizontalBottom.style.left = x + '%'
       htmlIndicatorVerticalLeft.style.top = y + '%'
       htmlIndicatorVerticalRIght.style.top = y + '%'
+   }
+
+   updateFrames({ width, height }) {
+      this.frameWidth = width
+      this.frameHeight = height
    }
 
    recipe() {

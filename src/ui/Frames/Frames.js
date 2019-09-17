@@ -9,6 +9,8 @@ class Frames extends Base {
 
       this.size = 80
       this.frames = []
+      this.frameWidth = 0
+      this.frameHeight = 0
       this.framesLength = 0
       this.framesOffsetX = 0
       this.mouse = {
@@ -80,17 +82,19 @@ class Frames extends Base {
       this.callDeleteFrame(frameID)
    }
 
-   setFrames(frames, current, selected) {
+   setFrames({ list, width, height, currentFrame }, selected) {
       var bakedReel = this.bakedHTML.find('reel')
-      var needToRebuildHTML = this.framesLength != frames.length
+      var needToRebuildHTML = this.framesLength != list.length
       if(needToRebuildHTML) bakedReel.clear()
 
-      this.currentFrame = current
-      this.frames = frames
+      this.currentFrame = currentFrame
+      this.frameWidth = width
+      this.frameHeight = height
+      this.frames = list
       this.selected = selected
 
-      for(var frameID in frames) {
-         var frame = frames[frameID]
+      for(var frameID in this.frames) {
+         var frame = this.frames[frameID]
 
          if(needToRebuildHTML) {
             var recipeFrame = this.recipeFrame(frameID)
@@ -98,24 +102,24 @@ class Frames extends Base {
          }
 
          var eleFrame = this.bakedHTML.ele('frame_'+frameID)
-         eleFrame.classList.toggle('current', frameID == current)
+         eleFrame.classList.toggle('current', frameID == currentFrame)
          this.updateFrame(frameID, frame)
       }
 
       this.framesLength = this.frames.length
    }
 
-   updateFrame(frameID, frame, selected) {
+   updateFrame(frameID, frame) {
       var eleCanvas = this.bakedHTML.ele('canvas_'+frameID)
       this.drawFramePreview(eleCanvas, frame, frameID)
    }
 
    drawFramePreview(eleCanvas, frame, frameID) {
       var scale = this.size / Math.max(frame.width, frame.height)
-      eleCanvas.width = app.frames.width
-      eleCanvas.height = app.frames.height
+      eleCanvas.width = this.frameWidth
+      eleCanvas.height = this.frameHeight
 
-      if (app.frames.width >= app.frames.height) {
+      if (this.frameWidth >= this.frameHeight) {
          eleCanvas.style.width = '100%'
          eleCanvas.style.height = 'auto'
       } else {

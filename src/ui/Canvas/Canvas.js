@@ -5,7 +5,9 @@ class Canvas extends Base  {
       this.initialScale = 1
       this.scale = this.initialScale
 
-      this.frames = []
+      this.framesList = []
+      this.frameWidth = 0
+      this.frameHeight = 0
       this.onion = 1
 
       this.bakeHTML()
@@ -15,16 +17,15 @@ class Canvas extends Base  {
       this.selected = undefined
    }
 
-   setFrames(currentFrame, frames) {
-      this.frames = frames
+   setFrames({ list, currentFrame, width, height }, selected) {
+      this.framesList = list
       this.currentFrame = currentFrame
+      this.frameWidth = width
+      this.frameHeight = height
+      this.selected = selected
 
       this.resetCanvas()
       this.drawFrame()
-   }
-
-   setSelected(selected) {
-      this.selected = selected
       this.drawSelected()
    }
 
@@ -36,7 +37,7 @@ class Canvas extends Base  {
 
       while(start <= this.currentFrame) {
          var opacity = currentDistance / totalDistance
-         var frame = this.frames[start]
+         var frame = this.framesList[start]
          this.ctx.globalAlpha = opacity
 
          this.ctx.drawImage(frame.canvas, 0, 0)
@@ -47,11 +48,11 @@ class Canvas extends Base  {
    }
 
    resetCanvas() {
-      var frame = this.frames[this.currentFrame]
-      this.canvas.width = app.frames.width
-      this.canvas.height = app.frames.height
-      this.canvas.style.width = (app.frames.width) + 'px'
-      this.canvas.style.height = (app.frames.height) + 'px'
+      var frame = this.framesList[this.currentFrame]
+      this.canvas.width = this.frameWidth
+      this.canvas.height = this.frameHeight
+      this.canvas.style.width = (this.frameWidth) + 'px'
+      this.canvas.style.height = (this.frameHeight) + 'px'
       this.drawCheckerBoard()
    }
 
@@ -80,11 +81,11 @@ class Canvas extends Base  {
    }
 
    drawCheckerBoard() {
-      var frame = this.frames[this.currentFrame]
+      var frame = this.framesList[this.currentFrame]
 
       var size = 16
-      var spacesX = Math.ceil(app.frames.width / size)
-      var spacesY = Math.ceil(app.frames.height / size)
+      var spacesX = Math.ceil(this.frameWidth / size)
+      var spacesY = Math.ceil(this.frameHeight / size)
       var counter = 0
       for(var x = 0; x < spacesX; x++) {
          for(var y = 0; y < spacesY; y++) {
