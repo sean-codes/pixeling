@@ -28,10 +28,12 @@ app.dialogs.Canvas = {
 
             var width = Number(data.width.value)
             var height = Number(data.height.value)
-            app.frames.setCanvasSize(width, height)
+            app.frames.setSize(width, height)
 
             app.updateFrames()
             app.ui.easel.centerCanvas()
+            app.ui.easel.fitCanvas()
+            app.history.push()
          }
       },
       {

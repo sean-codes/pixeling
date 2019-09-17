@@ -55,10 +55,11 @@ app.command = {
       if(app.ui.cursor.selected) {
          var { x, y, width, height } = app.ui.cursor.selected
          app.tools.select.unsetSelected()
-         app.frames.cropCanvas(x, y, width, height)
+         app.frames.crop(x, y, width, height)
 
          app.updateFrames()
-
+         app.ui.easel.centerCanvas()
+         app.ui.easel.fitCanvas()
          app.history.push()
       }
    },

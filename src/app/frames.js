@@ -81,7 +81,7 @@ app.frames = new class Frames {
    }
 
    setSize(width, height) {
-      this.cropCanvas(0, 0, width, height)
+      this.crop(0, 0, width, height)
    }
 
    crop(startX, startY, width, height) {
@@ -91,14 +91,12 @@ app.frames = new class Frames {
          frame.ctx = frame.canvas.getContext('2d')
          frame.canvas.width = width
          frame.canvas.height = height
-         frame.width = width
-         frame.height = height
 
-         frame.ctx.drawImage(oldCanvas, 0, 0)
+         frame.ctx.drawImage(oldCanvas, startX, startY, width, height, 0, 0, width, height)
       }
 
-      this.dimensions.width = width
-      this.dimensions.height = height
+      this.width = width
+      this.height = height
    }
 
    clearBetween([p1, p2]) {
