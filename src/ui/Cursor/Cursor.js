@@ -254,23 +254,23 @@ class Cursor extends Base  {
 
    drawCrosshair(dimensions, color) {
       var { x, y, width, height } = this.scaleDimensions(dimensions)
-
+      var lineLength = 15
       this.ctx.strokeStyle = color
       this.ctx.lineWidth = 3
       this.ctx.moveTo(x, y + height/2)
-      this.ctx.lineTo(x-width/2, y+height/2)
+      this.ctx.lineTo(x-lineLength, y + height/2)
       this.ctx.stroke()
 
       this.ctx.moveTo(x+width, y + height/2)
-      this.ctx.lineTo(x+width+width/2, y+height/2)
+      this.ctx.lineTo(x+width+lineLength, y + height/2)
       this.ctx.stroke()
 
       this.ctx.moveTo(x+width/2, y)
-      this.ctx.lineTo(x+width/2, y-height/2)
+      this.ctx.lineTo(x+width/2, y-lineLength)
       this.ctx.stroke()
 
       this.ctx.moveTo(x+width/2, y+height)
-      this.ctx.lineTo(x+width/2, y+height+height/2)
+      this.ctx.lineTo(x+width/2, y+height+lineLength)
       this.ctx.stroke()
    }
 
