@@ -25,33 +25,55 @@ app.tools.fill = new app.tools.Base({
    },
 
    fillAdjecentPixels(pos, color) {
-      var checked = {}
-      var unconfirmed = [ pos ]
+      var checked = new Array(app.frames.width * app.frames.height)
+      var unconfirmed = new Array(app.frames.width * app.frames.height * 4 + 1 * 2)
+      var pointer = 0
+      unconfirmed[pointer] = pos.x
+      unconfirmed[pointer + 1] = pos.y
+      pointer += 2
+      check = 0
 
       var frame = app.frames.getCurrentFrame()
       var frameImageData = frame.ctx.getImageData(0, 0, app.frames.width, app.frames.height)
 
-      while (unconfirmed.length) {
-         var pos = unconfirmed.shift()
+      while (check < pointer && pointer < 2000 * 2000 * 2) {
+         var x = unconfirmed[check]
+         var y = unconfirmed[check + 1]
+         check += 2
 
-         if(pos.x < 0 || pos.x >= app.frames.width) continue
-         if(pos.y < 0 || pos.y >= app.frames.height) continue
-         if(checked[pos.x + '-' + pos.y]) continue
+         if(x < 0 || x >= app.frames.width) continue
+         if(y < 0 || y >= app.frames.height) continue
 
-         checked[pos.x + '-' + pos.y] = true
+         var id = y * app.frames.width + x
+         if(checked[id]) continue
+         checked[id] = true
 
-         var i = (pos.y * (app.frames.width * 4)) + (pos.x * 4)
-         var [r, g, b, a] = frameImageData.data.slice(i, i + 4)
+         var dataId = id * 4
 
-         if (r == color.r && g == color.g && b == color.b && a == color.a) {
-            frame.ctx.fillStyle = app.colorString
-            frame.ctx.fillRect(pos.x, pos.y, 1, 1)
-            unconfirmed.push({ x: pos.x, y: pos.y - 1 })
-            unconfirmed.push({ x: pos.x, y: pos.y + 1 })
-            unconfirmed.push({ x: pos.x - 1, y: pos.y })
-            unconfirmed.push({ x: pos.x + 1, y: pos.y })
+         if (
+            Math.abs(frameImageData.data[dataId + 0] - color.r) < 3
+            && Math.abs(frameImageData.data[dataId + 1] - color.g) < 3
+            && Math.abs(frameImageData.data[dataId + 2] - color.b) < 3
+            && Math.abs(frameImageData.data[dataId + 3] - color.a) < 3
+         ) {
+            frameImageData.data[dataId] = app.rgba.r
+            frameImageData.data[dataId + 1] = app.rgba.g
+            frameImageData.data[dataId + 2] = app.rgba.b
+            frameImageData.data[dataId + 3] = app.rgba.a
+
+            unconfirmed[pointer] = x
+            unconfirmed[pointer + 1] = y - 1
+            unconfirmed[pointer + 2] = x
+            unconfirmed[pointer + 3] = y + 1
+            unconfirmed[pointer + 4] = x - 1
+            unconfirmed[pointer + 5] = y
+            unconfirmed[pointer + 6] = x + 1
+            unconfirmed[pointer + 7] = y
+            pointer += 8
          }
       }
+
+      frame.ctx.putImageData(frameImageData, 0, 0)
    },
 
    colorsCloseEnough(c1, c2) {

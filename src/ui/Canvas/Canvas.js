@@ -12,8 +12,12 @@ class Canvas extends Base  {
 
       this.bakeHTML()
 
-      this.canvas = this.bakedHTML.ele('canvas')
-      this.ctx = this.canvas.getContext('2d')
+      this.eleCanvasContainer = this.bakedHTML.ele('canvas')
+      this.mainCanvas = this.bakedHTML.ele('canvas-main')
+      this.mainCtx = this.mainCanvas.getContext('2d')
+      this.tempCanvas = this.bakedHTML.ele('canvas-temp')
+      this.tempCtx = this.tempCanvas.getContext('2d')
+
       this.selected = undefined
    }
 
@@ -38,41 +42,44 @@ class Canvas extends Base  {
       while(start <= this.currentFrame) {
          var opacity = currentDistance / totalDistance
          var frame = this.framesList[start]
-         this.ctx.globalAlpha = opacity
+         this.mainCtx.globalAlpha = opacity
 
-         this.ctx.drawImage(frame.canvas, 0, 0)
+         this.mainCtx.drawImage(frame.canvas, 0, 0)
          start += 1
          currentDistance += 1
       }
-      this.ctx.globalAlpha = 1
+      this.mainCtx.globalAlpha = 1
    }
 
    resetCanvas() {
       var frame = this.framesList[this.currentFrame]
-      this.canvas.width = this.frameWidth
-      this.canvas.height = this.frameHeight
-      this.canvas.style.width = (this.frameWidth) + 'px'
-      this.canvas.style.height = (this.frameHeight) + 'px'
+      this.eleCanvasContainer.style.width = this.frameWidth + 'px'
+      this.eleCanvasContainer.style.height = this.frameHeight + 'px'
+      this.mainCanvas.width = this.frameWidth
+      this.mainCanvas.height = this.frameHeight
+      this.mainCanvas.style.width = (this.frameWidth) + 'px'
+      this.mainCanvas.style.height = (this.frameHeight) + 'px'
+      this.tempCanvas.width = this.frameWidth
+      this.tempCanvas.height = this.frameHeight
+      this.tempCanvas.style.width = (this.frameWidth) + 'px'
+      this.tempCanvas.style.height = (this.frameHeight) + 'px'
       this.drawCheckerBoard()
    }
 
    drawTemporary(temporaryCanvas) {
-      this.resetCanvas()
-      this.drawFrame()
-
-      this.ctx.drawImage(temporaryCanvas, 0, 0)
+      this.tempCtx.drawImage(temporaryCanvas, 0, 0)
    }
 
    drawSelected() {
       var { selected } = this
       if (selected) {
-         this.ctx.drawImage(selected.copy, selected.x, selected.y)
+         this.mainCtx.drawImage(selected.copy, selected.x, selected.y)
       }
    }
 
    drawPixel(pixel) {
-      this.ctx.fillStyle = pixel.colorString
-      this.ctx.fillRect(
+      this.mainCtx.fillStyle = pixel.colorString
+      this.mainCtx.fillRect(
          Math.floor(pixel.x*this.scale),
          Math.floor(pixel.y*this.scale),
          Math.ceil(this.scale),
@@ -89,8 +96,8 @@ class Canvas extends Base  {
       var counter = 0
       for(var x = 0; x < spacesX; x++) {
          for(var y = 0; y < spacesY; y++) {
-            this.ctx.fillStyle = (counter % 2 == 0) ? '#DDD' : '#CCC'
-            this.ctx.fillRect(
+            this.mainCtx.fillStyle = (counter % 2 == 0) ? '#DDD' : '#CCC'
+            this.mainCtx.fillRect(
                x*size*this.scale,
                y*size*this.scale,
                this.scale*size,
@@ -119,9 +126,21 @@ class Canvas extends Base  {
 
    recipe() {
       return {
+         tag: 'div',
          name: 'canvas',
-         tag: 'canvas',
-         classes: ['canvas']
+         classes: ['canvas-container'],
+         ingredients: [
+            {
+               name: 'canvas-main',
+               tag: 'canvas',
+               classes: ['canvas'],
+            },
+            {
+               name: 'canvas-temp',
+               tag: 'canvas',
+               classes: ['canvas'],
+            }
+         ]
       }
    }
 }

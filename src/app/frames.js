@@ -100,21 +100,38 @@ app.frames = new class Frames {
    }
 
    clearBetween([p1, p2]) {
+      var frame = this.getCurrentFrame()
+      var frameImageData = frame.ctx.getImageData(0, 0, this.width, this.height)
+
       var pixels = app.util.pixelsBetweenPoints(p1, p2)
+      var size = app.cursorSize
+
       for (var pixel of pixels) {
-         console.log('clearing', pixel)
-         this.clear({
-            x: pixel.x - Math.floor(app.cursorSize/2),
-            y: pixel.y - Math.floor(app.cursorSize/2),
-            width: app.cursorSize,
-            height: app.cursorSize
-         })
+         var xStart = pixel.x - Math.floor(size/2)
+         var xEnd = xStart + size
+
+         for (var x = xStart; x < xEnd; x++) {
+            var yStart = pixel.y - Math.floor(size/2)
+            var yEnd = yStart + size
+
+            for (var y = yStart; y < yEnd; y++) {
+               if (x < 0 || x >= app.frames.width) continue
+               if (y < 0 || y >= app.frames.height) continue
+               var i = (app.frames.width * 4 * y) + (x * 4)
+
+               frameImageData.data[i] = 0
+               frameImageData.data[i + 1] = 0
+               frameImageData.data[i + 2] = 0
+               frameImageData.data[i + 3] = 0
+            }
+         }
       }
+
+      frame.ctx.putImageData(frameImageData, 0, 0)
    }
 
    clear(area) {
       var frame = this.getCurrentFrame()
-      console.log('clearing area', area)
       frame.ctx.clearRect(area.x, area.y, area.width, area.height)
    }
 
@@ -130,27 +147,33 @@ app.frames = new class Frames {
 
    temporaryAddPixels(positions) {
       // need to find a way to hide this.....
-      var time = Date.now()
       var p1 = positions[positions.length - 1]
       var p2 = positions[positions.length - 2] || p1
 
       var size = app.cursorSize
       var pixels = app.util.pixelsBetweenPoints(p1, p2)
 
-      // var temporaryImageData = this.temporaryCtx.getImageData(0, 0, app.frames.width, app.frames.height)
-      var temporaryImageData = this.temporaryImageData
-      for (var pixel of pixels) {
-         var xStart = pixel.x - Math.floor(size/2)
-         var xEnd = xStart + size
+      // need to apply this to canvas temp draw also
+      var minX = Math.min(p1.x, p2.x) - Math.floor(app.cursorSize / 2)
+      var minY = Math.min(p1.y, p2.y) - Math.floor(app.cursorSize / 2)
+      var maxX = Math.max(p1.x, p2.x) + app.cursorSize
+      var maxY = Math.max(p1.y, p2.y) + app.cursorSize
+      var width = maxX - minX
+      var height = maxY - minY
 
+      var temporaryImageData = this.temporaryCtx.getImageData(minX, minY, width, height)
+
+      for (var pixel of pixels) {
+         var xStart = pixel.x - minX - Math.floor(size/2)
+         var xEnd = xStart + size
          for (var x = xStart; x < xEnd; x++) {
-            var yStart = pixel.y - Math.floor(size/2)
+            var yStart = pixel.y - minY - Math.floor(size/2)
             var yEnd = yStart + size
 
             for (var y = yStart; y < yEnd; y++) {
                if (x < 0 || x >= app.frames.width) continue
                if (y < 0 || y >= app.frames.height) continue
-               var i = (app.frames.width * 4 * y) + (x * 4)
+               var i = (width * 4 * y) + (x * 4)
 
                temporaryImageData.data[i] = app.rgba.r
                temporaryImageData.data[i + 1] = app.rgba.g
@@ -160,16 +183,7 @@ app.frames = new class Frames {
          }
       }
 
-      // its possible to apply only that changed pixels
-      var minX = Math.min(p1.x, p2.x) - app.cursorSize
-      var minY = Math.min(p1.y, p2.y) - app.cursorSize
-      var maxX = Math.max(p1.x, p2.x) + app.cursorSize * 2
-      var maxY = Math.max(p1.y, p2.y) + app.cursorSize * 2
-      var width = maxX - minX
-      var height = maxY - minY
-
-      app.frames.temporaryCtx.putImageData(temporaryImageData, 0, 0, minX, minY, width, height)
-      console.log(Date.now() - time + 'ms')
+      this.temporaryCtx.putImageData(temporaryImageData, minX, minY)
    }
 
    readPixel(x, y) {

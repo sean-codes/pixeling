@@ -22,7 +22,6 @@ app.tools.eraser = new app.tools.Base({
    },
 
    erase(mouse) {
-      console.log(mouse.positionLast, mouse.positionCurrent)
       app.frames.clearBetween([
          mouse.positionLast,
          mouse.positionCurrent

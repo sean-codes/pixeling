@@ -121,7 +121,15 @@ class Easel extends Base  {
       // easel space
       var easelElement = this.bakedHTML.ele('easel')
       var easelRect = easelElement.getBoundingClientRect()
-      var scale = Math.floor((easelRect.height - 40) / this.frameHeight * 100)/100
+
+      // try to fit with
+      var scale = 1
+
+      scale = Math.min(
+         Math.floor((easelRect.width - 40) / this.frameWidth * 100)/100,
+         Math.floor((easelRect.height - 40) / this.frameHeight * 100)/100
+      )
+
       this.setScale(scale)
    }
 
