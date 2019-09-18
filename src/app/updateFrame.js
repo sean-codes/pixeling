@@ -7,7 +7,6 @@ app.updateFrames = function() {
    app.ui.canvas.setFrames(app.frames, app.ui.cursor.selected)
    app.ui.frames.setFrames(app.frames, app.ui.cursor.selected)
    app.ui.preview.setFrames(app.frames, app.ui.cursor.selected)
-   app.ui.preview.setVisibleFrame(frameID)
    app.ui.cursor.updateFrames(app.frames)
    app.ui.easel.updateFrames(app.frames)
 }

@@ -99,17 +99,19 @@ class Frames extends Base {
          if(needToRebuildHTML) {
             var recipeFrame = this.recipeFrame(frameID)
             bakedReel.append(this.bake(recipeFrame))
+            this.updateFrame(frameID)
          }
 
          var eleFrame = this.bakedHTML.ele('frame_'+frameID)
          eleFrame.classList.toggle('current', frameID == currentFrame)
-         this.updateFrame(frameID, frame)
       }
 
+      this.updateFrame(this.currentFrame)
       this.framesLength = this.frames.length
    }
 
-   updateFrame(frameID, frame) {
+   updateFrame(frameID) {
+      var frame = this.frames[frameID]
       var eleCanvas = this.bakedHTML.ele('canvas_'+frameID)
       this.drawFramePreview(eleCanvas, frame, frameID)
    }
