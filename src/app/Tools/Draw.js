@@ -9,7 +9,7 @@ app.tools.draw = new app.tools.Base({
 
       app.frames.temporaryClear()
       app.frames.temporaryAddPixels(mouse.positions)
-      // app.updateTemporary()
+      app.updateTemporary()
    },
 
    up(mouse) {

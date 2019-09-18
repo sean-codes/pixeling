@@ -67,6 +67,7 @@ class Canvas extends Base  {
    }
 
    drawTemporary(temporaryCanvas) {
+      this.tempCtx.clearRect(0, 0, this.frameWidth, this.frameHeight)
       this.tempCtx.drawImage(temporaryCanvas, 0, 0)
    }
 
