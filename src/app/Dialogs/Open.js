@@ -30,10 +30,13 @@ app.dialogs.Open = {
             reader.onload = (e) => {
                var image = new Image()
                image.onload = () => {
+                  var timer = Date.now()
                   app.ui.dialogOpen.hide()
                   app.frames.load(image, data.frames.value)
                   app.history.reset()
                   app.updateFrames()
+                  app.ui.easel.centerCanvas()
+                  app.ui.easel.fitCanvas()
                }
                image.src = e.target.result
             }

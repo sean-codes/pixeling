@@ -2,27 +2,38 @@ class Canvas extends Base  {
    constructor(options) {
       super()
 
-      this.initialScale = 10
+      this.initialScale = 1
       this.scale = this.initialScale
 
-      this.frames = []
+      this.framesList = []
+      this.frameWidth = 0
+      this.frameHeight = 0
       this.onion = 1
 
       this.bakeHTML()
 
-      this.canvas = this.bakedHTML.ele('canvas')
-      this.ctx = this.canvas.getContext('2d')
+      this.eleCanvasContainer = this.bakedHTML.ele('canvas')
+      this.mainCanvas = this.bakedHTML.ele('canvas-main')
+      this.mainCtx = this.mainCanvas.getContext('2d')
+      this.tempCanvas = this.bakedHTML.ele('canvas-temp')
+      this.tempCtx = this.tempCanvas.getContext('2d')
+
+      this.selected = undefined
    }
 
-   setFrames(currentFrame, frames) {
-      this.frames = frames
+   setFrames({ list, currentFrame, width, height }, selected) {
+      this.framesList = list
       this.currentFrame = currentFrame
+      this.frameWidth = width
+      this.frameHeight = height
+      this.selected = selected
 
       this.resetCanvas()
-      this.drawImage()
+      this.drawFrame()
+      this.drawSelected()
    }
 
-   drawImage() {
+   drawFrame() {
       // a bit all over the place. i need a nap
       var start = Math.max(0, this.currentFrame - this.onion)
       var totalDistance = (this.currentFrame - start + 1)
@@ -30,40 +41,45 @@ class Canvas extends Base  {
 
       while(start <= this.currentFrame) {
          var opacity = currentDistance / totalDistance
-         var frame = this.frames[start]
-         this.ctx.globalAlpha = opacity
+         var frame = this.framesList[start]
+         this.mainCtx.globalAlpha = opacity
 
-         for(var x = 0; x < frame.width; x++) {
-            for(var y = 0; y < frame.height; y++) {
-               this.drawPixel(frame.pixels[x][y])
-            }
-         }
+         this.mainCtx.drawImage(frame.canvas, 0, 0)
          start += 1
          currentDistance += 1
       }
-      this.ctx.globalAlpha = 1
+      this.mainCtx.globalAlpha = 1
    }
 
    resetCanvas() {
-      var frame = this.frames[this.currentFrame]
-      this.canvas.width = frame.width*this.scale
-      this.canvas.height = frame.height*this.scale
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+      var frame = this.framesList[this.currentFrame]
+      this.eleCanvasContainer.style.width = this.frameWidth + 'px'
+      this.eleCanvasContainer.style.height = this.frameHeight + 'px'
+      this.mainCanvas.width = this.frameWidth
+      this.mainCanvas.height = this.frameHeight
+      this.mainCanvas.style.width = (this.frameWidth) + 'px'
+      this.mainCanvas.style.height = (this.frameHeight) + 'px'
+      this.tempCanvas.width = this.frameWidth
+      this.tempCanvas.height = this.frameHeight
+      this.tempCanvas.style.width = (this.frameWidth) + 'px'
+      this.tempCanvas.style.height = (this.frameHeight) + 'px'
       this.drawCheckerBoard()
    }
 
-   temporaryPixels(temporaryPixels) {
-      this.resetCanvas()
-      this.drawImage()
+   drawTemporary(temporaryCanvas) {
+      this.tempCtx.drawImage(temporaryCanvas, 0, 0)
+   }
 
-      for(var pixel of temporaryPixels) {
-         this.drawPixel(pixel)
+   drawSelected() {
+      var { selected } = this
+      if (selected) {
+         this.mainCtx.drawImage(selected.copy, selected.x, selected.y)
       }
    }
 
    drawPixel(pixel) {
-      this.ctx.fillStyle = pixel.colorString
-      this.ctx.fillRect(
+      this.mainCtx.fillStyle = pixel.colorString
+      this.mainCtx.fillRect(
          Math.floor(pixel.x*this.scale),
          Math.floor(pixel.y*this.scale),
          Math.ceil(this.scale),
@@ -72,16 +88,16 @@ class Canvas extends Base  {
    }
 
    drawCheckerBoard() {
-      var frame = this.frames[this.currentFrame]
+      var frame = this.framesList[this.currentFrame]
 
       var size = 16
-      var spacesX = Math.ceil(frame.width / size)
-      var spacesY = Math.ceil(frame.height / size)
+      var spacesX = Math.ceil(this.frameWidth / size)
+      var spacesY = Math.ceil(this.frameHeight / size)
       var counter = 0
       for(var x = 0; x < spacesX; x++) {
          for(var y = 0; y < spacesY; y++) {
-            this.ctx.fillStyle = (counter % 2 == 0) ? '#DDD' : '#CCC'
-            this.ctx.fillRect(
+            this.mainCtx.fillStyle = (counter % 2 == 0) ? '#DDD' : '#CCC'
+            this.mainCtx.fillRect(
                x*size*this.scale,
                y*size*this.scale,
                this.scale*size,
@@ -105,14 +121,26 @@ class Canvas extends Base  {
    updateScale(scale) {
       this.scale = this.initialScale * scale
       this.resetCanvas()
-      this.drawImage()
+      this.drawFrame()
    }
 
    recipe() {
       return {
+         tag: 'div',
          name: 'canvas',
-         tag: 'canvas',
-         classes: ['canvas']
+         classes: ['canvas-container'],
+         ingredients: [
+            {
+               name: 'canvas-main',
+               tag: 'canvas',
+               classes: ['canvas'],
+            },
+            {
+               name: 'canvas-temp',
+               tag: 'canvas',
+               classes: ['canvas'],
+            }
+         ]
       }
    }
 }

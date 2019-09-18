@@ -24,7 +24,7 @@ app.initializeUI = function() {
       status: {
          color: '[ hsla() ]',
          pos: '[ pos: 0, 0 ]',
-         scale: '[ scale: 1x ]',
+         scale: '[ scale: 10x ]',
       }
    })
 
@@ -56,10 +56,8 @@ app.initializeUI = function() {
    app.ui.canvas = new Canvas()
 
    app.ui.easel = new Easel({
-      center: [
-         app.ui.canvas,
-         app.ui.cursor
-      ],
+      uiCanvas: app.ui.canvas,
+      uiCursor: app.ui.cursor,
       onScale: (scale) => {
          app.ui.statusbar.updateStatus({
             scale: `[ scale: ${scale}x ]`
@@ -71,11 +69,14 @@ app.initializeUI = function() {
    app.ui.pallet = new Pallet({
       mixer: app.ui.colorMixer,
       onChangeColor: (color) => {
-         var colorString = app.frames.hslaToString(color)
+         var colorString = app.util.hslaToString(color)
+         app.rgba = app.util.hslaToRgba(color.h, color.s, color.l, color.a)
+         app.colorString = colorString
          app.ui.statusbar.updateStatus({ color: `[ color: ${colorString} ]` })
          app.ui.cursor.update({ color: colorString })
       },
       onChangeSize: (size) => {
+         app.cursorSize = size
          app.ui.cursor.update({ size })
       }
    })

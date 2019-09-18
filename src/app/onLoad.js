@@ -5,10 +5,9 @@ app.onLoad = function() {
 
    app.ui.toolbox.selectTool('draw')
    app.command.create({
-      width: 48,
+      width: 32,
       height: 32
    })
-
 
    app.keyboard.listen()
 }

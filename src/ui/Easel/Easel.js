@@ -2,7 +2,11 @@ class Easel extends Base  {
    constructor(options) {
       super()
 
-      this.center = options.center
+      this.uiCanvas = options.uiCanvas
+      this.uiCursor = options.uiCursor
+
+      this.frameWidth = 0
+      this.frameHeight = 0
 
       this.bakeHTML()
 
@@ -14,10 +18,11 @@ class Easel extends Base  {
       this.moving = false
       this.moveDampen = 2
 
-      this.scale = 1
+      this.scale = 10
+
       this.scaleMin = 0.1
-      this.scaleMax = 20
-      this.scaleDampen = 100
+      this.scaleMax = 100
+      this.scaleDampen = 10
    }
 
    eventMousedown(e, element) {
@@ -55,11 +60,11 @@ class Easel extends Base  {
    }
 
    zoomIn() {
-      this.zoom(-0.1)
+      this.zoom(-1)
    }
 
    zoomOut() {
-      this.zoom(0.1)
+      this.zoom(1)
    }
 
    zoomReset() {
@@ -71,18 +76,36 @@ class Easel extends Base  {
       var newScale = this.scale - amount
       var newScaleMinMax = Math.min(this.scaleMax, Math.max(this.scaleMin, newScale))
       var newScaleRounded = Math.round(newScaleMinMax*100)/100
-      this.scale = newScaleRounded
-      this.moveCanvas(0, 0)
-      this.onScale(newScaleRounded)
+
+      this.setScale(newScaleRounded)
+   }
+
+   setScale(scale) {
+      this.scale = scale
+      this.onScale(this.scale)
+
+      this.uiCanvas.updateCanvasPositionAndScale(this.centerX, this.centerY, this.scale)
+      this.uiCursor.updateCanvasPositionAndScale(this.centerX/100, this.centerY/100, this.scale)
    }
 
    moveCanvas(moveX, moveY) {
       var easelElement = this.bakedHTML.ele('easel')
+      var canvasElement = this.bakedHTML.ele('canvas')
       this.centerX += (moveX / easelElement.clientWidth)*100
       this.centerY += (moveY / easelElement.clientHeight)*100
 
       this.transformIndicators()
-      this.transformElements()
+      this.uiCanvas.updateCanvasPositionAndScale(this.centerX, this.centerY, this.scale)
+      this.uiCursor.updateCanvasPositionAndScale(this.centerX/100, this.centerY/100, this.scale)
+   }
+
+   setCanvas(centerX, centerY) {
+      this.centerX = centerX
+      this.centerY = centerY
+
+      this.transformIndicators()
+      this.uiCanvas.updateCanvasPositionAndScale(this.centerX, this.centerY, this.scale)
+      this.uiCursor.updateCanvasPositionAndScale(this.centerX/100, this.centerY/100, this.scale)
    }
 
    centerCanvas() {
@@ -90,13 +113,24 @@ class Easel extends Base  {
       this.centerY = 50
 
       this.transformIndicators()
-      this.transformElements()
+      this.uiCanvas.updateCanvasPositionAndScale(this.centerX, this.centerY, this.scale)
+      this.uiCursor.updateCanvasPositionAndScale(this.centerX/100, this.centerY/100, this.scale)
    }
 
-   transformElements(element) {
-      for(var ui of this.center) {
-         ui.updateCanvasPositionAndScale(this.centerX, this.centerY, this.scale)
-      }
+   fitCanvas() {
+      // easel space
+      var easelElement = this.bakedHTML.ele('easel')
+      var easelRect = easelElement.getBoundingClientRect()
+
+      // try to fit with
+      var scale = 1
+
+      scale = Math.min(
+         Math.floor((easelRect.width - 40) / this.frameWidth * 100)/100,
+         Math.floor((easelRect.height - 40) / this.frameHeight * 100)/100
+      )
+
+      this.setScale(scale)
    }
 
    transformIndicators() {
@@ -116,6 +150,11 @@ class Easel extends Base  {
       htmlIndicatorVerticalRIght.style.top = y + '%'
    }
 
+   updateFrames({ width, height }) {
+      this.frameWidth = width
+      this.frameHeight = height
+   }
+
    recipe() {
       return {
          name: 'easel',
@@ -127,7 +166,10 @@ class Easel extends Base  {
             mouseleave: this.eventMouseup.bind(this),
             wheel: this.eventScroll.bind(this)
          },
-         append: this.center.map((ui) => ui.bakedHTML),
+         append: [
+            this.uiCanvas.bakedHTML,
+            this.uiCursor.bakedHTML
+         ],
          ingredients: [
             { name: 'indicatorHB', classes: ['indicator', 'horizontal'] },
             { name: 'indicatorHT', classes: ['indicator', 'horizontal', 'top'] },

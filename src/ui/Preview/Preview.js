@@ -5,11 +5,13 @@ class Preview extends Base {
 
       this.size = 200
       this.looping = false
-      this.currentFrame = 0
       this.loopInterval = 100
       this.loopTimeout = undefined
       this.loopFrame = 0
       this.frames = []
+      this.currentFrame = 0
+      this.frameWidth = 0
+      this.frameHeight = 0
    }
 
    toggle() {
@@ -47,63 +49,43 @@ class Preview extends Base {
       }
    }
 
-   setFrames(currentFrame, frames, selected) {
+   setFrames({ list, width, height, currentFrame }, selected) {
       this.currentFrame = currentFrame
-      this.frames = frames
+      this.frames = list
+      this.frameWidth = width
+      this.frameHeight = height
       var bakedReel = this.bakedHTML.find('reel')
       bakedReel.clear()
 
-      for(var frameID in frames) {
-         var frame = frames[frameID]
-
-         var bakedFrame = this.bake(this.recipeFrame(frameID))
+      for(var frameID in this.frames) {
+         var frame = this.frames[frameID]
+         var bakedFrame = this.bake(this.recipeFrame(frameID, frame.canvas))
          bakedReel.append(bakedFrame)
-
-         this.updateFrame(frameID, frame, selected)
+         this.updateFrame(frameID, selected)
       }
    }
 
-   updateFrame(frameID, frame, selected) {
+   updateFrame(frameID, selected) {
+      var frame = this.frames[frameID]
       var eleReel = this.bakedHTML.ele('reel')
       var eleCanvas = this.bakedHTML.ele('frame_'+frameID)
 
       var ctx = eleCanvas.getContext('2d')
-      var scale = this.size / Math.max(frame.width, frame.height)
-      var width = frame.width * scale
-      var height = frame.height * scale
+      var scale = this.size / Math.max(this.frameWidth, this.frameHeight)
+      var width = this.frameWidth * scale
+      var height = this.frameHeight * scale
       eleCanvas.width = width
       eleCanvas.height = height
       eleReel.style.width = width + 'px'
       eleReel.style.height = height + 'px'
+      ctx.imageSmoothingEnabled = false
 
       this.drawCheckedBackground(ctx, scale)
-
-      for(var x = 0; x < frame.width; x++) {
-         for(var y = 0; y < frame.height; y++) {
-            var pixel = frame.pixels[x][y]
-            ctx.fillStyle = pixel.colorString
-            ctx.fillRect(
-               Math.floor(x*scale),
-               Math.floor(y*scale),
-               Math.ceil(scale),
-               Math.ceil(scale))
-         }
-      }
+      ctx.drawImage(frame.canvas, 0, 0, width, height)
 
       // selected, i know this function is dense :<
       if(frameID != this.currentFrame || !selected || !selected.copy) return
-      for(var x = 0; x < selected.width; x++) {
-         for(var y = 0; y < selected.height; y++) {
-            var pixel = selected.copy.pixels[x][y]
-
-            ctx.fillStyle = pixel.colorString
-            ctx.fillRect(
-               Math.floor((selected.x + x)*scale),
-               Math.floor((selected.y + y)*scale),
-               Math.ceil(scale),
-               Math.ceil(scale))
-         }
-      }
+      ctx.drawImage(selected.copy, selected.x*scale, selected.y*scale, selected.width * scale, selected.height * scale)
    }
 
    drawCheckedBackground(ctx, scale) {
@@ -139,7 +121,7 @@ class Preview extends Base {
       }
    }
 
-   recipeFrame(id) {
+   recipeFrame(id, canvas) {
       return {
          tag: 'canvas',
          name: 'frame_'+id

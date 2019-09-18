@@ -4,9 +4,14 @@ app.updateFrames = function() {
    var frames = app.frames.list
    var frame = app.frames.getCurrentFrame()
 
-   app.ui.cursor.updateImage(frame)
-   app.ui.canvas.setFrames(frameID, app.clone(frames))
-   app.ui.preview.setFrames(frameID, app.clone(frames), app.ui.cursor.selected)
-   app.ui.frames.setFrames(app.clone(frames), frameID, app.ui.cursor.selected)
+   app.ui.canvas.setFrames(app.frames, app.ui.cursor.selected)
+   app.ui.frames.setFrames(app.frames, app.ui.cursor.selected)
+   app.ui.preview.setFrames(app.frames, app.ui.cursor.selected)
    app.ui.preview.setVisibleFrame(frameID)
+   app.ui.cursor.updateFrames(app.frames)
+   app.ui.easel.updateFrames(app.frames)
+}
+
+app.updateTemporary = function() {
+   app.ui.canvas.drawTemporary(app.frames.temporaryCanvas)
 }

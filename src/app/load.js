@@ -1,14 +1,24 @@
 // include everything
 var app = {}
+app.tools = {}
+app.dialogs = {}
+app.config = {}
+app.rgba = { r: 0, g: 0, b: 0, a: 1 }
+app.cursorSize = 1
 
+// for splitting key/value pairs
 app.clone = function(object) {
    return JSON.parse(JSON.stringify(object))
 }
 
+// for operating
+app.scratchCanvas = document.createElement('canvas')
+app.scratchCtx = app.scratchCanvas.getContext('2d')
+
 app.imports = {
    js: [
       // globals
-      './src/app/globals.js',
+      './src/app/util.js',
       // config
       './src/app/Config/keybinds.js',
       './src/app/Config/menu.js',

@@ -14,42 +14,66 @@ app.tools.fill = new app.tools.Base({
    down(mouse) {
       var frame = app.frames.getCurrentFrame()
       var pos = mouse.positionCurrent
-      var pixel = frame.pixels[pos.x][pos.y]
-      var initialColor = app.clone(pixel.color)
-      app.frames.drawPixel(pos.x, pos.y, app.ui.pallet.color)
+      var initialColor = app.frames.readPixel(pos.x, pos.y)
 
-      // if the color delta is not really changed
-      if(this.colorsCloseEnough(initialColor, pixel.color)){
-         return
-      }
-      this.fillAdjecentPixels(pos, initialColor)
+      var initialColorRgba = app.util.hslaToRgba(initialColor.h, initialColor.s, initialColor.l, initialColor.a)
+
+      this.fillAdjecentPixels(pos, initialColorRgba)
+
       app.updateFrames()
       app.history.push()
    },
 
    fillAdjecentPixels(pos, color) {
-      // sort of dangerous
-      // thinking we search top right bottom left and curse
-      // might run into a infinite
-      // possibly we check if the pixel hasnt been painted. dont curse that
-      var positions = {
-         top: { x: pos.x, y: pos.y - 1 },
-         bottom: { x: pos.x, y: pos.y + 1 },
-         left: { x: pos.x - 1, y: pos.y },
-         right: { x: pos.x + 1, y: pos.y }
-      }
+      var checked = new Array(app.frames.width * app.frames.height)
+      var unconfirmed = new Array(app.frames.width * app.frames.height * 4 + 1 * 2)
+      var pointer = 0
+      unconfirmed[pointer] = pos.x
+      unconfirmed[pointer + 1] = pos.y
+      pointer += 2
+      check = 0
 
-      var image = app.frames.getCurrentFrame()
-      for(var positionName in positions) {
-         var position = positions[positionName]
-         if(position.x < 0 || position.x == image.width) continue
-         if(position.y < 0 || position.y == image.height) continue
-         var pixelAtAdj = image.pixels[position.x][position.y]
-         if(this.colorsCloseEnough(color, pixelAtAdj.color)) {
-            app.frames.drawPixel(position.x, position.y, app.ui.pallet.color)
-            this.fillAdjecentPixels(position, color)
+      var frame = app.frames.getCurrentFrame()
+      var frameImageData = frame.ctx.getImageData(0, 0, app.frames.width, app.frames.height)
+
+      while (check < pointer && pointer < 2000 * 2000 * 2) {
+         var x = unconfirmed[check]
+         var y = unconfirmed[check + 1]
+         check += 2
+
+         if(x < 0 || x >= app.frames.width) continue
+         if(y < 0 || y >= app.frames.height) continue
+
+         var id = y * app.frames.width + x
+         if(checked[id]) continue
+         checked[id] = true
+
+         var dataId = id * 4
+
+         if (
+            Math.abs(frameImageData.data[dataId + 0] - color.r) < 3
+            && Math.abs(frameImageData.data[dataId + 1] - color.g) < 3
+            && Math.abs(frameImageData.data[dataId + 2] - color.b) < 3
+            && Math.abs(frameImageData.data[dataId + 3] - color.a) < 3
+         ) {
+            frameImageData.data[dataId] = app.rgba.r
+            frameImageData.data[dataId + 1] = app.rgba.g
+            frameImageData.data[dataId + 2] = app.rgba.b
+            frameImageData.data[dataId + 3] = app.rgba.a
+
+            unconfirmed[pointer] = x
+            unconfirmed[pointer + 1] = y - 1
+            unconfirmed[pointer + 2] = x
+            unconfirmed[pointer + 3] = y + 1
+            unconfirmed[pointer + 4] = x - 1
+            unconfirmed[pointer + 5] = y
+            unconfirmed[pointer + 6] = x + 1
+            unconfirmed[pointer + 7] = y
+            pointer += 8
          }
       }
+
+      frame.ctx.putImageData(frameImageData, 0, 0)
    },
 
    colorsCloseEnough(c1, c2) {

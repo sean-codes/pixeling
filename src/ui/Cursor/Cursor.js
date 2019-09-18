@@ -7,22 +7,24 @@ class Cursor extends Base  {
       this.canvas = this.bakedHTML.ele('canvas')
       this.ctx = this.canvas.getContext('2d')
 
-      this.imageWidth = 32
-      this.imageHeight = 32
+      this.easelCanvas = {
+         x: 0, y: 0, width: 32, height: 32, scale: 1
+      }
 
       this.x = 0
       this.y = 0
-      this.width = 1
-      this.height = 1
       this.scale = 1
-      this.easelScale = 1
       this.size = 1
       this.selected = undefined
       this.color = '#000'
       this.mode = 'stroke'
 
-      this.initialScale = 10
-      this.scale = this.initialScale
+      this.cursorScale = 10
+      this.scale = 1
+
+      this.frameWidth = 1
+      this.frameHeight = 1
+
       this.onDown = options.onDown || function(){}
       this.onMove = options.onMove || function(){}
       this.onStroke = options.onStroke || function(){}
@@ -38,22 +40,6 @@ class Cursor extends Base  {
       }
 
       this.updateCanvas()
-      this.setChangeInterval()
-   }
-
-   setChangeInterval() {
-      this.change = false
-      setInterval(() => {
-         if (this.change) {
-            this.change = false
-            if(this.mouse.down) {
-               this.mouse.positions.push(this.mouse.positionCurrent)
-               return this.onStroke(this.mouse)
-            }
-
-            this.onMove(this.mouse)
-         }
-      }, 1000/30)
    }
 
    eventMousedown(e, element) {
@@ -66,7 +52,7 @@ class Cursor extends Base  {
       this.mouse.positionLast = this.getMouseEventPosition(e)
       this.mouse.positionDelta = { x: 0, y: 0 }
       this.mouse.positionTotalDelta = { x: 0, y: 0 }
-      this.mouse.positions = [ this.mouse.positionStart ]
+      this.mouse.positions = [ this.mouse.positionStart ] // pls roll over 0 to make a line
 
       this.onDown(this.mouse)
    }
@@ -81,6 +67,11 @@ class Cursor extends Base  {
       // if same pixel skip (mouse did move but in same pixel)
       if(samePosition) return
 
+      this.mouse.positionLast = {
+         x: this.mouse.positionCurrent.x || x,
+         y: this.mouse.positionCurrent.y || y
+      }
+
       this.mouse.positionCurrent = { x, y }
       this.mouse.positionDelta = {
          x: x - this.mouse.positionLast.x,
@@ -92,9 +83,13 @@ class Cursor extends Base  {
          y: y - this.mouse.positionStart.y
       }
 
-      this.mouse.positionLast = { x, y }
 
-      this.change = true
+      if(this.mouse.down) {
+         this.mouse.positions.push(this.mouse.positionCurrent)
+         return this.onStroke(this.mouse)
+      }
+
+      this.onMove(this.mouse)
    }
 
    eventMouseleave(e, element) {
@@ -109,18 +104,17 @@ class Cursor extends Base  {
    }
 
    getMouseEventPosition(e) {
-      var eleCursor = this.bakedHTML.ele('cursor')
-      var eleCanvas = this.bakedHTML.ele('canvas')
+      var eleCursor = this.bakedHTML.ele('canvas')
 
-      var rectCursor = eleCursor.getBoundingClientRect()
-      var rectCanvas = eleCanvas.getBoundingClientRect()
+      var easelCanvasX = this.easelCanvas.xPercent * eleCursor.clientWidth - this.easelCanvas.width/2
+      var easelCanvasY = this.easelCanvas.yPercent * eleCursor.clientHeight - this.easelCanvas.height/2
 
-      var rawX = -(rectCanvas.x - rectCursor.x) + e.offsetX // just swap the order...
-      var rawY = -(rectCanvas.y - rectCursor.y) + e.offsetY // never! :]
+      var xPercent = (e.offsetX - easelCanvasX) / this.easelCanvas.width
+      var yPercent = (e.offsetY - easelCanvasY) / this.easelCanvas.height
 
-      var x = Math.floor(rawX / this.scale / this.easelScale)
-      var y = Math.floor(rawY / this.scale / this.easelScale)
-
+      var x = Math.floor(xPercent * this.frameWidth)
+      var y = Math.floor(yPercent * this.frameHeight)
+      // console.log('mouse pos', x, y, e.offsetY)
       return { x, y }
    }
 
@@ -130,12 +124,21 @@ class Cursor extends Base  {
    }
 
    canMoveSelected() {
+      if (!this.selected) return false
+
       var mx = this.mouse.positionCurrent.x
       var my = this.mouse.positionCurrent.y
 
+      var select = this.selected
       return this.selected
-         && this.selected.x <= mx && this.selected.x + this.selected.width > mx
-         && this.selected.y <= my && this.selected.y + this.selected.height > my
+         && select.x <= mx && select.x + select.width > mx
+         && select.y <= my && select.y + select.height > my
+   }
+
+   updateFrames({ width, height }) {
+      this.frameWidth = width
+      this.frameHeight = height
+      this.update()
    }
 
    update(options) {
@@ -143,6 +146,33 @@ class Cursor extends Base  {
 
       this.updateCanvas()
       this.renderCursor()
+   }
+
+   updateCanvas() {
+      this.canvas.style.cursor = this.getCursor()
+      this.canvas.width = this.canvas.clientWidth
+      this.canvas.height = this.canvas.clientHeight
+      this.ctx.imageSmoothingEnabled = false
+
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+   }
+
+   updateScale(scale) {
+      this.scale = scale
+      this.updateCanvas()
+      this.renderCursor()
+   }
+
+   updateCanvasPositionAndScale(xPercent, yPercent, scale) {
+      this.easelCanvas = {
+         xPercent: xPercent,
+         yPercent: yPercent,
+         width: scale * this.frameWidth,
+         height: scale * this.frameHeight,
+         scale: scale
+      }
+
+      this.update()
    }
 
    renderCursor() {
@@ -196,31 +226,15 @@ class Cursor extends Base  {
 
    renderCursorModeSelect(dimensions) {
       // override dimensions to use 1px
-      var cursorDimensions1px = { width:1, height: 1 }
+      var cursorDimensions1px = { width: 1, height: 1 }
       cursorDimensions1px = Object.assign(cursorDimensions1px, dimensions)
-      !this.mouse.down && !this.canMoveSelected() && this.drawRectangleDashed(cursorDimensions1px)
+
+      if(!this.mouse.down && !this.canMoveSelected()) {
+         this.drawRectangleDashed(cursorDimensions1px)
+      }
 
       if(this.selected) {
-         this.selected.copy && this.drawSelectedPixels()
          this.drawRectangleDashed(this.selected)
-      }
-   }
-
-   drawSelectedPixels() {
-      var copy = this.selected.copy
-
-      for(var x = 0; x < copy.dimensions.width; x++) {
-         for(var y = 0; y < copy.dimensions.height; y++) {
-            var pixel = copy.pixels[x][y]
-            var pixelDimensions = {
-               x: this.selected.x + x,
-               y: this.selected.y + y,
-               width: 1,
-               height: 1
-            }
-
-            this.drawRectangleFilled(pixelDimensions, pixel.colorString)
-         }
       }
    }
 
@@ -240,23 +254,23 @@ class Cursor extends Base  {
 
    drawCrosshair(dimensions, color) {
       var { x, y, width, height } = this.scaleDimensions(dimensions)
-
+      var lineLength = 15
       this.ctx.strokeStyle = color
       this.ctx.lineWidth = 3
       this.ctx.moveTo(x, y + height/2)
-      this.ctx.lineTo(x-width/2, y+height/2)
+      this.ctx.lineTo(x-lineLength, y + height/2)
       this.ctx.stroke()
 
       this.ctx.moveTo(x+width, y + height/2)
-      this.ctx.lineTo(x+width+width/2, y+height/2)
+      this.ctx.lineTo(x+width+lineLength, y + height/2)
       this.ctx.stroke()
 
       this.ctx.moveTo(x+width/2, y)
-      this.ctx.lineTo(x+width/2, y-height/2)
+      this.ctx.lineTo(x+width/2, y-lineLength)
       this.ctx.stroke()
 
       this.ctx.moveTo(x+width/2, y+height)
-      this.ctx.lineTo(x+width/2, y+height+height/2)
+      this.ctx.lineTo(x+width/2, y+height+lineLength)
       this.ctx.stroke()
    }
 
@@ -277,47 +291,17 @@ class Cursor extends Base  {
    scaleDimensions(dimensions) {
       var { x, y, width, height } = dimensions
 
+      var eleCursor = this.bakedHTML.ele('canvas')
+      var easelCanvas = this.easelCanvas
+      var easelCanvasX = this.easelCanvas.xPercent * eleCursor.clientWidth - this.easelCanvas.width/2
+      var easelCanvasY = this.easelCanvas.yPercent * eleCursor.clientHeight - this.easelCanvas.height/2
+
       return {
-         x: Math.floor(x*this.scale),
-         y: Math.floor(y*this.scale),
-         width: Math.ceil(width*this.scale),
-         height: Math.ceil(height*this.scale)
+         x: Math.floor(easelCanvasX + (x * this.easelCanvas.scale)),
+         y: Math.floor(easelCanvasY + (y * this.easelCanvas.scale)),
+         width: Math.ceil(width*this.easelCanvas.scale),
+         height: Math.ceil(height*this.easelCanvas.scale)
       }
-   }
-
-   updateImage(image) {
-      this.imageWidth = image.width
-      this.imageHeight = image.height
-
-      this.update()
-   }
-
-   updateCanvas() {
-      var cursorScale = this.scale
-      this.canvas.style.cursor = this.getCursor()
-      if (this.canvas.width != this.imageWidth * cursorScale
-         || this.canvas.height != this.imageHeight * cursorScale) {
-            this.canvas.width = this.imageWidth*cursorScale
-            this.canvas.height = this.imageHeight*cursorScale
-      }
-
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-   }
-
-   updateCanvasPositionAndScale(x, y, scale) {
-      this.easelScale = scale
-      var eleCanvas = this.bakedHTML.ele('canvas')
-
-      eleCanvas.style.left = x + '%'
-      eleCanvas.style.top = y + '%'
-      eleCanvas.style.transform =
-         `translateX(-50%) translateY(-50%) scale(${scale})`
-   }
-
-   updateScale(scale) {
-      this.scale = this.initialScale * scale
-      this.updateCanvas()
-      this.renderCursor()
    }
 
    recipe() {

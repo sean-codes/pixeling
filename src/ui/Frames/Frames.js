@@ -9,6 +9,9 @@ class Frames extends Base {
 
       this.size = 80
       this.frames = []
+      this.frameWidth = 0
+      this.frameHeight = 0
+      this.framesLength = 0
       this.framesOffsetX = 0
       this.mouse = {
          down: false,
@@ -79,17 +82,19 @@ class Frames extends Base {
       this.callDeleteFrame(frameID)
    }
 
-   setFrames(frames, current, selected) {
+   setFrames({ list, width, height, currentFrame }, selected) {
       var bakedReel = this.bakedHTML.find('reel')
-      var needToRebuildHTML = frames.length != this.frames.length
+      var needToRebuildHTML = this.framesLength != list.length
       if(needToRebuildHTML) bakedReel.clear()
 
-      this.currentFrame = current
-      this.frames = frames
+      this.currentFrame = currentFrame
+      this.frameWidth = width
+      this.frameHeight = height
+      this.frames = list
       this.selected = selected
 
-      for(var frameID in frames) {
-         var frame = frames[frameID]
+      for(var frameID in this.frames) {
+         var frame = this.frames[frameID]
 
          if(needToRebuildHTML) {
             var recipeFrame = this.recipeFrame(frameID)
@@ -97,74 +102,42 @@ class Frames extends Base {
          }
 
          var eleFrame = this.bakedHTML.ele('frame_'+frameID)
-         eleFrame.classList.toggle('current', frameID == current)
+         eleFrame.classList.toggle('current', frameID == currentFrame)
          this.updateFrame(frameID, frame)
       }
+
+      this.framesLength = this.frames.length
    }
 
-   updateFrame(frameID, frame, selected) {
+   updateFrame(frameID, frame) {
       var eleCanvas = this.bakedHTML.ele('canvas_'+frameID)
       this.drawFramePreview(eleCanvas, frame, frameID)
    }
 
    drawFramePreview(eleCanvas, frame, frameID) {
       var scale = this.size / Math.max(frame.width, frame.height)
-      eleCanvas.width = frame.width * scale
-      eleCanvas.height = frame.height * scale
+      eleCanvas.width = this.frameWidth
+      eleCanvas.height = this.frameHeight
+
+      if (this.frameWidth >= this.frameHeight) {
+         eleCanvas.style.width = '100%'
+         eleCanvas.style.height = 'auto'
+      } else {
+         eleCanvas.style.width = 'auto'
+         eleCanvas.style.height = '100%'
+      }
 
       var ctx = eleCanvas.getContext('2d')
-      this.drawCheckedBackground(ctx, scale)
-      for(var x = 0; x < frame.width; x++) {
-         for(var y = 0; y < frame.height; y++) {
-            var pixel = frame.pixels[x][y]
-            ctx.fillStyle = pixel.colorString
-            ctx.fillRect(
-               Math.floor(x*scale),
-               Math.floor(y*scale),
-               Math.ceil(scale),
-               Math.ceil(scale))
-         }
-      }
+      ctx.drawImage(frame.canvas, 0, 0)
 
       var thisFrameCouldHaveSelectedContet = frameID == this.currentFrame
       var somethingIsSelected = this.selected && this.selected.copy
 
       if(thisFrameCouldHaveSelectedContet && somethingIsSelected) {
-         // draw selected (duplicated from preview)
-         for(var x = 0; x < this.selected.width; x++) {
-            for(var y = 0; y < this.selected.height; y++) {
-               var pixel = this.selected.copy.pixels[x][y]
-
-               ctx.fillStyle = pixel.colorString
-               ctx.fillRect(
-                  Math.floor((this.selected.x + x)*scale),
-                  Math.floor((this.selected.y + y)*scale),
-                  Math.ceil(scale),
-                  Math.ceil(scale))
-            }
-         }
+         ctx.drawImage(this.selected.copy, this.selected.x, this.selected.y, this.selected.width, this.selected.height)
       }
    }
 
-   drawCheckedBackground(ctx, scale) {
-      var size = 16
-      var spacesX = Math.ceil(ctx.canvas.width / (size*scale))
-      var spacesY = Math.ceil(ctx.canvas.height / (size*scale))
-      var counter = 0
-      for(var x = 0; x < spacesX; x++) {
-         for(var y = 0; y < spacesY; y++) {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'
-            if(counter % 2) ctx.fillRect(
-               x*size*scale,
-               y*size*scale,
-               scale*size,
-               scale*size
-            )
-            counter += 1
-         }
-         if(spacesY % 2 == 0) counter += 1
-      }
-   }
 
    scrollFrames(x) {
       var eleFrames = this.bakedHTML.ele('frames')

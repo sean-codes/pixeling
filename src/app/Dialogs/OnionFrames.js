@@ -17,8 +17,7 @@ app.dialogs.dialogOnionFrames = {
          onClick: (data) => {
             app.ui.dialogdialogOnionFrames.hide()
             app.ui.canvas.onion = Number(data.onion.value)
-            app.ui.canvas.resetCanvas()
-            app.ui.canvas.drawImage()
+            app.updateFrames()
          }
       },
       {

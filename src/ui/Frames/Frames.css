@@ -44,7 +44,7 @@
    margin-bottom:8px;
    position:relative;
    cursor:pointer;
-   background:#999;
+   background:none;
    display:Flex;
    border:4px solid transparent;
    user-select:none;
@@ -55,7 +55,7 @@
 }
 
 .ui.frames > .frames > .reel .frame.current {
-   border:4px solid #FFF;
+   border: 3px dashed #FFF;
 }
 
 .ui.frames > .frames > .reel .frame canvas {
