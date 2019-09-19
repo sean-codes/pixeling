@@ -110,11 +110,11 @@ class Canvas extends Base  {
       }
    }
 
-   updateCanvasPositionAndScale(x, y, scale) {
+   updateCanvasPositionAndScale(xRatio, yRatio, scale) {
       var element = this.bakedHTML.ele('canvas')
 
-      element.style.left = x + '%'
-      element.style.top = y + '%'
+      element.style.left = (xRatio*100) + '%'
+      element.style.top = (yRatio*100) + '%'
       element.style.transform =
          `translateX(-50%) translateY(-50%) scale(${scale})`
    }

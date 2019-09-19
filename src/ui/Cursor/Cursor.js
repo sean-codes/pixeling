@@ -4,8 +4,8 @@ class Cursor extends Base  {
       super()
       this.bakeHTML()
 
-      this.canvas = this.bakedHTML.ele('canvas')
-      this.ctx = this.canvas.getContext('2d')
+      this.eleCanvas = this.bakedHTML.ele('canvas')
+      this.ctx = this.eleCanvas.getContext('2d')
 
       this.easelCanvas = {
          x: 0, y: 0, width: 32, height: 32, scale: 1
@@ -32,6 +32,8 @@ class Cursor extends Base  {
 
       this.mouse = {
          down: false,
+         positionRatio: { x: 0.5, y: 0.5 },
+         positionRaw: { x: 0, y: 0 },
          positionLast: { x: 0, y: 0 },
          positionCurrent: { x: 0, y: 0 },
          positionStart: { x: 0, y: 0 },
@@ -58,6 +60,10 @@ class Cursor extends Base  {
    }
 
    eventMousemove(e, element) {
+      this.mouse.positionRaw.x = e.offsetX
+      this.mouse.positionRaw.y = e.offsetY
+      this.mouse.positionRatio.x = e.offsetX / this.eleCanvas.width
+      this.mouse.positionRatio.y = e.offsetY / this.eleCanvas.height
       var { x, y } = this.getMouseEventPosition(e)
 
       var samePosition =
@@ -104,10 +110,8 @@ class Cursor extends Base  {
    }
 
    getMouseEventPosition(e) {
-      var eleCursor = this.bakedHTML.ele('canvas')
-
-      var easelCanvasX = this.easelCanvas.xPercent * eleCursor.clientWidth - this.easelCanvas.width/2
-      var easelCanvasY = this.easelCanvas.yPercent * eleCursor.clientHeight - this.easelCanvas.height/2
+      var easelCanvasX = this.easelCanvas.xPercent * this.eleCanvas.clientWidth - this.easelCanvas.width/2
+      var easelCanvasY = this.easelCanvas.yPercent * this.eleCanvas.clientHeight - this.easelCanvas.height/2
 
       var xPercent = (e.offsetX - easelCanvasX) / this.easelCanvas.width
       var yPercent = (e.offsetY - easelCanvasY) / this.easelCanvas.height
@@ -149,12 +153,12 @@ class Cursor extends Base  {
    }
 
    updateCanvas() {
-      this.canvas.style.cursor = this.getCursor()
-      this.canvas.width = this.canvas.clientWidth
-      this.canvas.height = this.canvas.clientHeight
+      this.eleCanvas.style.cursor = this.getCursor()
+      this.eleCanvas.width = this.eleCanvas.clientWidth
+      this.eleCanvas.height = this.eleCanvas.clientHeight
       this.ctx.imageSmoothingEnabled = false
 
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+      this.ctx.clearRect(0, 0, this.eleCanvas.width, this.eleCanvas.height)
    }
 
    updateScale(scale) {
@@ -291,10 +295,8 @@ class Cursor extends Base  {
    scaleDimensions(dimensions) {
       var { x, y, width, height } = dimensions
 
-      var eleCursor = this.bakedHTML.ele('canvas')
-      var easelCanvas = this.easelCanvas
-      var easelCanvasX = this.easelCanvas.xPercent * eleCursor.clientWidth - this.easelCanvas.width/2
-      var easelCanvasY = this.easelCanvas.yPercent * eleCursor.clientHeight - this.easelCanvas.height/2
+      var easelCanvasX = this.easelCanvas.xPercent * this.eleCanvas.clientWidth - this.easelCanvas.width/2
+      var easelCanvasY = this.easelCanvas.yPercent * this.eleCanvas.clientHeight - this.easelCanvas.height/2
 
       return {
          x: Math.floor(easelCanvasX + (x * this.easelCanvas.scale)),

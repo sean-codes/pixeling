@@ -10,10 +10,11 @@ class Easel extends Base  {
 
       this.bakeHTML()
 
+      this.eleEasel = this.bakedHTML.ele('easel')
       this.onScale = options.onScale || function(){}
 
-      this.centerX = 0
-      this.centerY = 0
+      this.xRatio = 0
+      this.yRatio = 0
 
       this.moving = false
       this.moveDampen = 2
@@ -77,44 +78,62 @@ class Easel extends Base  {
       var newScaleMinMax = Math.min(this.scaleMax, Math.max(this.scaleMin, newScale))
       var newScaleRounded = Math.round(newScaleMinMax*100)/100
 
+
+      // attempt to keep curor in view
+      var rectEasel = this.eleEasel.getBoundingClientRect()
+      var xScaled = (newScale * this.frameWidth) - (this.scale * this.frameWidth)
+      var yScaled = (newScale * this.frameHeight) - (this.scale * this.frameHeight)
+      // var maxXMoveRatio = sizeChange / rectEasel.width
+
+      // var mXRatio = this.uiCursor.mouse.positionRatio.x
+      // var mYRatio = this.uiCursor.mouse.positionRatio.y
+      var mouseX = this.uiCursor.mouse.positionRaw.x
+      var mouseY = this.uiCursor.mouse.positionRaw.y
+      var easelX = this.xRatio * rectEasel.width
+      var easelY = this.yRatio * rectEasel.height
+
+      var xDiff = (easelX - mouseX)
+      var yDiff = (easelY - mouseY)
+
       this.setScale(newScaleRounded)
+      this.setCanvas(this.xRatio, this.yRatio)
    }
 
    setScale(scale) {
       this.scale = scale
       this.onScale(this.scale)
 
-      this.uiCanvas.updateCanvasPositionAndScale(this.centerX, this.centerY, this.scale)
-      this.uiCursor.updateCanvasPositionAndScale(this.centerX/100, this.centerY/100, this.scale)
+      this.uiCanvas.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
+      this.uiCursor.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
    }
 
    moveCanvas(moveX, moveY) {
       var easelElement = this.bakedHTML.ele('easel')
       var canvasElement = this.bakedHTML.ele('canvas')
-      this.centerX += (moveX / easelElement.clientWidth)*100
-      this.centerY += (moveY / easelElement.clientHeight)*100
+      this.xRatio += (moveX / easelElement.clientWidth)
+      this.yRatio += (moveY / easelElement.clientHeight)
 
       this.transformIndicators()
-      this.uiCanvas.updateCanvasPositionAndScale(this.centerX, this.centerY, this.scale)
-      this.uiCursor.updateCanvasPositionAndScale(this.centerX/100, this.centerY/100, this.scale)
+      this.uiCanvas.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
+      this.uiCursor.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
    }
 
-   setCanvas(centerX, centerY) {
-      this.centerX = centerX
-      this.centerY = centerY
+   setCanvas(xRatio, yRatio) {
+      this.xRatio = xRatio
+      this.yRatio = yRatio
 
       this.transformIndicators()
-      this.uiCanvas.updateCanvasPositionAndScale(this.centerX, this.centerY, this.scale)
-      this.uiCursor.updateCanvasPositionAndScale(this.centerX/100, this.centerY/100, this.scale)
+      this.uiCanvas.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
+      this.uiCursor.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
    }
 
    centerCanvas() {
-      this.centerX = 50
-      this.centerY = 50
+      this.xRatio = 0.5
+      this.yRatio = 0.5
 
       this.transformIndicators()
-      this.uiCanvas.updateCanvasPositionAndScale(this.centerX, this.centerY, this.scale)
-      this.uiCursor.updateCanvasPositionAndScale(this.centerX/100, this.centerY/100, this.scale)
+      this.uiCanvas.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
+      this.uiCursor.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
    }
 
    fitCanvas() {
@@ -134,15 +153,14 @@ class Easel extends Base  {
    }
 
    transformIndicators() {
-      var easelElement = this.bakedHTML.ele('easel')
       var htmlIndicatorHorizontalTop = this.bakedHTML.ele('indicatorHT')
       var htmlIndicatorHorizontalBottom = this.bakedHTML.ele('indicatorHB')
       var htmlIndicatorVerticalLeft = this.bakedHTML.ele('indicatorVL')
       var htmlIndicatorVerticalRIght = this.bakedHTML.ele('indicatorVR')
 
 
-      var x = Math.max(0, Math.min(this.centerX, 100))
-      var y = Math.max(0, Math.min(this.centerY, 100))
+      var x = Math.max(0, Math.min(this.xRatio*100, 100))
+      var y = Math.max(0, Math.min(this.yRatio*100, 100))
 
       htmlIndicatorHorizontalTop.style.left = x + '%'
       htmlIndicatorHorizontalBottom.style.left = x + '%'
