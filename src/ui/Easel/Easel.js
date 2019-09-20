@@ -115,17 +115,26 @@ class Easel extends Base  {
    }
 
    moveCanvas(moveX, moveY) {
-      var easelElement = this.bakedHTML.ele('easel')
-      var canvasElement = this.bakedHTML.ele('canvas')
-      this.xRatio += (moveX / easelElement.clientWidth)
-      this.yRatio += (moveY / easelElement.clientHeight)
 
-      this.transformIndicators()
-      this.uiCanvas.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
-      this.uiCursor.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
+      var xRatio = this.xRatio + (moveX / this.eleEasel.clientWidth)
+      var yRatio = this.yRatio + (moveY / this.eleEasel.clientHeight)
+
+      this.setCanvas(xRatio, yRatio)
    }
 
    setCanvas(xRatio, yRatio) {
+      var halfWidthCanvasRatio = (this.frameWidth/2*this.scale) / this.eleEasel.clientWidth
+      var ratioPixelWidthToWidth = (this.scale / this.eleEasel.clientWidth)
+      var maxXRatio = 1 + halfWidthCanvasRatio - ratioPixelWidthToWidth
+      var minXRatio = -halfWidthCanvasRatio + ratioPixelWidthToWidth
+      var xRatio = Math.max(minXRatio, Math.min(maxXRatio, xRatio))
+
+      var halfHeightCanvasRatio = (this.frameHeight/2*this.scale) / this.eleEasel.clientHeight
+      var ratioPixelHeightToHeight = (this.scale / this.eleEasel.clientHeight)
+      var maxYRatio = 1 + halfHeightCanvasRatio - ratioPixelHeightToHeight
+      var minYRatio = -halfHeightCanvasRatio + ratioPixelHeightToHeight
+      var yRatio = Math.max(minYRatio, Math.min(maxYRatio, yRatio))
+
       this.xRatio = xRatio
       this.yRatio = yRatio
 
