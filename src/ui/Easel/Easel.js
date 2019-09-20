@@ -22,8 +22,8 @@ class Easel extends Base  {
       this.scale = 10
 
       this.scaleMin = 0.1
-      this.scaleMax = 100
-      this.scaleDampen = 10
+      this.scaleMax = 64
+      this.scaleDampen = 100
    }
 
    eventMousedown(e, element) {
@@ -52,7 +52,10 @@ class Easel extends Base  {
 
       var isZoom = e.ctrlKey
       if(isZoom) {
-         this.zoom(e.deltaY/this.scaleDampen)
+         // more scale = faster scaling
+         // less scale = slower scaling
+         var scaleChange = e.deltaY*(this.scale/this.scaleDampen)
+         this.zoom(scaleChange)
       } else {
          var moveX = -e.deltaX / this.moveDampen
          var moveY = -e.deltaY / this.moveDampen
@@ -81,19 +84,23 @@ class Easel extends Base  {
 
       // attempt to keep curor in view
       var rectEasel = this.eleEasel.getBoundingClientRect()
-      var xScaled = (newScale * this.frameWidth) - (this.scale * this.frameWidth)
-      var yScaled = (newScale * this.frameHeight) - (this.scale * this.frameHeight)
-      // var maxXMoveRatio = sizeChange / rectEasel.width
 
-      // var mXRatio = this.uiCursor.mouse.positionRatio.x
-      // var mYRatio = this.uiCursor.mouse.positionRatio.y
-      var mouseX = this.uiCursor.mouse.positionRaw.x
-      var mouseY = this.uiCursor.mouse.positionRaw.y
-      var easelX = this.xRatio * rectEasel.width
-      var easelY = this.yRatio * rectEasel.height
+      var canvasX = this.xRatio * rectEasel.width // x center of easel
+      var canvasY = this.yRatio * rectEasel.height // y center of easel
 
-      var xDiff = (easelX - mouseX)
-      var yDiff = (easelY - mouseY)
+      var mouseRawX = this.uiCursor.mouse.positionRaw.x
+      var mouseRawY = this.uiCursor.mouse.positionRaw.y
+
+      var mouseXRatio = (canvasX - mouseRawX) / (this.frameWidth * this.scale) // x ratio from center of canvas
+      var mouseYRatio = (canvasY - mouseRawY) / (this.frameHeight * this.scale) // y ratio from center of canvas
+      var widthChange = this.frameWidth * newScaleRounded - this.frameWidth * this.scale
+      var heightChange = this.frameHeight * newScaleRounded - this.frameHeight * this.scale
+
+      var moveXRatio = widthChange * mouseXRatio / rectEasel.width // i guessed a bunch of times :]
+      var moveYRatio = heightChange * mouseYRatio / rectEasel.height
+
+      this.xRatio += moveXRatio
+      this.yRatio += moveYRatio
 
       this.setScale(newScaleRounded)
       this.setCanvas(this.xRatio, this.yRatio)
