@@ -4,8 +4,8 @@ class Cursor extends Base  {
       super()
       this.bakeHTML()
 
-      this.canvas = this.bakedHTML.ele('canvas')
-      this.ctx = this.canvas.getContext('2d')
+      this.eleCanvas = this.bakedHTML.ele('canvas')
+      this.ctx = this.eleCanvas.getContext('2d')
 
       this.easelCanvas = {
          x: 0, y: 0, width: 32, height: 32, scale: 1
@@ -32,6 +32,7 @@ class Cursor extends Base  {
 
       this.mouse = {
          down: false,
+         positionRaw: { x: 0, y: 0 },
          positionLast: { x: 0, y: 0 },
          positionCurrent: { x: 0, y: 0 },
          positionStart: { x: 0, y: 0 },
@@ -48,8 +49,8 @@ class Cursor extends Base  {
 
       this.mouse.down = true
       this.mouse.dragging = this.canMoveSelected()
-      this.mouse.positionStart = this.getMouseEventPosition(e)
-      this.mouse.positionLast = this.getMouseEventPosition(e)
+      this.mouse.positionRaw = { x: e.offsetX, y: e.offsetY }
+      this.mouse.positionStart = this.getPixelPositionsFromRaw(this.mouse.positionRaw)
       this.mouse.positionDelta = { x: 0, y: 0 }
       this.mouse.positionTotalDelta = { x: 0, y: 0 }
       this.mouse.positions = [ this.mouse.positionStart ] // pls roll over 0 to make a line
@@ -58,7 +59,26 @@ class Cursor extends Base  {
    }
 
    eventMousemove(e, element) {
-      var { x, y } = this.getMouseEventPosition(e)
+      this.mouse.positionRaw = { x: e.offsetX, y: e.offsetY }
+      this.setMouseCoordinatesFromRaw()
+   }
+
+   eventMouseleave(e, element) {
+      this.eventMouseup(e, element)
+   }
+
+   eventMouseup(e, element) {
+      if(!this.mouse.down) return
+      this.mouse.down = false
+
+      this.mouse.positionRaw = { x: e.offsetX, y: e.offsetY }
+      this.mouse.positionEnd = this.getPixelPositionsFromRaw(this.mouse.positionRaw)
+
+      this.onUp(this.mouse)
+   }
+
+   setMouseCoordinatesFromRaw() {
+      var { x, y } = this.getPixelPositionsFromRaw(this.mouse.positionRaw)
 
       var samePosition =
          this.mouse.positionCurrent.x == x &&
@@ -92,30 +112,17 @@ class Cursor extends Base  {
       this.onMove(this.mouse)
    }
 
-   eventMouseleave(e, element) {
-      this.eventMouseup(e, element)
-   }
+   getPixelPositionsFromRaw({ x, y }) {
+      var easelCanvasX = this.easelCanvas.xPercent * this.eleCanvas.clientWidth - this.easelCanvas.width/2
+      var easelCanvasY = this.easelCanvas.yPercent * this.eleCanvas.clientHeight - this.easelCanvas.height/2
 
-   eventMouseup(e, element) {
-      if(!this.mouse.down) return
-      this.mouse.down = false
-      this.mouse.positionEnd  = { x: e.offsetX, y: e.offsetY }
-      this.onUp(this.mouse)
-   }
+      var xPercent = (x - easelCanvasX) / this.easelCanvas.width
+      var yPercent = (y - easelCanvasY) / this.easelCanvas.height
 
-   getMouseEventPosition(e) {
-      var eleCursor = this.bakedHTML.ele('canvas')
-
-      var easelCanvasX = this.easelCanvas.xPercent * eleCursor.clientWidth - this.easelCanvas.width/2
-      var easelCanvasY = this.easelCanvas.yPercent * eleCursor.clientHeight - this.easelCanvas.height/2
-
-      var xPercent = (e.offsetX - easelCanvasX) / this.easelCanvas.width
-      var yPercent = (e.offsetY - easelCanvasY) / this.easelCanvas.height
-
-      var x = Math.floor(xPercent * this.frameWidth)
-      var y = Math.floor(yPercent * this.frameHeight)
+      var xPixel = Math.floor(xPercent * this.frameWidth)
+      var yPixel = Math.floor(yPercent * this.frameHeight)
       // console.log('mouse pos', x, y, e.offsetY)
-      return { x, y }
+      return { x: xPixel, y: yPixel }
    }
 
    getCursor() {
@@ -149,12 +156,12 @@ class Cursor extends Base  {
    }
 
    updateCanvas() {
-      this.canvas.style.cursor = this.getCursor()
-      this.canvas.width = this.canvas.clientWidth
-      this.canvas.height = this.canvas.clientHeight
+      this.eleCanvas.style.cursor = this.getCursor()
+      this.eleCanvas.width = this.eleCanvas.clientWidth
+      this.eleCanvas.height = this.eleCanvas.clientHeight
       this.ctx.imageSmoothingEnabled = false
 
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+      this.ctx.clearRect(0, 0, this.eleCanvas.width, this.eleCanvas.height)
    }
 
    updateScale(scale) {
@@ -173,6 +180,7 @@ class Cursor extends Base  {
       }
 
       this.update()
+      this.setMouseCoordinatesFromRaw()
    }
 
    renderCursor() {
@@ -291,10 +299,8 @@ class Cursor extends Base  {
    scaleDimensions(dimensions) {
       var { x, y, width, height } = dimensions
 
-      var eleCursor = this.bakedHTML.ele('canvas')
-      var easelCanvas = this.easelCanvas
-      var easelCanvasX = this.easelCanvas.xPercent * eleCursor.clientWidth - this.easelCanvas.width/2
-      var easelCanvasY = this.easelCanvas.yPercent * eleCursor.clientHeight - this.easelCanvas.height/2
+      var easelCanvasX = this.easelCanvas.xPercent * this.eleCanvas.clientWidth - this.easelCanvas.width/2
+      var easelCanvasY = this.easelCanvas.yPercent * this.eleCanvas.clientHeight - this.easelCanvas.height/2
 
       return {
          x: Math.floor(easelCanvasX + (x * this.easelCanvas.scale)),

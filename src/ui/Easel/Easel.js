@@ -10,10 +10,11 @@ class Easel extends Base  {
 
       this.bakeHTML()
 
+      this.eleEasel = this.bakedHTML.ele('easel')
       this.onScale = options.onScale || function(){}
 
-      this.centerX = 0
-      this.centerY = 0
+      this.xRatio = 0
+      this.yRatio = 0
 
       this.moving = false
       this.moveDampen = 2
@@ -21,8 +22,8 @@ class Easel extends Base  {
       this.scale = 10
 
       this.scaleMin = 0.1
-      this.scaleMax = 100
-      this.scaleDampen = 10
+      this.scaleMax = 64
+      this.scaleDampen = 100
    }
 
    eventMousedown(e, element) {
@@ -51,7 +52,10 @@ class Easel extends Base  {
 
       var isZoom = e.ctrlKey
       if(isZoom) {
-         this.zoom(e.deltaY/this.scaleDampen)
+         // more scale = faster scaling
+         // less scale = slower scaling
+         var scaleChange = e.deltaY*(this.scale/this.scaleDampen)
+         this.zoom(scaleChange)
       } else {
          var moveX = -e.deltaX / this.moveDampen
          var moveY = -e.deltaY / this.moveDampen
@@ -77,44 +81,74 @@ class Easel extends Base  {
       var newScaleMinMax = Math.min(this.scaleMax, Math.max(this.scaleMin, newScale))
       var newScaleRounded = Math.round(newScaleMinMax*100)/100
 
+
+      // attempt to keep curor in view
+      var rectEasel = this.eleEasel.getBoundingClientRect()
+
+      var canvasX = this.xRatio * rectEasel.width // x center of easel
+      var canvasY = this.yRatio * rectEasel.height // y center of easel
+
+      var mouseRawX = this.uiCursor.mouse.positionRaw.x
+      var mouseRawY = this.uiCursor.mouse.positionRaw.y
+
+      var mouseXRatio = (canvasX - mouseRawX) / (this.frameWidth * this.scale) // x ratio from center of canvas
+      var mouseYRatio = (canvasY - mouseRawY) / (this.frameHeight * this.scale) // y ratio from center of canvas
+      var widthChange = this.frameWidth * newScaleRounded - this.frameWidth * this.scale
+      var heightChange = this.frameHeight * newScaleRounded - this.frameHeight * this.scale
+
+      var moveXRatio = widthChange * mouseXRatio / rectEasel.width // i guessed a bunch of times :]
+      var moveYRatio = heightChange * mouseYRatio / rectEasel.height
+
+      this.xRatio += moveXRatio
+      this.yRatio += moveYRatio
+
       this.setScale(newScaleRounded)
+      this.setCanvas(this.xRatio, this.yRatio)
    }
 
    setScale(scale) {
       this.scale = scale
       this.onScale(this.scale)
 
-      this.uiCanvas.updateCanvasPositionAndScale(this.centerX, this.centerY, this.scale)
-      this.uiCursor.updateCanvasPositionAndScale(this.centerX/100, this.centerY/100, this.scale)
+      this.uiCanvas.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
+      this.uiCursor.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
    }
 
    moveCanvas(moveX, moveY) {
-      var easelElement = this.bakedHTML.ele('easel')
-      var canvasElement = this.bakedHTML.ele('canvas')
-      this.centerX += (moveX / easelElement.clientWidth)*100
-      this.centerY += (moveY / easelElement.clientHeight)*100
+      var xRatio = this.xRatio + (moveX / this.eleEasel.clientWidth)
+      var yRatio = this.yRatio + (moveY / this.eleEasel.clientHeight)
 
-      this.transformIndicators()
-      this.uiCanvas.updateCanvasPositionAndScale(this.centerX, this.centerY, this.scale)
-      this.uiCursor.updateCanvasPositionAndScale(this.centerX/100, this.centerY/100, this.scale)
+      this.setCanvas(xRatio, yRatio)
    }
 
-   setCanvas(centerX, centerY) {
-      this.centerX = centerX
-      this.centerY = centerY
+   setCanvas(xRatio, yRatio) {
+      var halfWidthCanvasRatio = (this.frameWidth/2*this.scale) / this.eleEasel.clientWidth
+      var ratioPixelWidthToWidth = (this.scale / this.eleEasel.clientWidth)
+      var maxXRatio = 1 + halfWidthCanvasRatio - ratioPixelWidthToWidth
+      var minXRatio = -halfWidthCanvasRatio + ratioPixelWidthToWidth
+      var xRatio = Math.max(minXRatio, Math.min(maxXRatio, xRatio))
+
+      var halfHeightCanvasRatio = (this.frameHeight/2*this.scale) / this.eleEasel.clientHeight
+      var ratioPixelHeightToHeight = (this.scale / this.eleEasel.clientHeight)
+      var maxYRatio = 1 + halfHeightCanvasRatio - ratioPixelHeightToHeight
+      var minYRatio = -halfHeightCanvasRatio + ratioPixelHeightToHeight
+      var yRatio = Math.max(minYRatio, Math.min(maxYRatio, yRatio))
+
+      this.xRatio = xRatio
+      this.yRatio = yRatio
 
       this.transformIndicators()
-      this.uiCanvas.updateCanvasPositionAndScale(this.centerX, this.centerY, this.scale)
-      this.uiCursor.updateCanvasPositionAndScale(this.centerX/100, this.centerY/100, this.scale)
+      this.uiCanvas.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
+      this.uiCursor.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
    }
 
    centerCanvas() {
-      this.centerX = 50
-      this.centerY = 50
+      this.xRatio = 0.5
+      this.yRatio = 0.5
 
       this.transformIndicators()
-      this.uiCanvas.updateCanvasPositionAndScale(this.centerX, this.centerY, this.scale)
-      this.uiCursor.updateCanvasPositionAndScale(this.centerX/100, this.centerY/100, this.scale)
+      this.uiCanvas.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
+      this.uiCursor.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
    }
 
    fitCanvas() {
@@ -134,15 +168,14 @@ class Easel extends Base  {
    }
 
    transformIndicators() {
-      var easelElement = this.bakedHTML.ele('easel')
       var htmlIndicatorHorizontalTop = this.bakedHTML.ele('indicatorHT')
       var htmlIndicatorHorizontalBottom = this.bakedHTML.ele('indicatorHB')
       var htmlIndicatorVerticalLeft = this.bakedHTML.ele('indicatorVL')
       var htmlIndicatorVerticalRIght = this.bakedHTML.ele('indicatorVR')
 
 
-      var x = Math.max(0, Math.min(this.centerX, 100))
-      var y = Math.max(0, Math.min(this.centerY, 100))
+      var x = Math.max(0, Math.min(this.xRatio*100, 100))
+      var y = Math.max(0, Math.min(this.yRatio*100, 100))
 
       htmlIndicatorHorizontalTop.style.left = x + '%'
       htmlIndicatorHorizontalBottom.style.left = x + '%'

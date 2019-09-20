@@ -43,7 +43,7 @@ app.tools.select = new app.tools.Base({
    },
 
    unsetSelected() {
-      if(app.ui.cursor.selected) {
+      if(app.ui.cursor.selected && app.ui.cursor.selected.copy) {
          app.clipboard.pasteCopy(app.ui.cursor.selected)
          app.history.rewrite()
          app.updateFrames()
