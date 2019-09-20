@@ -115,7 +115,6 @@ class Easel extends Base  {
    }
 
    moveCanvas(moveX, moveY) {
-
       var xRatio = this.xRatio + (moveX / this.eleEasel.clientWidth)
       var yRatio = this.yRatio + (moveY / this.eleEasel.clientHeight)
 

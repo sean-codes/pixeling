@@ -32,7 +32,6 @@ class Cursor extends Base  {
 
       this.mouse = {
          down: false,
-         positionRatio: { x: 0.5, y: 0.5 },
          positionRaw: { x: 0, y: 0 },
          positionLast: { x: 0, y: 0 },
          positionCurrent: { x: 0, y: 0 },
@@ -50,8 +49,8 @@ class Cursor extends Base  {
 
       this.mouse.down = true
       this.mouse.dragging = this.canMoveSelected()
-      this.mouse.positionStart = this.getMouseEventPosition(e)
-      this.mouse.positionLast = this.getMouseEventPosition(e)
+      this.mouse.positionRaw = { x: e.offsetX, y: e.offsetY }
+      this.mouse.positionStart = this.getPixelPositionsFromRaw(this.mouse.positionRaw)
       this.mouse.positionDelta = { x: 0, y: 0 }
       this.mouse.positionTotalDelta = { x: 0, y: 0 }
       this.mouse.positions = [ this.mouse.positionStart ] // pls roll over 0 to make a line
@@ -60,11 +59,26 @@ class Cursor extends Base  {
    }
 
    eventMousemove(e, element) {
-      this.mouse.positionRaw.x = e.offsetX
-      this.mouse.positionRaw.y = e.offsetY
-      this.mouse.positionRatio.x = e.offsetX / this.eleCanvas.width
-      this.mouse.positionRatio.y = e.offsetY / this.eleCanvas.height
-      var { x, y } = this.getMouseEventPosition(e)
+      this.mouse.positionRaw = { x: e.offsetX, y: e.offsetY }
+      this.setMouseCoordinatesFromRaw()
+   }
+
+   eventMouseleave(e, element) {
+      this.eventMouseup(e, element)
+   }
+
+   eventMouseup(e, element) {
+      if(!this.mouse.down) return
+      this.mouse.down = false
+
+      this.mouse.positionRaw = { x: e.offsetX, y: e.offsetY }
+      this.mouse.positionEnd = this.getPixelPositionsFromRaw(this.mouse.positionRaw)
+
+      this.onUp(this.mouse)
+   }
+
+   setMouseCoordinatesFromRaw() {
+      var { x, y } = this.getPixelPositionsFromRaw(this.mouse.positionRaw)
 
       var samePosition =
          this.mouse.positionCurrent.x == x &&
@@ -98,28 +112,17 @@ class Cursor extends Base  {
       this.onMove(this.mouse)
    }
 
-   eventMouseleave(e, element) {
-      this.eventMouseup(e, element)
-   }
-
-   eventMouseup(e, element) {
-      if(!this.mouse.down) return
-      this.mouse.down = false
-      this.mouse.positionEnd  = { x: e.offsetX, y: e.offsetY }
-      this.onUp(this.mouse)
-   }
-
-   getMouseEventPosition(e) {
+   getPixelPositionsFromRaw({ x, y }) {
       var easelCanvasX = this.easelCanvas.xPercent * this.eleCanvas.clientWidth - this.easelCanvas.width/2
       var easelCanvasY = this.easelCanvas.yPercent * this.eleCanvas.clientHeight - this.easelCanvas.height/2
 
-      var xPercent = (e.offsetX - easelCanvasX) / this.easelCanvas.width
-      var yPercent = (e.offsetY - easelCanvasY) / this.easelCanvas.height
+      var xPercent = (x - easelCanvasX) / this.easelCanvas.width
+      var yPercent = (y - easelCanvasY) / this.easelCanvas.height
 
-      var x = Math.floor(xPercent * this.frameWidth)
-      var y = Math.floor(yPercent * this.frameHeight)
+      var xPixel = Math.floor(xPercent * this.frameWidth)
+      var yPixel = Math.floor(yPercent * this.frameHeight)
       // console.log('mouse pos', x, y, e.offsetY)
-      return { x, y }
+      return { x: xPixel, y: yPixel }
    }
 
    getCursor() {
@@ -177,6 +180,7 @@ class Cursor extends Base  {
       }
 
       this.update()
+      this.setMouseCoordinatesFromRaw()
    }
 
    renderCursor() {
