@@ -37,6 +37,16 @@ class Easel extends Base  {
       this.gestureDelay = 100
       this.timeoutGesture = undefined
       this.pointers = []
+
+      this.changed = false
+      this.changeInterval = setInterval(() => {
+         if (this.changed) {
+            this.transformIndicators()
+            this.uiCanvas.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
+            this.uiCursor.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
+            this.changed = false
+         }
+      }, 1000/60)
    }
 
    eventMousedown(e) {
@@ -46,9 +56,7 @@ class Easel extends Base  {
          this.mode = 'moving'
       }
 
-      if (e.pointerId) {
-         this.pointers.push({ e, moveX: 0, moveY: 0 })
-      }
+      this.pointers.push({ e, moveX: 0, moveY: 0 })
 
       clearTimeout(this.timeoutGesture)
       this.timeoutGesture = setTimeout(() => {
@@ -63,6 +71,8 @@ class Easel extends Base  {
    }
 
    eventMouseup(e) {
+      e.preventDefault()
+
       if (this.mode == '') {
          clearTimeout(this.timeoutGesture)
          this.onPassEventMousedown(e)
@@ -74,7 +84,8 @@ class Easel extends Base  {
       }
 
       this.pointers = this.pointers.filter(p => e.pointerId !== p.e.pointerId)
-      if (this.pointers.length < 2) {
+
+      if (!this.pointers.length) {
          this.mode = ''
       }
    }
@@ -91,9 +102,22 @@ class Easel extends Base  {
          this.moveCanvas(moveX, moveY)
       }
 
-      if (this.mode == 'gesturing') {
+      if (this.mode == 'gesturing' && this.pointers.length == 2) {
          var pointer0 = this.pointers.find(p => p.e.pointerId === e.pointerId)
          var pointer1 = this.pointers.find(p => p.e.pointerId !== e.pointerId)
+
+         var diffX = e.offsetX - pointer1.e.offsetX
+         var diffY = e.offsetY - pointer1.e.offsetY
+         var oldDiffX = pointer0.e.offsetX - pointer1.e.offsetX
+         var oldDiffY = pointer0.e.offsetY - pointer1.e.offsetY
+         var distance = Math.sqrt(diffX*diffX + diffY*diffY)
+         var oldDistance = Math.sqrt(oldDiffX*oldDiffX + oldDiffY*oldDiffY)
+         var scale = (oldDistance - distance) * (this.scale/(this.scaleDampen*5))
+
+         // move cursor between touch points
+         var middleX = pointer0.e.offsetX - (diffX)/2
+         var middleY = pointer0.e.offsetY - (diffY)/2
+         this.uiCursor.onEventMousemove({ offsetX: middleX, offsetY: middleY })
 
          var moveX = 0
          var moveY = 0
@@ -113,15 +137,21 @@ class Easel extends Base  {
             pointer0.moveY = e.movementY
          }
 
+
+         pointer0.e = e
          this.moveCanvas(moveX, moveY)
+         this.zoom(scale)
       }
    }
 
    eventMouseleave(e) {
-      this.eventMouseup(e)
-
-      if (!this.gesturing) {
-         this.onPassEventMouseleave(e)
+      // prevent double calling up/leave
+      var pointer = this.pointers.find(p => e.pointerId == p.e.pointerId)
+      if (pointer) {
+         this.eventMouseup(e)
+         if (!this.gesturing) {
+            this.onPassEventMouseleave(e)
+         }
       }
    }
 
@@ -188,8 +218,7 @@ class Easel extends Base  {
       this.scale = scale
       this.onScale(this.scale)
 
-      this.uiCanvas.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
-      this.uiCursor.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
+      this.changed = true
    }
 
    moveCanvas(moveX, moveY) {
@@ -215,18 +244,14 @@ class Easel extends Base  {
       this.xRatio = xRatio
       this.yRatio = yRatio
 
-      this.transformIndicators()
-      this.uiCanvas.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
-      this.uiCursor.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
+      this.changed = true
    }
 
    centerCanvas() {
       this.xRatio = 0.5
       this.yRatio = 0.5
 
-      this.transformIndicators()
-      this.uiCanvas.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
-      this.uiCursor.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
+      this.changed = true
    }
 
    fitCanvas() {
