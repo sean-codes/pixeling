@@ -16,7 +16,11 @@ class Easel extends Base  {
       this.xRatio = 0
       this.yRatio = 0
 
-      this.moving = false
+      this.moving = false // middle mouse
+      this.gesturing = false // two touch
+      this.drawing = false // one touch / missed gesture timeout
+      this.mode = 'gesture'
+
       this.moveDampen = 2
 
       this.scale = 10
@@ -24,26 +28,100 @@ class Easel extends Base  {
       this.scaleMin = 0.1
       this.scaleMax = 64
       this.scaleDampen = 100
+
+      this.onPassEventMousedown = options.onPassEventMousedown || function() {}
+      this.onPassEventMousemove = options.onPassEventMousemove || function() {}
+      this.onPassEventMouseup = options.onPassEventMouseup || function() {}
+      this.onPassEventMouseleave = options.onPassEventMouseleave || function() {}
+
+      this.gestureDelay = 100
+      this.timeoutGesture = undefined
+      this.pointers = []
    }
 
-   eventMousedown(e, element) {
+   eventMousedown(e) {
       var isMiddleButton = e.button == 1
 
       if(isMiddleButton) {
-         this.moving = true
+         this.mode = 'moving'
+      }
+
+      if (e.pointerId) {
+         this.pointers.push({ e, moveX: 0, moveY: 0 })
+      }
+
+      clearTimeout(this.timeoutGesture)
+      this.timeoutGesture = setTimeout(() => {
+         this.mode = 'cursor'
+         this.onPassEventMousedown(e)
+      }, this.gestureDelay)
+
+      if (this.pointers.length == 2 && this.mode !== 'cursor') {
+         clearTimeout(this.timeoutGesture)
+         this.mode = 'gesturing'
       }
    }
 
-   eventMouseup(e, element) {
-      this.moving = false
+   eventMouseup(e) {
+      if (this.mode == '') {
+         clearTimeout(this.timeoutGesture)
+         this.onPassEventMousedown(e)
+         this.onPassEventMouseup(e)
+      }
+
+      if (this.mode == 'cursor') {
+         this.onPassEventMouseup(e)
+      }
+
+      this.pointers = this.pointers.filter(p => e.pointerId !== p.e.pointerId)
+      if (this.pointers.length < 2) {
+         this.mode = ''
+      }
    }
 
-   eventMousemove(e, element) {
-      if (this.moving) {
+   eventMousemove(e) {
+      if (this.mode == 'cursor' || this.mode == '') {
+         this.onPassEventMousemove(e)
+      }
+
+      if (this.mode == 'moving') {
          var moveX = e.movementX
          var moveY = e.movementY
 
          this.moveCanvas(moveX, moveY)
+      }
+
+      if (this.mode == 'gesturing') {
+         var pointer0 = this.pointers.find(p => p.e.pointerId === e.pointerId)
+         var pointer1 = this.pointers.find(p => p.e.pointerId !== e.pointerId)
+
+         var moveX = 0
+         var moveY = 0
+         if (Math.sign(e.movementX) == Math.sign(pointer1.moveX)) {
+            pointer0.moveX = 0
+            pointer1.moveX = 0
+            moveX = e.movementX
+         } else {
+            pointer0.moveX = e.movementX
+         }
+
+         if (Math.sign(e.movementY) == Math.sign(pointer1.moveY)) {
+            pointer0.moveY = 0
+            pointer1.moveY = 0
+            moveY = e.movementY
+         } else {
+            pointer0.moveY = e.movementY
+         }
+
+         this.moveCanvas(moveX, moveY)
+      }
+   }
+
+   eventMouseleave(e) {
+      this.eventMouseup(e)
+
+      if (!this.gesturing) {
+         this.onPassEventMouseleave(e)
       }
    }
 
@@ -189,16 +267,29 @@ class Easel extends Base  {
    }
 
    recipe() {
+      let events = {
+         mousemove: this.eventMousemove.bind(this),
+         mouseleave: this.eventMouseleave.bind(this),
+         mousedown: this.eventMousedown.bind(this),
+         mouseup: this.eventMouseup.bind(this),
+      }
+
+      const supportsPointerEvents = PointerEvent ? true : false
+      if (supportsPointerEvents) {
+         events = {
+            pointermove: this.eventMousemove.bind(this),
+            pointerleave: this.eventMouseleave.bind(this),
+            pointerdown: this.eventMousedown.bind(this),
+            pointerup: this.eventMouseup.bind(this),
+         }
+      }
+
+      events.wheel = this.eventScroll.bind(this)
+
       return {
          name: 'easel',
          classes: ['easel'],
-         events: {
-            mousemove: this.eventMousemove.bind(this),
-            mousedown: this.eventMousedown.bind(this),
-            mouseup: this.eventMouseup.bind(this),
-            mouseleave: this.eventMouseup.bind(this),
-            wheel: this.eventScroll.bind(this)
-         },
+         events: events,
          append: [
             this.uiCanvas.bakedHTML,
             this.uiCursor.bakedHTML

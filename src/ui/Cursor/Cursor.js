@@ -29,9 +29,11 @@ class Cursor extends Base  {
       this.onMove = options.onMove || function(){}
       this.onStroke = options.onStroke || function(){}
       this.onUp = options.onUp || function(){}
+      this.onEraserDown = options.onEraserDown || function(){}
 
       this.mouse = {
          down: false,
+         pointers: [],
          positionRaw: { x: 0, y: 0 },
          positionLast: { x: 0, y: 0 },
          positionCurrent: { x: 0, y: 0 },
@@ -43,9 +45,13 @@ class Cursor extends Base  {
       this.updateCanvas()
    }
 
-   eventMousedown(e, element) {
-      var mouseButton = ['left', 'middle', 'right'][e.button]
-      if(mouseButton != 'left') return
+   onEventMousedown(e) {
+      var mouseButton = ['left', 'middle', 'right', 'nan', 'nan', 'eraser'][e.button]
+      if (mouseButton === 'middle') return
+
+      if(mouseButton === 'eraser') {
+         this.onEraserDown()
+      }
 
       this.mouse.down = true
       this.mouse.dragging = this.canMoveSelected()
@@ -58,16 +64,16 @@ class Cursor extends Base  {
       this.onDown(this.mouse)
    }
 
-   eventMousemove(e, element) {
+   onEventMousemove(e) {
       this.mouse.positionRaw = { x: e.offsetX, y: e.offsetY }
       this.setMouseCoordinatesFromRaw()
    }
 
-   eventMouseleave(e, element) {
-      this.eventMouseup(e, element)
+   onEventMouseleave(e) {
+      this.onEventMouseup(e)
    }
 
-   eventMouseup(e, element) {
+   onEventMouseup(e) {
       if(!this.mouse.down) return
       this.mouse.down = false
 
@@ -314,12 +320,6 @@ class Cursor extends Base  {
       return {
          name: 'cursor',
          classes: ['ui', 'cursor'],
-         events: {
-            mousemove: this.eventMousemove.bind(this),
-            mouseleave: this.eventMouseleave.bind(this),
-            mousedown: this.eventMousedown.bind(this),
-            mouseup: this.eventMouseup.bind(this),
-         },
          ingredients: [
             {
                tag: 'canvas',

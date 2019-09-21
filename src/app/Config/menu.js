@@ -32,6 +32,7 @@ app.config.menu = [
            { label: 'paste', hint: 'ctrl-v' },
            { label: 'undo', hint: 'ctrl-z', command: 'undo' },
            { label: 'redo', hint: 'ctrl-shift-z', command: 'redo' },
+           { label: 'delete', command: 'delete' },
            { label: 'crop', command: 'crop' },
            { label: 'canvas size', command: 'canvasDialog' },
            { label: 'flip', to: 'flip', transition: 'forward' }

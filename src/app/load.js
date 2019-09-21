@@ -5,6 +5,7 @@ app.dialogs = {}
 app.config = {}
 app.rgba = { r: 0, g: 0, b: 0, a: 1 }
 app.cursorSize = 1
+app.switchedToEraserFrom = undefined
 
 // for splitting key/value pairs
 app.clone = function(object) {

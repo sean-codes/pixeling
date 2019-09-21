@@ -43,13 +43,25 @@ app.initializeUI = function() {
 
    app.ui.cursor = new Cursor({
       onDown: (mouse) => { app.ui.toolbox.down(mouse) },
-      onUp: (mouse) => { app.ui.toolbox.up(mouse) },
+      onUp: (mouse) => {
+         app.ui.toolbox.up(mouse)
+         
+         if (app.switchedToEraserFrom) {
+            app.ui.toolbox.selectTool(app.switchedToEraserFrom)
+            app.switchedToEraserFrom = undefined
+         }
+      },
       onStroke: (mouse) => { app.ui.toolbox.stroke(mouse) },
       onMove: (mouse) => {
          app.ui.toolbox.move(mouse)
          app.ui.statusbar.updateStatus({
             pos: `[ pos: ${mouse.positionCurrent.x}, ${mouse.positionCurrent.y} ]`
          })
+      },
+      onEraserDown: () => {
+         console.log('eraser down!!!')
+         app.switchedToEraserFrom = app.ui.toolbox.currentTool.name
+         app.ui.toolbox.selectTool('eraser')
       }
    })
 
@@ -62,7 +74,11 @@ app.initializeUI = function() {
          app.ui.statusbar.updateStatus({
             scale: `[ scale: ${scale}x ]`
          })
-      }
+      },
+      onPassEventMousedown: e => app.ui.cursor.onEventMousedown(e),
+      onPassEventMousemove: e => app.ui.cursor.onEventMousemove(e),
+      onPassEventMouseup: e => app.ui.cursor.onEventMouseup(e),
+      onPassEventMouseleave: e => app.ui.cursor.onEventMouseleave(e)
    })
 
    app.ui.colorMixer = new ColorMixer()
