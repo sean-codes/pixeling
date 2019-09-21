@@ -128,6 +128,24 @@ class ColorMixer extends Base  {
    }
 
    optionRecipe(name) {
+      var events = {
+         mousemove: this.eventMousemoveOption.bind(this),
+         mousedown: this.eventMousedownOption.bind(this),
+         mouseup: this.eventMouseoutOption.bind(this),
+         mouseout: this.eventMouseoutOption.bind(this),
+         mouseleave: this.eventMouseoutOption.bind(this),
+      }
+
+      if (PointerEvent) {
+         events = {
+            pointermove: this.eventMousemoveOption.bind(this),
+            pointerdown: this.eventMousedownOption.bind(this),
+            pointerup: this.eventMouseoutOption.bind(this),
+            pointerout: this.eventMouseoutOption.bind(this),
+            pointerleave: this.eventMouseoutOption.bind(this),
+         }
+      }
+      
       return {
          name: 'option_'+name,
          classes: ['option'],
@@ -151,13 +169,7 @@ class ColorMixer extends Base  {
                ]
             }
          ],
-         events: {
-            mousemove: this.eventMousemoveOption.bind(this),
-            mousedown: this.eventMousedownOption.bind(this),
-            mouseup: this.eventMouseoutOption.bind(this),
-            mouseout: this.eventMouseoutOption.bind(this),
-            mouseleave: this.eventMouseoutOption.bind(this),
-         }
+         events: events
       }
    }
 }
