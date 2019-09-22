@@ -13,8 +13,10 @@ app.tools.draw = new app.tools.Base({
    },
 
    up(mouse) {
+      app.ui.cursor.update(mouse.positionCurrent)
       app.frames.temporaryAddPixels(mouse.positions)
       app.frames.temporaryApply()
+      app.frames.temporaryClear()
       app.updateFrames()
       app.history.push()
    },

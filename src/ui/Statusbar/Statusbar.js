@@ -20,7 +20,7 @@ class Statusbar extends Base  {
    updateStatus(newStatusObject) {
       for(var statusName in newStatusObject) {
          var statusElement = this.bakedHTML.ele('status_'+statusName)
-         statusElement.innerHTML = newStatusObject[statusName]
+         statusElement.innerText = newStatusObject[statusName]
       }
    }
 

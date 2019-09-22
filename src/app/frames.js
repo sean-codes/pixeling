@@ -171,8 +171,6 @@ app.frames = new class Frames {
             var yEnd = yStart + size
 
             for (var y = yStart; y < yEnd; y++) {
-               if (x < 0 || x >= app.frames.width) continue
-               if (y < 0 || y >= app.frames.height) continue
                var i = (width * 4 * y) + (x * 4)
 
                temporaryImageData.data[i] = app.rgba.r

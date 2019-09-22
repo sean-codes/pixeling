@@ -82,6 +82,7 @@ mobile
 
 .ui.layout > .center > .center > .dockbottom {
    flex: 1;
+   max-height: 100%;
 }
 
 .ui.layout > .center .dock {

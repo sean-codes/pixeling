@@ -1,7 +1,6 @@
 app.tools.line = new app.tools.Base({
 
    select() {
-      console.log('selecting line tool')
       app.ui.cursor.update({ fill: true, selected: false, mode: 'stroke' })
    },
 

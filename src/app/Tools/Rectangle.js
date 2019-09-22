@@ -23,7 +23,7 @@ app.tools.rectangle = new app.tools.Base({
    up(mouse) {
       app.ui.cursor.update(mouse.positionCurrent)
       app.frames.temporaryApply()
-
+      app.frames.temporaryClear()
       app.updateFrames()
       app.history.push()
    },

@@ -53,16 +53,10 @@ class Canvas extends Base  {
 
    resetCanvas() {
       var frame = this.framesList[this.currentFrame]
-      this.eleCanvasContainer.style.width = this.frameWidth + 'px'
-      this.eleCanvasContainer.style.height = this.frameHeight + 'px'
       this.mainCanvas.width = this.frameWidth
       this.mainCanvas.height = this.frameHeight
-      this.mainCanvas.style.width = (this.frameWidth) + 'px'
-      this.mainCanvas.style.height = (this.frameHeight) + 'px'
       this.tempCanvas.width = this.frameWidth
       this.tempCanvas.height = this.frameHeight
-      this.tempCanvas.style.width = (this.frameWidth) + 'px'
-      this.tempCanvas.style.height = (this.frameHeight) + 'px'
       this.drawCheckerBoard()
    }
 
@@ -89,20 +83,18 @@ class Canvas extends Base  {
    }
 
    drawCheckerBoard() {
-      var frame = this.framesList[this.currentFrame]
-
       var size = 16
       var spacesX = Math.ceil(this.frameWidth / size)
       var spacesY = Math.ceil(this.frameHeight / size)
       var counter = 0
       for(var x = 0; x < spacesX; x++) {
          for(var y = 0; y < spacesY; y++) {
-            this.mainCtx.fillStyle = (counter % 2 == 0) ? '#DDD' : '#CCC'
+            this.mainCtx.fillStyle = (counter % 2 != 0) ? '#DDD' : '#BBB'
             this.mainCtx.fillRect(
-               x*size*this.scale,
-               y*size*this.scale,
-               this.scale*size,
-               this.scale*size
+               x*size,
+               y*size,
+               size,
+               size
             )
             counter += 1
          }
@@ -112,11 +104,13 @@ class Canvas extends Base  {
 
    updateCanvasPositionAndScale(xRatio, yRatio, scale) {
       var element = this.bakedHTML.ele('canvas')
-
+      this.scale = scale
+      element.style.width = (this.frameWidth * this.scale) + 'px'
+      element.style.height = (this.frameHeight * this.scale) + 'px'
       element.style.left = (xRatio*100) + '%'
       element.style.top = (yRatio*100) + '%'
       element.style.transform =
-         `translateX(-50%) translateY(-50%) scale(${scale})`
+         `translateX(-50%) translateY(-50%)`
    }
 
    updateScale(scale) {

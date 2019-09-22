@@ -4,7 +4,7 @@
    transform:translateX(-50%) translateY(-50%);
 }
 
-.canvas canvas {
+.canvas-container canvas {
    position: absolute;
    top: 0;
    left: 0;

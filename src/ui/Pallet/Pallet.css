@@ -7,61 +7,61 @@
    display: flex;
    flex-direction: column;
    justify-content: space-between;
-   position:relative;
-   z-index:1000;
+   position: relative;
+   z-index: 1000;
 }
 
 .pallet.container #colorPicker {
-   display:none;
+   display: none;
 }
 
 .pallet.container .colors {
-   display:flex;
+   display: flex;
    flex-wrap: wrap;
    align-content: flex-start;
    overflow: auto;
-   flex:1;
+   flex: 1;
 }
 
 .pallet.container .colors .color {
-   width:30px;
-   height:30px;
-   border:2.5px solid #151a1a;
+   width: 30px;
+   height: 30px;
+   /* border: 2.5px solid #151a1a; */
 }
 
 .pallet.container .colors .color.active {
-   border:3px solid #FFF;
+   border: 3px solid #FFF;
 }
 
 .pallet.container .mixer {
-   position:relative;
-   cursor:pointer;
-   height:40px;
-   width:100%;
-   margin-top:5px;
+   position: relative;
+   cursor: pointer;
+   height: 40px;
+   width: 100%;
+   margin-top: 5px;
 }
 
 .pallet.container .brush {
    height: 30px;
-   display:flex;
-   color:#FFF;
-   font-weight:600;
-   font-size:12px;
-   user-select:none;
+   display: flex;
+   color: #FFF;
+   font-weight: 600;
+   font-size: 12px;
+   user-select: none;
 }
 
 .pallet.container .brush * {
-   width:30px;
-   height:25px;
-   line-height:25px;
-   text-align:center;
+   width: 30px;
+   height: 25px;
+   line-height: 25px;
+   text-align: center;
 }
 
 .pallet.container .brush .size {
-   pointer-events:none;
+   pointer-events: none;
 }
 
 .pallet.container .brush .control:hover {
-   background:#333;
-   cursor:pointer;
+   background: #333;
+   cursor: pointer;
 }

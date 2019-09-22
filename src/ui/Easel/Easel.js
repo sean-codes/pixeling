@@ -16,7 +16,11 @@ class Easel extends Base  {
       this.xRatio = 0
       this.yRatio = 0
 
-      this.moving = false
+      this.moving = false // middle mouse
+      this.gesturing = false // two touch
+      this.drawing = false // one touch / missed gesture timeout
+      this.mode = ''
+
       this.moveDampen = 2
 
       this.scale = 10
@@ -24,26 +28,131 @@ class Easel extends Base  {
       this.scaleMin = 0.1
       this.scaleMax = 64
       this.scaleDampen = 100
+
+      this.onPassEventMousedown = options.onPassEventMousedown || function() {}
+      this.onPassEventMousemove = options.onPassEventMousemove || function() {}
+      this.onPassEventMouseup = options.onPassEventMouseup || function() {}
+      this.onPassEventMouseleave = options.onPassEventMouseleave || function() {}
+
+      this.gestureDelay = 100
+      this.timeoutGesture = undefined
+      this.pointers = []
+
+      this.changed = false
+      this.changeInterval = setInterval(() => {
+         if (this.changed) {
+            this.transformIndicators()
+            this.uiCanvas.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
+            this.uiCursor.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
+            this.changed = false
+         }
+      }, 1000/60)
    }
 
-   eventMousedown(e, element) {
+   eventMousedown(e) {
       var isMiddleButton = e.button == 1
 
       if(isMiddleButton) {
-         this.moving = true
+         this.mode = 'moving'
+      }
+
+      this.pointers.push({ e, moveX: 0, moveY: 0 })
+
+      clearTimeout(this.timeoutGesture)
+      this.timeoutGesture = setTimeout(() => {
+         this.mode = 'cursor'
+         this.onPassEventMousedown(e)
+      }, this.gestureDelay)
+
+      if (this.pointers.length == 2 && this.mode !== 'cursor') {
+         clearTimeout(this.timeoutGesture)
+         this.mode = 'gesturing'
       }
    }
 
-   eventMouseup(e, element) {
-      this.moving = false
+   eventMouseup(e) {
+      e.preventDefault()
+
+      if (this.mode == '') {
+         clearTimeout(this.timeoutGesture)
+         this.onPassEventMousedown(e)
+         this.onPassEventMouseup(e)
+      }
+
+      if (this.mode == 'cursor') {
+         this.onPassEventMouseup(e)
+      }
+
+      this.pointers = this.pointers.filter(p => e.pointerId !== p.e.pointerId)
+
+      if (!this.pointers.length) {
+         this.mode = ''
+      }
    }
 
-   eventMousemove(e, element) {
-      if (this.moving) {
+   eventMousemove(e) {
+      if (this.mode == 'cursor' || this.mode == '') {
+         this.onPassEventMousemove(e)
+      }
+
+      if (this.mode == 'moving') {
          var moveX = e.movementX
          var moveY = e.movementY
 
          this.moveCanvas(moveX, moveY)
+      }
+
+      if (this.mode == 'gesturing' && this.pointers.length == 2) {
+         var pointer0 = this.pointers.find(p => p.e.pointerId === e.pointerId)
+         var pointer1 = this.pointers.find(p => p.e.pointerId !== e.pointerId)
+
+         var diffX = e.offsetX - pointer1.e.offsetX
+         var diffY = e.offsetY - pointer1.e.offsetY
+         var oldDiffX = pointer0.e.offsetX - pointer1.e.offsetX
+         var oldDiffY = pointer0.e.offsetY - pointer1.e.offsetY
+         var distance = Math.sqrt(diffX*diffX + diffY*diffY)
+         var oldDistance = Math.sqrt(oldDiffX*oldDiffX + oldDiffY*oldDiffY)
+         var scale = (oldDistance - distance) * (this.scale/(this.scaleDampen*5))
+
+         // move cursor between touch points
+         var middleX = pointer0.e.offsetX - (diffX)/2
+         var middleY = pointer0.e.offsetY - (diffY)/2
+         this.uiCursor.onEventMousemove({ offsetX: middleX, offsetY: middleY })
+
+         var moveX = 0
+         var moveY = 0
+         if (Math.sign(e.movementX) == Math.sign(pointer1.moveX)) {
+            pointer0.moveX = 0
+            pointer1.moveX = 0
+            moveX = e.movementX
+         } else {
+            pointer0.moveX = e.movementX
+         }
+
+         if (Math.sign(e.movementY) == Math.sign(pointer1.moveY)) {
+            pointer0.moveY = 0
+            pointer1.moveY = 0
+            moveY = e.movementY
+         } else {
+            pointer0.moveY = e.movementY
+         }
+
+
+         pointer0.e = e
+         this.moveCanvas(moveX, moveY)
+         this.zoom(scale)
+      }
+   }
+
+   eventMouseleave(e) {
+      // prevent double calling up/leave
+      var pointer = this.pointers.find(p => e.pointerId == p.e.pointerId)
+      if (pointer) {
+         this.eventMouseup(e)
+      }
+
+      if (!this.gesturing) {
+         this.onPassEventMouseleave(e)
       }
    }
 
@@ -110,8 +219,7 @@ class Easel extends Base  {
       this.scale = scale
       this.onScale(this.scale)
 
-      this.uiCanvas.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
-      this.uiCursor.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
+      this.changed = true
    }
 
    moveCanvas(moveX, moveY) {
@@ -137,18 +245,14 @@ class Easel extends Base  {
       this.xRatio = xRatio
       this.yRatio = yRatio
 
-      this.transformIndicators()
-      this.uiCanvas.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
-      this.uiCursor.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
+      this.changed = true
    }
 
    centerCanvas() {
       this.xRatio = 0.5
       this.yRatio = 0.5
 
-      this.transformIndicators()
-      this.uiCanvas.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
-      this.uiCursor.updateCanvasPositionAndScale(this.xRatio, this.yRatio, this.scale)
+      this.changed = true
    }
 
    fitCanvas() {
@@ -189,16 +293,29 @@ class Easel extends Base  {
    }
 
    recipe() {
+      let events = {
+         mousemove: this.eventMousemove.bind(this),
+         mouseleave: this.eventMouseleave.bind(this),
+         mousedown: this.eventMousedown.bind(this),
+         mouseup: this.eventMouseup.bind(this),
+      }
+
+      const supportsPointerEvents = PointerEvent ? true : false
+      if (supportsPointerEvents) {
+         events = {
+            pointermove: this.eventMousemove.bind(this),
+            pointerleave: this.eventMouseleave.bind(this),
+            pointerdown: this.eventMousedown.bind(this),
+            pointerup: this.eventMouseup.bind(this),
+         }
+      }
+
+      events.wheel = this.eventScroll.bind(this)
+
       return {
          name: 'easel',
          classes: ['easel'],
-         events: {
-            mousemove: this.eventMousemove.bind(this),
-            mousedown: this.eventMousedown.bind(this),
-            mouseup: this.eventMouseup.bind(this),
-            mouseleave: this.eventMouseup.bind(this),
-            wheel: this.eventScroll.bind(this)
-         },
+         events: events,
          append: [
             this.uiCanvas.bakedHTML,
             this.uiCursor.bakedHTML

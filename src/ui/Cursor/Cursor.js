@@ -4,6 +4,7 @@ class Cursor extends Base  {
       super()
       this.bakeHTML()
 
+      this.eleContainer = this.bakedHTML.ele('cursor')
       this.eleCanvas = this.bakedHTML.ele('canvas')
       this.ctx = this.eleCanvas.getContext('2d')
 
@@ -29,9 +30,11 @@ class Cursor extends Base  {
       this.onMove = options.onMove || function(){}
       this.onStroke = options.onStroke || function(){}
       this.onUp = options.onUp || function(){}
+      this.onEraserDown = options.onEraserDown || function(){}
 
       this.mouse = {
          down: false,
+         pointers: [],
          positionRaw: { x: 0, y: 0 },
          positionLast: { x: 0, y: 0 },
          positionCurrent: { x: 0, y: 0 },
@@ -43,9 +46,14 @@ class Cursor extends Base  {
       this.updateCanvas()
    }
 
-   eventMousedown(e, element) {
-      var mouseButton = ['left', 'middle', 'right'][e.button]
-      if(mouseButton != 'left') return
+   onEventMousedown(e) {
+      this.mouseWithin = true
+      var mouseButton = ['left', 'middle', 'right', 'nan', 'nan', 'eraser'][e.button]
+      if (mouseButton === 'middle') return
+
+      if(mouseButton === 'eraser') {
+         this.onEraserDown()
+      }
 
       this.mouse.down = true
       this.mouse.dragging = this.canMoveSelected()
@@ -58,20 +66,25 @@ class Cursor extends Base  {
       this.onDown(this.mouse)
    }
 
-   eventMousemove(e, element) {
+   onEventMousemove(e) {
+      this.mouseWithin = true
       this.mouse.positionRaw = { x: e.offsetX, y: e.offsetY }
       this.setMouseCoordinatesFromRaw()
    }
 
-   eventMouseleave(e, element) {
-      this.eventMouseup(e, element)
+   onEventMouseleave(e) {
+      this.mouseWithin = false
+      this.update()
+
+      this.onEventMouseup(e)
    }
 
-   eventMouseup(e, element) {
+   onEventMouseup(e) {
       if(!this.mouse.down) return
       this.mouse.down = false
 
       this.mouse.positionRaw = { x: e.offsetX, y: e.offsetY }
+      this.setMouseCoordinatesFromRaw()
       this.mouse.positionEnd = this.getPixelPositionsFromRaw(this.mouse.positionRaw)
 
       this.onUp(this.mouse)
@@ -102,7 +115,6 @@ class Cursor extends Base  {
          x: x - this.mouse.positionStart.x,
          y: y - this.mouse.positionStart.y
       }
-
 
       if(this.mouse.down) {
          this.mouse.positions.push(this.mouse.positionCurrent)
@@ -148,6 +160,10 @@ class Cursor extends Base  {
       this.update()
    }
 
+   updateColor(color) {
+      this.color = color
+   }
+
    update(options) {
       for(var option in options) this[option] = options[option]
 
@@ -157,8 +173,8 @@ class Cursor extends Base  {
 
    updateCanvas() {
       this.eleCanvas.style.cursor = this.getCursor()
-      this.eleCanvas.width = this.eleCanvas.clientWidth
-      this.eleCanvas.height = this.eleCanvas.clientHeight
+      this.eleCanvas.width = this.eleContainer.clientWidth
+      this.eleCanvas.height = this.eleContainer.clientHeight
       this.ctx.imageSmoothingEnabled = false
 
       this.ctx.clearRect(0, 0, this.eleCanvas.width, this.eleCanvas.height)
@@ -200,12 +216,15 @@ class Cursor extends Base  {
    }
 
    renderCursorModeRead(dimensions) {
+      if (!this.mouseWithin) return
       var cursorDimensions1px = { width:1, height: 1 }
       cursorDimensions1px = Object.assign(cursorDimensions1px, dimensions)
       this.drawCrosshair(cursorDimensions1px, '#FFF')
    }
 
    renderCursorModeErase(dimensions) {
+      if (!this.mouseWithin) return
+
       var cursorDimensionsFullSize = {
          x: Math.ceil(dimensions.x - this.size/2),
          y: Math.ceil(dimensions.y - this.size/2),
@@ -215,7 +234,10 @@ class Cursor extends Base  {
       this.drawRectangleStroke(cursorDimensionsFullSize, '#FFF')
    }
 
+
    renderCursorModeStroke(dimensions) {
+      if (!this.mouseWithin) return
+
       var cursorDimensionsFullSize = {
          x: Math.ceil(dimensions.x - this.size/2),
          y: Math.ceil(dimensions.y - this.size/2),
@@ -228,6 +250,8 @@ class Cursor extends Base  {
    }
 
    renderCursorModeFill(dimensions) {
+      if (!this.mouseWithin) return
+
       this.drawRectangleFilled(dimensions, this.color)
       this.drawRectangleStroke(dimensions, 'rgba(255, 255, 255, 0.85)')
    }
@@ -237,8 +261,11 @@ class Cursor extends Base  {
       var cursorDimensions1px = { width: 1, height: 1 }
       cursorDimensions1px = Object.assign(cursorDimensions1px, dimensions)
 
+
       if(!this.mouse.down && !this.canMoveSelected()) {
-         this.drawRectangleDashed(cursorDimensions1px)
+         if (this.mouseWithin) {
+            this.drawRectangleDashed(cursorDimensions1px)
+         }
       }
 
       if(this.selected) {
@@ -314,12 +341,6 @@ class Cursor extends Base  {
       return {
          name: 'cursor',
          classes: ['ui', 'cursor'],
-         events: {
-            mousemove: this.eventMousemove.bind(this),
-            mouseleave: this.eventMouseleave.bind(this),
-            mousedown: this.eventMousedown.bind(this),
-            mouseup: this.eventMouseup.bind(this),
-         },
          ingredients: [
             {
                tag: 'canvas',

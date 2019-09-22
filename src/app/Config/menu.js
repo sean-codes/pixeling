@@ -5,9 +5,9 @@ app.config.menu = [
            { label: 'create', command: 'createDialog' },
            { label: 'open', command: 'openDialog', hint: 'ctrl-o' },
            { label: 'export', command: 'export', hint: 'ctrl-s' },
+           { label: 'edit', to: 'edit', transition: 'forward' },
            { label: 'view', to: 'view', transition: 'forward' },
            { label: 'preview', to: 'preview', transition: 'forward' },
-           { label: 'edit', to: 'edit', transition: 'forward' },
         ]
      },
      {
@@ -28,10 +28,11 @@ app.config.menu = [
         name: 'edit',
         items: [
            { label: 'back', to: 'home', transition: 'backward' },
-           { label: 'copy', hint: 'ctrl-c' },
-           { label: 'paste', hint: 'ctrl-v' },
+           { label: 'copy', hint: 'ctrl-c', command: 'copy' },
+           { label: 'paste', hint: 'ctrl-v', command: 'paste' },
            { label: 'undo', hint: 'ctrl-z', command: 'undo' },
            { label: 'redo', hint: 'ctrl-shift-z', command: 'redo' },
+           { label: 'delete', command: 'delete' },
            { label: 'crop', command: 'crop' },
            { label: 'canvas size', command: 'canvasDialog' },
            { label: 'flip', to: 'flip', transition: 'forward' }
