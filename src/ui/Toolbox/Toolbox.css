@@ -5,6 +5,7 @@
    color: #FFF;
    z-index: 100;
    position: relative;
+   overflow: hidden;
 }
 
 .toolbox .tool {

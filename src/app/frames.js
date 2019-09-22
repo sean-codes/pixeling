@@ -22,17 +22,22 @@ app.frames = new class Frames {
       this.temporaryCanvas.height = this.height
    }
 
-   load(image, frames=1) {
-      var frameWidth = image.width/frames
+   load(image, frameCount=1) {
+      // currently only support opening horizontal frames
+      var frameWidth = image.width/frameCount
       var frameHeight = image.height
       this.create(frameWidth, frameHeight)
 
-      this.list[0].ctx.drawImage(image, 0, 0, frameWidth, frameHeight)
+      for (var frameId = 0; frameId < frameCount; frameId++) {
+         // add frames for ones after first
+         if (frameId) this.addFrame()
 
-      for(var offset = 1; offset < frames; offset++) {
-         this.addFrame()
-         this.currentFrame = 0
-         this.list[offset].ctx.drawImage(image, frameWidth*offset, frameHeight*offset, frameWidth, frameHeight)
+         // draw the frame from image
+         this.list[frameId].ctx.drawImage(
+            image,
+            frameWidth*frameId, 0, frameWidth, frameHeight,
+            0, 0, frameWidth, frameHeight
+         )
       }
    }
 
