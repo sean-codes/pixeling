@@ -36,7 +36,7 @@ class Pallet extends Base{
       this.mixer = options.mixer
       this.bakedHTML.append(this.mixer.bakedHTML)
       this.mixer.onChange = (color) => {
-         this.setColor(color)
+         this.setColor(color, false)
       }
 
       // set initial color
@@ -93,17 +93,16 @@ class Pallet extends Base{
 
    setActiveColor(colorId) {
       this.selected = colorId
-      this.setColor(this.colors[colorId])
+      this.setColor(this.colors[colorId], true)
 
       // toggle color element active class
       for(var id = 0; id < this.colors.length; id++) {
          var colorElement = this.bakedHTML.ele('color_'+id)
          colorElement.classList.toggle('active', id == colorId)
       }
-
    }
 
-   setColor(color) {
+   setColor(color, andMixer) {
       this.color = color
       this.colors[this.selected] = color
       var stringColor = this.hslaToString(color)
@@ -113,7 +112,7 @@ class Pallet extends Base{
       mixerElement.style.background = stringColor
       colorElement.style.background = stringColor
 
-      this.mixer.setColor(color)
+      andMixer && this.mixer.setColor(color)
       this.onChangeColor(this.color)
    }
 

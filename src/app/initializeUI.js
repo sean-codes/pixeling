@@ -45,13 +45,18 @@ app.initializeUI = function() {
       onDown: (mouse) => { app.ui.toolbox.down(mouse) },
       onUp: (mouse) => {
          app.ui.toolbox.up(mouse)
-         
+
          if (app.switchedToEraserFrom) {
             app.ui.toolbox.selectTool(app.switchedToEraserFrom)
             app.switchedToEraserFrom = undefined
          }
       },
-      onStroke: (mouse) => { app.ui.toolbox.stroke(mouse) },
+      onStroke: (mouse) => {
+         app.ui.statusbar.updateStatus({
+            pos: `[ pos: ${mouse.positionCurrent.x}, ${mouse.positionCurrent.y} ]`
+         })
+         app.ui.toolbox.stroke(mouse)
+      },
       onMove: (mouse) => {
          app.ui.toolbox.move(mouse)
          app.ui.statusbar.updateStatus({
@@ -89,7 +94,7 @@ app.initializeUI = function() {
          app.rgba = app.util.hslaToRgba(color.h, color.s, color.l, color.a)
          app.colorString = colorString
          app.ui.statusbar.updateStatus({ color: `[ color: ${colorString} ]` })
-         app.ui.cursor.update({ color: colorString })
+         app.ui.cursor.updateColor(colorString)
       },
       onChangeSize: (size) => {
          app.cursorSize = size

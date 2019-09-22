@@ -28,22 +28,22 @@ class ColorMixer extends Base  {
       })
    }
 
-   eventMousedownOption(e, bakedHTML) {
+   eventOptionMousedown(e, bakedHTML) {
       bakedHTML.data('moving', true)
    }
 
-   eventMouseoutOption(e, bakedHTML) {
+   eventOptionMouseout(e, bakedHTML) {
+      console.log('out')
       bakedHTML.data('moving', false)
    }
 
-   eventMousemoveOption(e, bakedHTML) {
-
+   eventOptionMousemove(e, bakedHTML) {
       if(!bakedHTML.data('moving')) return
 
       var htmlCanvas = bakedHTML.ele('canvas')
 
       var elementWidth = htmlCanvas.clientWidth
-      var percent = e.offsetX / elementWidth
+      var percent = Math.max(0, Math.min(1, e.offsetX / elementWidth))
       var name = bakedHTML.data('name')
 
       var htmlCursor = bakedHTML.ele('cursor')
@@ -52,7 +52,7 @@ class ColorMixer extends Base  {
       var colorPart = this.hsla[name]
       colorPart.value = colorPart.max * Math.ceil(percent*100)/100
 
-      this.updateColor()
+      this.updateCanvasColors(name)
       this.onChange(this.getHSLA())
    }
 
@@ -71,21 +71,13 @@ class ColorMixer extends Base  {
       this.hsla.lightness.value = color.l
       this.hsla.alpha.value = color.a
 
-      this.updateColor()
-   }
-
-   updateColor() {
-      var h = Math.round(this.hsla.hue.value)
-      var s = Math.round(this.hsla.saturation.value)
-      var l = Math.round(this.hsla.lightness.value)
-      var a = Math.round(this.hsla.alpha.value*100)/100
-      var color = `hsla(${h}, ${s}%, ${l}%, ${a})`
-
       this.updateCanvasColors()
    }
 
-   updateCanvasColors() {
+   updateCanvasColors(colorValueName) {
       for(var name in this.hsla) {
+         if (name === colorValueName) continue
+
          var part = this.hsla[name]
          var bakedOptionElement = this.bakedHTML.find('option_'+name)
          var htmlCursor = bakedOptionElement.ele('cursor')
@@ -102,12 +94,11 @@ class ColorMixer extends Base  {
          ctx.clearRect(0, 0, htmlCanvas.width, htmlCanvas.height)
 
          for(var x = 0; x < part.max; x += part.step) {
-            ctx.fillStyle = `hsla(
-               ${name == 'hue' ? x : this.hsla.hue.value},
-               ${name == 'saturation' ? x : this.hsla.saturation.value}%,
-               ${name == 'lightness' ? x : this.hsla.lightness.value}%,
-               ${name == 'alpha' ? x : this.hsla.alpha.value}
-            )`
+            var h = name == 'hue' ? x : this.hsla.hue.value
+            var s = name == 'saturation' ? x : this.hsla.saturation.value
+            var l = name == 'lightness' ? x : this.hsla.lightness.value
+            var a = name == 'alpha' ? x : this.hsla.alpha.value
+            ctx.fillStyle = 'hsla('+h+', '+s+'%, '+l+'%,'+a+')'
 
             var percent = x / part.max
             var xPosition = percent * htmlCanvas.width
@@ -129,23 +120,22 @@ class ColorMixer extends Base  {
 
    optionRecipe(name) {
       var events = {
-         mousemove: this.eventMousemoveOption.bind(this),
-         mousedown: this.eventMousedownOption.bind(this),
-         mouseup: this.eventMouseoutOption.bind(this),
-         mouseout: this.eventMouseoutOption.bind(this),
-         mouseleave: this.eventMouseoutOption.bind(this),
+         mousemove: this.eventOptionMousemove.bind(this),
+         mousedown: this.eventOptionMousedown.bind(this),
+         mouseup: this.eventOptionMouseout.bind(this),
+         mouseleave: this.eventOptionMouseout.bind(this),
       }
 
-      if (PointerEvent) {
+      const supportsPointerEvents = PointerEvent ? true : false
+      if (supportsPointerEvents) {
          events = {
-            pointermove: this.eventMousemoveOption.bind(this),
-            pointerdown: this.eventMousedownOption.bind(this),
-            pointerup: this.eventMouseoutOption.bind(this),
-            pointerout: this.eventMouseoutOption.bind(this),
-            pointerleave: this.eventMouseoutOption.bind(this),
+            pointermove: this.eventOptionMousemove.bind(this),
+            pointerdown: this.eventOptionMousedown.bind(this),
+            pointerup: this.eventOptionMouseout.bind(this),
+            pointerleave: this.eventOptionMouseout.bind(this),
          }
       }
-      
+
       return {
          name: 'option_'+name,
          classes: ['option'],
@@ -166,7 +156,7 @@ class ColorMixer extends Base  {
                      name: 'cursor',
                      classes: ['cursor']
                   }
-               ]
+               ],
             }
          ],
          events: events

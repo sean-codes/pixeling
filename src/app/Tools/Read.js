@@ -10,7 +10,7 @@ app.tools.read = new app.tools.Base({
       var y = mouse.positionCurrent.y
 
       var color = app.frames.readPixel(x, y)
-      app.ui.pallet.setColor(color)
+      app.ui.pallet.setColor(color, true)
    },
 
    move(mouse) {

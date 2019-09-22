@@ -19,7 +19,7 @@ class Easel extends Base  {
       this.moving = false // middle mouse
       this.gesturing = false // two touch
       this.drawing = false // one touch / missed gesture timeout
-      this.mode = 'gesture'
+      this.mode = ''
 
       this.moveDampen = 2
 
@@ -149,9 +149,10 @@ class Easel extends Base  {
       var pointer = this.pointers.find(p => e.pointerId == p.e.pointerId)
       if (pointer) {
          this.eventMouseup(e)
-         if (!this.gesturing) {
-            this.onPassEventMouseleave(e)
-         }
+      }
+
+      if (!this.gesturing) {
+         this.onPassEventMouseleave(e)
       }
    }
 
