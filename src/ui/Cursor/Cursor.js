@@ -76,15 +76,16 @@ class Cursor extends Base  {
       this.mouseWithin = false
       this.update()
 
+      this.setMouseCoordinatesFromRaw()
       this.onEventMouseup(e)
    }
 
    onEventMouseup(e) {
       if(!this.mouse.down) return
-      this.mouse.down = false
-
       this.mouse.positionRaw = { x: e.offsetX, y: e.offsetY }
       this.setMouseCoordinatesFromRaw()
+
+      this.mouse.down = false
       this.mouse.positionEnd = this.getPixelPositionsFromRaw(this.mouse.positionRaw)
 
       this.onUp(this.mouse)

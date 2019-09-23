@@ -4,8 +4,6 @@ app.tools.draw = new app.tools.Base({
    },
 
    down(mouse) {
-      this.pixels = []
-      this.uniquePixels = {}
 
       app.frames.temporaryClear()
       app.frames.temporaryAddPixels(mouse.positions)

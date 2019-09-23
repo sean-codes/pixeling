@@ -20,6 +20,7 @@ class Easel extends Base  {
       this.gesturing = false // two touch
       this.drawing = false // one touch / missed gesture timeout
       this.mode = ''
+      this.downOffset = { offsetX: 0, offsetY: 0 }
 
       this.moveDampen = 2
 
@@ -50,18 +51,23 @@ class Easel extends Base  {
    }
 
    eventMousedown(e) {
+      var easelRect = this.eleEasel.getBoundingClientRect()
+      var offsetX = e.clientX - easelRect.x
+      var offsetY = e.clientY - easelRect.y
       var isMiddleButton = e.button == 1
+      this.downOffset = { offsetX, offsetY }
 
       if(isMiddleButton) {
          this.mode = 'moving'
+         return
       }
 
-      this.pointers.push({ e, moveX: 0, moveY: 0 })
+      this.pointers.push({ e, moveX: 0, moveY: 0, offsetX, offsetY })
 
       clearTimeout(this.timeoutGesture)
       this.timeoutGesture = setTimeout(() => {
          this.mode = 'cursor'
-         this.onPassEventMousedown(e)
+         this.onPassEventMousedown({ offsetX, offsetY })
       }, this.gestureDelay)
 
       if (this.pointers.length == 2 && this.mode !== 'cursor') {
@@ -71,16 +77,18 @@ class Easel extends Base  {
    }
 
    eventMouseup(e) {
-      e.preventDefault()
+      var easelRect = this.eleEasel.getBoundingClientRect()
+      var offsetX = e.clientX - easelRect.x
+      var offsetY = e.clientY - easelRect.y
 
       if (this.mode == '') {
          clearTimeout(this.timeoutGesture)
-         this.onPassEventMousedown(e)
-         this.onPassEventMouseup(e)
+         this.onPassEventMousedown(this.downOffset)
+         this.onPassEventMouseup({ offsetX, offsetY })
       }
 
       if (this.mode == 'cursor') {
-         this.onPassEventMouseup(e)
+         this.onPassEventMouseup({ offsetX, offsetY })
       }
 
       this.pointers = this.pointers.filter(p => e.pointerId !== p.e.pointerId)
@@ -91,14 +99,22 @@ class Easel extends Base  {
    }
 
    eventMousemove(e) {
+      var easelRect = this.eleEasel.getBoundingClientRect()
+      var offsetX = e.clientX - easelRect.x
+      var offsetY = e.clientY - easelRect.y
+
+      if (this.mode == 'moving') {
+         this.onPassEventMousemove({ offsetX, offsetY })
+      }
+
       if (this.mode == 'cursor' || this.mode == '') {
-         this.onPassEventMousemove(e)
+         this.onPassEventMousemove({ offsetX, offsetY })
       }
 
       if (this.mode == 'moving') {
          var moveX = e.movementX
          var moveY = e.movementY
-
+         console.log('moving')
          this.moveCanvas(moveX, moveY)
       }
 
@@ -106,17 +122,17 @@ class Easel extends Base  {
          var pointer0 = this.pointers.find(p => p.e.pointerId === e.pointerId)
          var pointer1 = this.pointers.find(p => p.e.pointerId !== e.pointerId)
 
-         var diffX = e.offsetX - pointer1.e.offsetX
-         var diffY = e.offsetY - pointer1.e.offsetY
-         var oldDiffX = pointer0.e.offsetX - pointer1.e.offsetX
-         var oldDiffY = pointer0.e.offsetY - pointer1.e.offsetY
+         var diffX = offsetX - pointer1.offsetX
+         var diffY = offsetY - pointer1.offsetY
+         var oldDiffX = pointer0.offsetX - pointer1.e.offsetX
+         var oldDiffY = pointer0.offsetY - pointer1.e.offsetY
          var distance = Math.sqrt(diffX*diffX + diffY*diffY)
          var oldDistance = Math.sqrt(oldDiffX*oldDiffX + oldDiffY*oldDiffY)
          var scale = (oldDistance - distance) * (this.scale/(this.scaleDampen*5))
 
          // move cursor between touch points
-         var middleX = pointer0.e.offsetX - (diffX)/2
-         var middleY = pointer0.e.offsetY - (diffY)/2
+         var middleX = pointer0.offsetX - (diffX)/2
+         var middleY = pointer0.offsetY - (diffY)/2
          this.uiCursor.onEventMousemove({ offsetX: middleX, offsetY: middleY })
 
          var moveX = 0
@@ -139,6 +155,8 @@ class Easel extends Base  {
 
 
          pointer0.e = e
+         pointer0.offsetX = offsetX
+         pointer0.offsetY = offsetY
          this.moveCanvas(moveX, moveY)
          this.zoom(scale)
       }
