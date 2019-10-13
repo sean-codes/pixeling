@@ -114,7 +114,6 @@ class Easel extends Base  {
       if (this.mode == 'moving') {
          var moveX = e.movementX
          var moveY = e.movementY
-         console.log('moving')
          this.moveCanvas(moveX, moveY)
       }
 

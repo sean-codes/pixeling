@@ -58,6 +58,7 @@ class Cursor extends Base  {
       this.mouse.down = true
       this.mouse.dragging = this.canMoveSelected()
       this.mouse.positionRaw = { x: e.offsetX, y: e.offsetY }
+      this.mouse.positionLast = this.getPixelPositionsFromRaw(this.mouse.positionRaw)
       this.mouse.positionStart = this.getPixelPositionsFromRaw(this.mouse.positionRaw)
       this.mouse.positionDelta = { x: 0, y: 0 }
       this.mouse.positionTotalDelta = { x: 0, y: 0 }
