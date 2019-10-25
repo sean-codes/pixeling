@@ -31,13 +31,17 @@ app.clipboard = {
 
       // load in the copy form localstorage
       var copyImg = document.createElement('img')
+      var copyCanvas = document.createElement('canvas')
       copyImg.src = copy.imageData
       copyImg.onload = () => {
+         copyCanvas.width = copyImg.width
+         copyCanvas.height = copyImg.height
+         copyCanvas.getContext('2d').drawImage(copyImg, 0, 0)
          var selected = {
             x: 0, y: 0,
             width: copy.dimensions.width,
             height: copy.dimensions.height,
-            copy: copyImg
+            copy: copyCanvas
          }
          document.body.appendChild(copyImg)
          app.ui.cursor.update({ selected })
