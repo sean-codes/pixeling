@@ -94,6 +94,7 @@ app.command = {
    paste: function() {
       app.clipboard.paste()
       app.history.push()
+      app.ui.toolbox.selectTool('select')
    },
 
    selectTool: function(info) {
