@@ -41,6 +41,7 @@ class Pallet extends Base{
 
       // set initial color
       this.setActiveColor(0)
+      this.setColor(this.colors[0], true)
    }
 
    eventClickColorMixer(e, bakedHTML) {
@@ -48,7 +49,9 @@ class Pallet extends Base{
    }
 
    eventClickColor(e, bakedHTML) {
-      this.setActiveColor(Number(bakedHTML.element.dataset.id))
+      const colorId = Number(bakedHTML.element.dataset.id)
+      this.setActiveColor(colorId)
+      this.setColor(this.colors[colorId], true)
    }
 
    eventBrushSizeScroll(e, bakedHTML) {
@@ -82,18 +85,20 @@ class Pallet extends Base{
       var nextColorID = this.selected+1
       if(nextColorID == this.colors.length) nextColorID = 0
       this.setActiveColor(nextColorID)
+      this.setColor(this.colors[nextColorID], true)
    }
 
    prevColor() {
       var nextColorID = this.selected-1
       if(nextColorID < 0) nextColorID = this.colors.length - 1
       this.setActiveColor(nextColorID)
+      this.setColor(this.colors[nextColorID], true)
    }
 
 
    setActiveColor(colorId) {
       this.selected = colorId
-      this.setColor(this.colors[colorId], true)
+      // this.setColor(this.colors[colorId], true)
 
       // toggle color element active class
       for(var id = 0; id < this.colors.length; id++) {
@@ -102,17 +107,37 @@ class Pallet extends Base{
       }
    }
 
-   setColor(color, andMixer) {
-      this.color = color
-      this.colors[this.selected] = color
-      var stringColor = this.hslaToString(color)
+   setColor(newColor, andMixer) {
+      // try and find a color
+      let oldColorId = -1
+      const oldColor = this.colors.find((c, i) => {
+         if (Math.abs(c.h - newColor.h) < 1
+            && Math.abs(c.s - newColor.s) < 1
+            && Math.abs(c.l - newColor.l) < 1
+            && Math.abs(c.a - newColor.a) < 1
+         ) {
+            oldColorId = i
+            return true
+         }
+      })
+
+      if (oldColor) {
+         this.color = oldColor
+         this.selected = oldColorId
+         this.setActiveColor(oldColorId)
+      } else {
+         this.color = newColor
+         this.colors[this.selected] = newColor
+      }
+
+      var stringColor = this.hslaToString(this.color)
 
       var mixerElement = this.bakedHTML.ele('mixer')
       var colorElement = this.bakedHTML.ele('color_'+this.selected)
       mixerElement.style.background = stringColor
       colorElement.style.background = stringColor
 
-      andMixer && this.mixer.setColor(color)
+      andMixer && this.mixer.setColor(this.color)
       this.onChangeColor(this.color)
    }
 

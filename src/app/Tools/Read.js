@@ -10,6 +10,9 @@ app.tools.read = new app.tools.Base({
       var y = mouse.positionCurrent.y
 
       var color = app.frames.readPixel(x, y)
+      // transparent lets leave!
+      if (!color.a) return
+      
       app.ui.pallet.setColor(color, true)
    },
 
