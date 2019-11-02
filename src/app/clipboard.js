@@ -26,6 +26,7 @@ app.clipboard = {
       }
 
       if (app.ui.cursor.selected) {
+         // put down what is currently held
          this.pasteCopy(app.ui.cursor.selected)
       }
 
@@ -38,7 +39,8 @@ app.clipboard = {
          copyCanvas.height = copyImg.height
          copyCanvas.getContext('2d').drawImage(copyImg, 0, 0)
          var selected = {
-            x: 0, y: 0,
+            x: copy.dimensions.x >= app.frames.width ? 0 : copy.dimensions.x,
+            y: copy.dimensions.y >= app.frames.height ? 0 : copy.dimensions.y,
             width: copy.dimensions.width,
             height: copy.dimensions.height,
             copy: copyCanvas
