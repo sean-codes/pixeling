@@ -85,6 +85,15 @@ app.frames = new class Frames {
       this.list = newFramesList
    }
 
+   moveFrame(frameId, direction) {
+      if (frameId === 0 && direction < 0) return
+      if (frameId === this.list.length-1 && direction > 0) return
+
+      var saveFrame = this.list[frameId]
+      this.list[frameId] = this.list[frameId + direction]
+      this.list[frameId + direction] = saveFrame
+   }
+
    setSize(width, height) {
       this.crop(0, 0, width, height)
    }

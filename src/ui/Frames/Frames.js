@@ -6,6 +6,8 @@ class Frames extends Base {
       this.callAddFrame = options.addFrame || function(){}
       this.callDeleteFrame = options.deleteFrame || function(){}
       this.callSelectFrame = options.selectFrame || function(){}
+      this.callMoveFrame = options.moveFrame || function(){}
+
 
       this.size = 80
       this.frames = []
@@ -31,33 +33,43 @@ class Frames extends Base {
       this.selectFrame(nextFrame)
    }
 
-   eventDeleteButton(e, bakeHTML) {
+   eventDeleteButton(e, bakeHtml) {
       e.stopPropagation()
-      this.deleteFrame(Number(bakeHTML.data('id')))
+      this.deleteFrame(Number(bakeHtml.data('id')))
    }
 
-   eventAddButton(e, bakeHTML) {
+   eventMoveFrameLeft(e, bakeHtml) {
+      e.stopPropagation()
+      this.moveFrame(Number(bakeHtml.data('id')), -1)
+   }
+
+   eventMoveFrameRight(e, bakeHtml) {
+      e.stopPropagation()
+      this.moveFrame(Number(bakeHtml.data('id')), 1)
+   }
+
+   eventAddButton(e, bakeHtml) {
       e.stopPropagation()
       this.addFrame()
    }
 
-   eventClickFrame(e, bakedHTML) {
+   eventClickFrame(e, bakeHtml) {
       e.stopPropagation()
-      var selectID = bakedHTML.data('id')
+      var selectID = bakeHtml.data('id')
       this.selectFrame(selectID)
    }
 
-   eventMouseDown(e, bakedHTML) {
+   eventMouseDown(e) {
       this.mouse.down = true
       this.mouse.x = e.clientX
       this.mouse.y = e.clientY
    }
 
-   eventMouseUp(e, bakedHTML) {
+   eventMouseUp(e) {
       this.mouse.down = false
    }
 
-   eventMouseMove(e, bakedHTML) {
+   eventMouseMove(e) {
       if(!this.mouse.down) return
 
       var deltaX = e.clientX - this.mouse.x
@@ -82,18 +94,26 @@ class Frames extends Base {
       this.callDeleteFrame(frameID)
    }
 
-   setFrames({ list, width, height, currentFrame }, selected) {
+   moveFrame(frameId, direction) {
+      if (frameId == 0 && direction < 0
+         || frameId == this.frames.length-1 && direction > 0
+      ) return
+      this.selectFrame(frameId + direction)
+      this.callMoveFrame(frameId, direction)
+   }
+
+   setFrames({ list, width, height, currentFrame }, selected, all) {
       var bakedReel = this.bakedHTML.find('reel')
       var needToRebuildHTML = this.framesLength != list.length
       if(needToRebuildHTML) bakedReel.clear()
 
-      this.currentFrame = currentFrame
+      this.currentFrame = Number(currentFrame)
       this.frameWidth = width
       this.frameHeight = height
       this.frames = list
       this.selected = selected
 
-      for(var frameID in this.frames) {
+      for(var frameID = 0; frameID < this.frames.length; frameID++) {
          var frame = this.frames[frameID]
 
          if(needToRebuildHTML) {
@@ -104,16 +124,19 @@ class Frames extends Base {
 
          var eleFrame = this.bakedHTML.ele('frame_'+frameID)
          eleFrame.classList.toggle('current', frameID == currentFrame)
+
+         if (frameID === this.currentFrame || all) {
+            this.updateFrame(frameID)
+         }
       }
 
-      this.updateFrame(this.currentFrame)
       this.framesLength = this.frames.length
    }
 
-   updateFrame(frameID) {
-      var frame = this.frames[frameID]
-      var eleCanvas = this.bakedHTML.ele('canvas_'+frameID)
-      this.drawFramePreview(eleCanvas, frame, frameID)
+   updateFrame(frameId) {
+      var frame = this.frames[frameId]
+      var eleCanvas = this.bakedHTML.ele('canvas_'+frameId)
+      this.drawFramePreview(eleCanvas, frame, frameId)
    }
 
    drawFramePreview(eleCanvas, frame, frameID) {
@@ -130,6 +153,7 @@ class Frames extends Base {
       }
 
       var ctx = eleCanvas.getContext('2d')
+      ctx.clearRect(0, 0, this.frameWidth, this.frameHeight)
       ctx.drawImage(frame.canvas, 0, 0)
 
       var thisFrameCouldHaveSelectedContet = frameID == this.currentFrame
@@ -198,13 +222,35 @@ class Frames extends Base {
                tag: 'canvas'
             },
             {
-               data: { id: id },
-               classes: ['delete'],
-               innerHTML: '+',
-               events: {
-                  click: this.eventDeleteButton.bind(this)
-               }
+               classes: ['buttons'],
+               ingredients: [
+                  {
+                     data: { id: id },
+                     classes: ['button', 'delete'],
+                     innerHTML: '+',
+                     events: {
+                        click: this.eventDeleteButton.bind(this)
+                     }
+                  },
+                  {
+                     data: { id: id },
+                     classes: ['button', 'move-left'],
+                     innerHTML: '',
+                     events: {
+                        click: this.eventMoveFrameLeft.bind(this)
+                     }
+                  },
+                  {
+                     data: { id: id },
+                     classes: ['button', 'move-right'],
+                     innerHTML: '',
+                     events: {
+                        click: this.eventMoveFrameRight.bind(this)
+                     }
+                  }
+               ]
             }
+
          ],
          data: {
             id: id

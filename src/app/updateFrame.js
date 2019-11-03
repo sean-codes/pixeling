@@ -1,11 +1,11 @@
 // going to use this to try and funnel these calls
-app.updateFrames = function() {
+app.updateFrames = function(all) {
    var frameID = app.frames.currentFrame
    var frames = app.frames.list
    var frame = app.frames.getCurrentFrame()
 
    app.ui.canvas.setFrames(app.frames, app.ui.cursor.selected)
-   app.ui.frames.setFrames(app.frames, app.ui.cursor.selected)
+   app.ui.frames.setFrames(app.frames, app.ui.cursor.selected, all)
    app.ui.preview.setFrames(app.frames, app.ui.cursor.selected)
    app.ui.cursor.updateFrames(app.frames)
    app.ui.easel.updateFrames(app.frames)

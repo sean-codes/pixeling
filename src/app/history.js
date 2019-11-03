@@ -34,10 +34,8 @@ app.history = {
          }
       })
 
-      console.log(app.frames.list)
-
       app.ui.cursor.update({ selected: undefined })
-      app.updateFrames()
+      app.updateFrames(true)
    },
 
    create: function() {

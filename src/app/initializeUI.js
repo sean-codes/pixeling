@@ -121,6 +121,10 @@ app.initializeUI = function() {
          app.frames.deleteFrame(deleteFrameID)
          app.updateFrames()
          app.history.push()
+      },
+      moveFrame: (frameId, direction) => {
+         app.frames.moveFrame(frameId, direction)
+         app.updateFrames(true)
       }
    })
 
