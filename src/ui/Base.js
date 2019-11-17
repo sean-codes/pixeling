@@ -24,6 +24,10 @@ class Base {
             this.ingredients.push(bakedIngredient)
             this.element.appendChild(bakedIngredient.element)
          },
+         insertBefore: function(bakedIngredient, bakedBefore) {
+            this.ingredients.push(bakedIngredient)
+            this.element.insertBefore(bakedIngredient.element, bakedBefore.element)
+         },
          appendTo: function(parentHTMLElement) {
             parentHTMLElement.appendChild(this.element)
          },
