@@ -19,11 +19,17 @@ class Menu extends Base {
    eventClickMenuItem(e, bakedHTML) {
       var action = bakedHTML.data('command')
       var to = bakedHTML.data('to')
+      var stayOpen = bakedHTML.data('stay_open')
 
       if(to) {
          var transition = bakedHTML.data('transition')
          this.navigate(to, transition)
       } else {
+         if (!stayOpen) {
+            app.ui.menu.navigate('home')
+            this.toggle()
+         }
+         
          this.onClick(action)
       }
    }
@@ -62,7 +68,8 @@ class Menu extends Base {
             data: {
                to: item.to,
                transition: item.transition,
-               command: item.command
+               command: item.command,
+               stay_open: item.stay_open,
             },
             events: {
                click: this.eventClickMenuItem.bind(this)

@@ -8,8 +8,6 @@ app.initializeUI = function() {
    app.ui.menu = new Menu({
       menu: app.config.menu,
       onClick: (label) => {
-         app.ui.menu.navigate('home')
-         app.ui.menu.toggle()
          app.command[label] && app.command[label]()
       }
    })
