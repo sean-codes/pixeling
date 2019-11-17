@@ -2,6 +2,40 @@ app.history = {
    store: [],
    point: -1,
 
+   hardSave: function() {
+      const hardSave = this.store.map((item) => {
+         return {
+            currentFrame: item.currentFrame,
+            id: item.id,
+            width: item.width,
+            height: item.height,
+            imageData: item.currentFrame,
+            frames: item.frames
+         }
+      })
+
+      localStorage.setItem('history', JSON.stringify(hardSave))
+   },
+
+   hardLoad: function() {
+      return new Promise((yay, nay) => {
+         // return false
+         let store = []
+         try {
+            store = JSON.parse(localStorage.getItem('history'))
+         } catch(e) {
+            console.log('something wrong with local storage', e)
+            nay()
+         }
+
+         this.store = store
+         this.point = this.store.length - 1
+
+         this.load().then(yay).catch(nay)
+      })
+   },
+
+
    reset: function() {
       this.store = []
       this.point = -1
@@ -9,33 +43,46 @@ app.history = {
    },
 
    load: function() {
-      var history = this.store[this.point]
+      return new Promise((yay, nay) => {
+         var history = this.store[this.point]
 
-      if(app.frames.list.length != history.frames.length) {
-         app.frames.currentFrame = history.currentFrame
-      }
-
-      app.frames.width = history.width
-      app.frames.height = history.height
-
-      app.frames.list = history.frames.map((frame) => {
-         var canvas = document.createElement('canvas')
-         canvas.width = history.width
-         canvas.height = history.height
-         var ctx = canvas.getContext('2d')
-
-         ctx.putImageData(frame.imageData, 0, 0)
-
-         return {
-            width: history.width,
-            height: history.height,
-            canvas: canvas,
-            ctx: ctx
+         if(app.frames.list.length != history.frames.length) {
+            app.frames.currentFrame = history.currentFrame
          }
-      })
 
-      app.ui.cursor.update({ selected: undefined })
-      app.updateFrames(true)
+         app.frames.width = history.width
+         app.frames.height = history.height
+
+         let loading = history.frames.length
+         app.frames.list = history.frames.map((frame) => {
+            // load in the copy form localstorage
+            const img = document.createElement('img')
+            const canvas = document.createElement('canvas')
+            const ctx = canvas.getContext('2d')
+
+            canvas.width = history.width
+            canvas.height = history.height
+            img.src = frame.imageData
+            img.onload = () => {
+               ctx.drawImage(img, 0, 0)
+               loading -= 1
+               if (!loading) {
+                  app.updateFrames(true)
+                  yay()
+               }
+            }
+
+            return {
+               width: history.width,
+               height: history.height,
+               canvas: canvas,
+               ctx: ctx
+            }
+         })
+
+         app.ui.cursor.update({ selected: undefined })
+
+      })
    },
 
    create: function() {
@@ -55,7 +102,7 @@ app.history = {
          height: app.frames.height,
          frames: app.frames.list.map((frame) => {
             return {
-               imageData: frame.ctx.getImageData(0, 0, app.frames.width, app.frames.height)
+               imageData: frame.canvas.toDataURL(0, 0, app.frames.width, app.frames.height)
             }
          })
       }
@@ -70,6 +117,8 @@ app.history = {
 
       var newHistory = app.history.create()
       this.store.push(newHistory)
+
+      this.hardSave()
    },
 
    rewrite: function() {

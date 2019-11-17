@@ -4,10 +4,19 @@ app.onLoad = function() {
    app.initializeUI()
 
    app.ui.toolbox.selectTool('draw')
-   app.command.create({
-      width: 48,
-      height: 48
-   })
+
+
+   app.history.hardLoad()
+      .then(() => {
+         app.ui.easel.centerCanvas()
+         app.ui.easel.fitCanvas()
+      })
+      .catch(() => {
+         app.command.create({
+            width: 48,
+            height: 48
+         })
+      })
 
    app.keyboard.listen()
 }
