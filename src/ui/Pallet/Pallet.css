@@ -26,7 +26,26 @@
 .pallet.container .colors .color {
    width: 30px;
    height: 30px;
+   position: relative;
    /* border: 2.5px solid #151a1a; */
+}
+
+.pallet.container .colors .color.add {
+   color: #666;
+   border: 2px solid #666;
+   font-weight: 600;
+   line-height: 27px;
+   text-align: center;
+   font-size: 20px;
+   user-select: none;
+   transition: all 0.5s;
+}
+
+.pallet.container .colors .color.add:hover {
+   border: 2px solid #FFF;
+   color: #FFF;
+   cursor: pointer;
+   transition: all 0s;
 }
 
 .pallet.container .colors .color.active {

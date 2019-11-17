@@ -54,6 +54,18 @@ class Pallet extends Base{
       this.setColor(this.colors[colorId], true)
    }
 
+   eventClickAddColor(e, bakedHTML) {
+      const clonedColor = { ...this.colors[this.selected] }
+      const nextColorId = this.colors.length
+      this.colors.push(clonedColor)
+
+      // bake and append a new color
+      const bakedNewColor = this.bake(this.recipeColor(clonedColor, nextColorId))
+      this.bakedHTML.find('colors').insertBefore(bakedNewColor, bakedHTML)
+
+      this.setActiveColor(nextColorId)
+   }
+
    eventBrushSizeScroll(e, bakedHTML) {
       if(Date.now() - this.sizeChangeDampener > 50) {
          this.sizeChangeDampener = Date.now()
@@ -107,21 +119,22 @@ class Pallet extends Base{
       }
    }
 
-   setColor(newColor, andMixer) {
+   setColor(newColor, andMixer, shouldFind = false) {
       // try and find a color
       let oldColorId = -1
+
       const oldColor = this.colors.find((c, i) => {
          if (Math.abs(c.h - newColor.h) < 1
             && Math.abs(c.s - newColor.s) < 1
             && Math.abs(c.l - newColor.l) < 1
-            && Math.abs(c.a - newColor.a) < 1
+            && Math.abs(c.a - newColor.a) < 0.01
          ) {
             oldColorId = i
             return true
          }
       })
 
-      if (oldColor) {
+      if (shouldFind && oldColor) {
          this.color = oldColor
          this.selected = oldColorId
          this.setActiveColor(oldColorId)
@@ -147,6 +160,20 @@ class Pallet extends Base{
 
    hslaToString(hsla) {
       return `hsla(${hsla.h}, ${hsla.s}%, ${hsla.l}%, ${hsla.a})`
+   }
+
+   recipeColor(color, id) {
+       return {
+         classes: ['color'],
+         data: { id },
+         name: 'color_'+id,
+         styles: {
+            background: this.hslaToString(this.colors[id])
+         },
+         events: {
+            click: this.eventClickColor.bind(this)
+         }
+      }
    }
 
    recipe() {
@@ -176,18 +203,19 @@ class Pallet extends Base{
 
       var recipeColors = {
          classes: ['colors'],
-         ingredients: this.colors.map((color, id) => ({
-            classes: ['color'],
-            data: { id },
-            name: 'color_'+id,
-            styles: {
-               background: this.hslaToString(this.colors[id])
-            },
-            events: {
-               click: this.eventClickColor.bind(this)
-            }
-         }))
+         name: 'colors',
+         ingredients: this.colors.map((color, id) => this.recipeColor(color, id))
       }
+
+      // add the add color button
+      recipeColors.ingredients.push({
+         classes: ['color', 'add'],
+         name: 'color_add',
+         innerHTML: '+',
+         events: {
+            click: this.eventClickAddColor.bind(this)
+         }
+      })
 
       var recipeMixer = {
          name: 'mixer',
