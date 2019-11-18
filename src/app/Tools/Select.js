@@ -6,6 +6,7 @@ app.tools.select = new app.tools.Base({
    },
 
    unSelect() {
+      app.ui.contextMenu.hide()
       this.unsetSelected()
    },
 
@@ -15,6 +16,8 @@ app.tools.select = new app.tools.Base({
    },
 
    down(mouse) {
+      app.ui.contextMenu.hide()
+
       if(mouse.dragging) {
          return
       }
@@ -31,6 +34,12 @@ app.tools.select = new app.tools.Base({
    up(mouse) {
       if(!mouse.dragging) {
          this.setCopy()
+      }
+
+      if (app.ui.cursor.selected) {
+         app.ui.contextMenu.show()
+      } else {
+         app.ui.contextMenu.hide()
       }
    },
 

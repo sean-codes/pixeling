@@ -12,6 +12,12 @@ app.initializeUI = function() {
       }
    })
 
+   app.ui.contextMenu = new ContextMenu({
+      onCommand: function(command) {
+         app.command[command] && app.command[command]()
+      }
+   })
+
    app.ui.appbar = new Appbar({
       onOpen: () => {
          app.ui.menu.toggle()
@@ -137,6 +143,7 @@ app.initializeUI = function() {
    app.ui.layout.appendUI(app.ui.pallet.bakedHTML, 'workspace_dockleft')
    app.ui.layout.appendUI(app.ui.easel.bakedHTML, 'workspace_dockbottom')
    app.ui.layout.appendUI(app.ui.preview.bakedHTML, 'workspace_dockbottom')
+   app.ui.layout.appendUI(app.ui.contextMenu.bakedHTML, 'workspace_dockbottom')
 
    // app.ui.dialogNew = new Dialog(app.dialogs.New)
    // app.ui.layout.appendUI(app.ui.dialogNew.bakedHTML, 'menu')
