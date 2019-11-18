@@ -111,6 +111,9 @@ app.frames = new class Frames {
 
       this.width = width
       this.height = height
+
+      this.temporaryCanvas.width = this.width
+      this.temporaryCanvas.height = this.height
    }
 
    clearBetween([p1, p2]) {
