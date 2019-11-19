@@ -174,6 +174,7 @@ app.command = {
 
    delete: function() {
       if (app.ui.cursor.selected) {
+         app.ui.contextMenu.hide()
          app.ui.cursor.update({ selected: undefined })
          app.updateFrames()
          app.history.push()

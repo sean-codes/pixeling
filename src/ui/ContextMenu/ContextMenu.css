@@ -1,13 +1,14 @@
 .ui.context-menu {
    position:absolute;
    top:10px;
-   left:10px;
+   left:50%;
    box-sizing:border-box;
    transition:all 0.1s;
    display: flex;
    flex-wrap: wrap;
    opacity: 0;
    pointer-events: none;
+   transform: translateX(-50%);
 }
 
 .ui.context-menu.show {
@@ -22,6 +23,7 @@
    padding: 1rem 1rem;
    position: relative;
    white-space: nowrap;
+   user-select: none;
 }
 
 .ui.context-menu .button:hover:after {

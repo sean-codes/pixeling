@@ -16,29 +16,12 @@ class ContextMenu extends Base {
       this.eleMenu.classList.remove('show')
    }
 
-   handleClickCopy() {
-
-   }
-
-   handleClickedPaste() {
-      console.log('clicked copy')
-   }
-
-   handleClickedFlipH() {
-      console.log('clicked copy')
-   }
-
-   handleClickedFlipH() {
-      console.log('clicked copy')
-   }
-
    recipe() {
       return {
          classes: ['ui', 'context-menu'],
          name: 'contextMenu',
          ingredients: [
             {
-               name: 'copy',
                tag: 'div',
                innerHTML: 'copy',
                classes: ['button'],
@@ -47,7 +30,6 @@ class ContextMenu extends Base {
                },
             },
             {
-               name: 'paste',
                tag: 'div',
                classes: ['button'],
                innerHTML: 'paste',
@@ -56,7 +38,6 @@ class ContextMenu extends Base {
                },
             },
             {
-               name: 'flip',
                tag: 'div',
                classes: ['button'],
                innerHTML: 'flip h',
@@ -65,12 +46,19 @@ class ContextMenu extends Base {
                },
             },
             {
-               name: 'flip',
                tag: 'div',
                classes: ['button'],
                innerHTML: 'flip v',
                events: {
                   click: () => this.onCommand('flipVertical')
+               },
+            },
+            {
+               tag: 'div',
+               classes: ['button'],
+               innerHTML: 'del',
+               events: {
+                  click: () => this.onCommand('delete')
                },
             }
          ]
