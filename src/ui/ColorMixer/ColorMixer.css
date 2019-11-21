@@ -7,7 +7,7 @@
 
 .colorMixer {
   position: absolute;
-  width: 200px;
+  width: 16rem;
   bottom: 5px;
   right: -10px;
   transform: translateX(100%);
@@ -68,6 +68,14 @@
 .colorMixer .option .slider {
    position:relative;
    flex:1;
+}
+
+.colorMixer .option .value {
+   width: 3rem;
+   text-align: center;
+   margin-left: 8px;
+   font-family: monospace, sans-serif;
+   font-weight: bolder;
 }
 
 .colorMixer .option .cursor {

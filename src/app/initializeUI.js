@@ -26,7 +26,6 @@ app.initializeUI = function() {
 
    app.ui.statusbar = new Statusbar({
       status: {
-         color: '[ hsla() ]',
          pos: '[ pos: 0, 0 ]',
          scale: '[ scale: 10x ]',
       }
@@ -97,7 +96,6 @@ app.initializeUI = function() {
          var colorString = app.util.hslaToString(color)
          app.rgba = app.util.hslaToRgba(color.h, color.s, color.l, color.a)
          app.colorString = colorString
-         app.ui.statusbar.updateStatus({ color: `[ color: ${colorString} ]` })
          app.ui.cursor.updateColor(colorString)
       },
       onChangeSize: (size) => {

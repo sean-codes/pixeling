@@ -14,7 +14,7 @@ class ColorMixer extends Base  {
       }
 
       this.bakeHTML()
-      this.updateCanvasColors()
+      this.updateCanvasAndValue()
    }
 
    show() { this.bakedHTML.element.classList.add('hide') }
@@ -33,27 +33,48 @@ class ColorMixer extends Base  {
    }
 
    eventOptionMouseout(e, bakedHTML) {
-      console.log('out')
       bakedHTML.data('moving', false)
    }
 
    eventOptionMousemove(e, bakedHTML) {
       if(!bakedHTML.data('moving')) return
 
-      var htmlCanvas = bakedHTML.ele('canvas')
+      var name = bakedHTML.data('name')
+      var bakedOptionElement = this.bakedHTML.find('option_'+name)
+      var htmlCursor = bakedOptionElement.ele('option_cursor_'+name)
+      var htmlCanvas = bakedOptionElement.ele('option_canvas_' + name)
+      var htmlValue = bakedOptionElement.ele('option_value_' + name)
 
       var elementWidth = htmlCanvas.clientWidth
       var percent = Math.max(0, Math.min(1, e.offsetX / elementWidth))
       var name = bakedHTML.data('name')
 
-      var htmlCursor = bakedHTML.ele('cursor')
       htmlCursor.style.left = percent*100 + '%'
 
       var colorPart = this.hsla[name]
-      colorPart.value = colorPart.max * Math.ceil(percent*100)/100
+      colorPart.value = colorPart.max > 1
+         ? Math.round(percent * colorPart.max) // 255 value
+         : Math.round(percent * colorPart.max * 100)/100 // 1 value (alpha)
 
-      this.updateCanvasColors(name)
+      htmlValue.value = colorPart.value
+
+      this.updateCanvasAndValue(name)
       this.onChange(this.getHSLA())
+   }
+
+   eventOptionValueKeyDown(e) {
+      e.stopPropagation()
+   }
+
+   eventOptionValueChange(e, bakedHTML) {
+      const max = Number(bakedHTML.element.getAttribute('max'))
+      const min = Number(bakedHTML.element.getAttribute('min'))
+      const value = Number(e.target.value)
+      const between = Math.min(max, Math.max(min, value))
+
+      const currentHsla = this.getHSLA()
+      currentHsla[bakedHTML.data('name')[0]] = Number(between)
+      this.setColor(currentHsla)
    }
 
    getHSLA() {
@@ -71,17 +92,21 @@ class ColorMixer extends Base  {
       this.hsla.lightness.value = color.l
       this.hsla.alpha.value = color.a
 
-      this.updateCanvasColors()
+      this.updateCanvasAndValue()
    }
 
-   updateCanvasColors(colorValueName) {
+   updateCanvasAndValue(colorValueName) {
       for(var name in this.hsla) {
          if (name === colorValueName) continue
 
          var part = this.hsla[name]
          var bakedOptionElement = this.bakedHTML.find('option_'+name)
-         var htmlCursor = bakedOptionElement.ele('cursor')
-         var htmlCanvas = bakedOptionElement.ele('canvas')
+         var htmlCursor = bakedOptionElement.ele('option_cursor_'+name)
+         var htmlCanvas = bakedOptionElement.ele('option_canvas_'+name)
+         var htmlValue = bakedOptionElement.ele('option_value_'+name)
+
+         // update value
+         htmlValue.value = part.value
 
          // update curor
          htmlCursor.style.left = part.value / part.max * 100 + '%'
@@ -119,7 +144,7 @@ class ColorMixer extends Base  {
    }
 
    optionRecipe(name) {
-      var events = {
+      var sliderEvents = {
          mousemove: this.eventOptionMousemove.bind(this),
          mousedown: this.eventOptionMousedown.bind(this),
          mouseup: this.eventOptionMouseout.bind(this),
@@ -128,7 +153,7 @@ class ColorMixer extends Base  {
 
       const supportsPointerEvents = PointerEvent ? true : false
       if (supportsPointerEvents) {
-         events = {
+         sliderEvents = {
             pointermove: this.eventOptionMousemove.bind(this),
             pointerdown: this.eventOptionMousedown.bind(this),
             pointerup: this.eventOptionMouseout.bind(this),
@@ -147,19 +172,38 @@ class ColorMixer extends Base  {
             },
             {
                classes: ['slider'],
+               name: 'option_slider_' + name,
+               data: { name },
                ingredients: [
                   {
                      tag: 'canvas',
-                     name: 'canvas'
+                     name: 'option_canvas_' + name,
                   },
                   {
-                     name: 'cursor',
+                     name: 'option_cursor_' + name,
                      classes: ['cursor']
                   }
                ],
+               events: sliderEvents
+            },
+            {
+               name: 'option_value_' + name,
+               tag: 'input',
+               classes: ['value'],
+               attr: {
+                  type: 'number',
+                  value: 255,
+                  min: 0,
+                  max: this.hsla[name].max,
+                  step: this.hsla[name].step,
+               },
+               data: { name: name },
+               events: {
+                  input: this.eventOptionValueChange.bind(this),
+                  keydown: this.eventOptionValueKeyDown.bind(this)
+               }
             }
-         ],
-         events: events
+         ]
       }
    }
 }
