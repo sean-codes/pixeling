@@ -83,6 +83,7 @@ app.tools.select = new app.tools.Base({
          width: app.frames.width,
          height: app.frames.height
       })
+      app.ui.contextMenu.show()
       app.updateFrames()
    },
 
