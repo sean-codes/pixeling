@@ -113,7 +113,7 @@ class Preview extends Base {
 
    recipe() {
       return {
-         classes: ['ui', 'preview'],
+         classes: ['ui', 'preview', 'hide'],
          name: 'preview',
          ingredients: [
             {
