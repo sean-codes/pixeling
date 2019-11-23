@@ -48,6 +48,7 @@ app.imports = {
       './src/app/keyboard.js',
       './src/app/onLoad.js',
       './src/app/updateFrame.js',
+      './src/app/fullscreen.js',
       // tools
       './src/app/Tools/Base.js',
       './src/app/Tools/Draw.js',

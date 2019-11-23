@@ -8,6 +8,7 @@ app.config.menu = [
            { label: 'edit', to: 'edit', transition: 'forward' },
            { label: 'view', to: 'view', transition: 'forward' },
            { label: 'preview', to: 'preview', transition: 'forward' },
+           { label: 'toggle fullscreen', command: 'toggleFullscreen' },
         ]
      },
      {

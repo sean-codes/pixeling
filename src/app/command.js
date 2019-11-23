@@ -204,5 +204,9 @@ app.command = {
 
    palletDecreaseBrush: function() {
       app.ui.pallet.eventDecreaseBrushSize()
+   },
+
+   toggleFullscreen: function() {
+      app.fullscreen.toggle()
    }
 }
