@@ -117,6 +117,7 @@ class Easel extends Base  {
          this.moveCanvas(moveX, moveY)
       }
 
+      // moving or scaling :]
       if (this.mode == 'gesturing' && this.pointers.length == 2) {
          var pointer0 = this.pointers.find(p => p.e.pointerId === e.pointerId)
          var pointer1 = this.pointers.find(p => p.e.pointerId !== e.pointerId)
@@ -240,8 +241,9 @@ class Easel extends Base  {
    }
 
    moveCanvas(moveX, moveY) {
-      var xRatio = this.xRatio + (moveX / this.eleEasel.clientWidth)
-      var yRatio = this.yRatio + (moveY / this.eleEasel.clientHeight)
+
+      var xRatio = this.xRatio + ((moveX/window.devicePixelRatio) / this.eleEasel.clientWidth)
+      var yRatio = this.yRatio + ((moveY/window.devicePixelRatio) / this.eleEasel.clientHeight)
 
       this.setCanvas(xRatio, yRatio)
    }
