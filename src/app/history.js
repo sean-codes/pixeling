@@ -52,7 +52,8 @@ app.history = {
 
          app.frames.width = history.width
          app.frames.height = history.height
-
+         app.frames.temporaryCanvas.width = history.width
+         app.frames.temporaryCanvas.height = history.height
          let loading = history.frames.length
          app.frames.list = history.frames.map((frame) => {
             // load in the copy form localstorage
