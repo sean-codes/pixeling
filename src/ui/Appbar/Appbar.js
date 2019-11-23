@@ -2,12 +2,10 @@ class Appbar extends Base {
    constructor(options = {}) {
       super()
       this.title = options.title || 'pixeling'
-      this.bakeHTML()
       this.onOpen = options.onOpen || function() {}
-   }
-
-   openMenu() {
-      this.onOpen()
+      this.onUndo = options.onUndo || function() {}
+      this.onRedo = options.onRedo || function() {}
+      this.bakeHTML()
    }
 
    recipe() {
@@ -17,12 +15,31 @@ class Appbar extends Base {
             {
                classes: ['menubtn'],
                events: {
-                  click: this.openMenu.bind(this)
+                  click: this.onOpen.bind(this)
                }
             },
             {
                classes: ['title'],
                innerHTML: this.title
+            },
+            {
+               classes: ['quick-edit'],
+               ingredients: [
+                  {
+                     classes: ['btn'],
+                     innerHTML: 'undo',
+                     events: {
+                        click: this.onUndo.bind(this)
+                     }
+                  },
+                  {
+                     classes: ['btn'],
+                     innerHTML: 'redo',
+                     events: {
+                        click: this.onRedo.bind(this)
+                     }
+                  }
+               ]
             }
          ]
       }

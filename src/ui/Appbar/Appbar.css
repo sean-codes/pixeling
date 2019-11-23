@@ -35,3 +35,17 @@
    flex: 1;
    padding:0 10px;
 }
+
+.appbar .quick-edit {
+   display: flex;
+}
+
+.appbar .quick-edit .btn {
+   padding: 0 0.5rem;
+}
+
+.appbar .quick-edit .btn:hover {
+   cursor: pointer;
+   background: rgba(255, 255, 255, 0.05);
+   user-select: none;
+}

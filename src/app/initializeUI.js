@@ -21,6 +21,12 @@ app.initializeUI = function() {
    app.ui.appbar = new Appbar({
       onOpen: () => {
          app.ui.menu.toggle()
+      },
+      onUndo: () => {
+         app.command.undo()
+      },
+      onRedo: () => {
+         app.command.redo()
       }
    })
 
