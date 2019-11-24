@@ -1,6 +1,6 @@
 app.onLoad = function() {
    document.querySelector('.loading').style.display = 'none'
-
+   app.open.init()
    app.initializeUI()
 
    app.ui.toolbox.selectTool('draw')

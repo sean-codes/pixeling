@@ -46,12 +46,15 @@ app.command = {
       link.click()
    },
 
-   openDialog: function() {
-      app.ui.dialogOpen.open()
+   open: function() {
+      app.open.request()
+   },
+
+   makeFramesDialog: function() {
+      app.ui.dialogMakeFrames.open()
    },
 
    crop: function() {
-      console.log('cropiing')
       if(app.ui.cursor.selected) {
          var { x, y, width, height } = app.ui.cursor.selected
          app.tools.select.unsetSelected()

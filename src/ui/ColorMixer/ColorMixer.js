@@ -151,7 +151,7 @@ class ColorMixer extends Base  {
          mouseleave: this.eventOptionMouseout.bind(this),
       }
 
-      const supportsPointerEvents = PointerEvent ? true : false
+      const supportsPointerEvents = window.PointerEvent ? true : false
       if (supportsPointerEvents) {
          sliderEvents = {
             pointermove: this.eventOptionMousemove.bind(this),

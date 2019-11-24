@@ -33,6 +33,7 @@ app.imports = {
       './src/ui/Canvas/Canvas.js',
       './src/ui/Cursor/Cursor.js',
       './src/ui/Frames/Frames.js',
+      './src/ui/Filedrop/Filedrop.js',
       './src/ui/Layout/Layout.js',
       './src/ui/Menu/Menu.js',
       './src/ui/Pallet/Pallet.js',
@@ -45,10 +46,11 @@ app.imports = {
       './src/app/initializeUI.js',
       './src/app/history.js',
       './src/app/frames.js',
+      './src/app/fullscreen.js',
       './src/app/keyboard.js',
       './src/app/onLoad.js',
+      './src/app/open.js',
       './src/app/updateFrame.js',
-      './src/app/fullscreen.js',
       // tools
       './src/app/Tools/Base.js',
       './src/app/Tools/Draw.js',
@@ -60,7 +62,7 @@ app.imports = {
       './src/app/Tools/Select.js',
       // dialogs
       './src/app/Dialogs/New.js',
-      './src/app/Dialogs/Open.js',
+      './src/app/Dialogs/MakeFrames.js',
       './src/app/Dialogs/Canvas.js',
       './src/app/Dialogs/OnionFrames.js'
    ],
@@ -73,6 +75,7 @@ app.imports = {
       './src/ui/ContextMenu/ContextMenu.css',
       './src/ui/Cursor/Cursor.css',
       './src/ui/Frames/Frames.css',
+      './src/ui/Filedrop/Filedrop.css',
       './src/ui/Layout/Layout.css',
       './src/ui/Menu/Menu.css',
       './src/ui/Pallet/Pallet.css',

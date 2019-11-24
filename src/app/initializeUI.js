@@ -138,6 +138,8 @@ app.initializeUI = function() {
 
    app.ui.preview = new Preview()
 
+   app.ui.filedrop = new Filedrop()
+
    // append all the ui components
    app.ui.layout.appendUI(app.ui.menu.bakedHTML, 'sidebar')
    app.ui.layout.appendUI(app.ui.appbar.bakedHTML, 'top')
@@ -148,6 +150,7 @@ app.initializeUI = function() {
    app.ui.layout.appendUI(app.ui.easel.bakedHTML, 'workspace_dockbottom')
    app.ui.layout.appendUI(app.ui.preview.bakedHTML, 'workspace_dockbottom')
    app.ui.layout.appendUI(app.ui.contextMenu.bakedHTML, 'workspace_dockbottom')
+   app.ui.layout.appendUI(app.ui.filedrop.bakedHTML, 'workspace_center')
 
    // app.ui.dialogNew = new Dialog(app.dialogs.New)
    // app.ui.layout.appendUI(app.ui.dialogNew.bakedHTML, 'menu')

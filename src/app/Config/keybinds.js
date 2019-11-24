@@ -87,7 +87,7 @@ app.config.keybinds = [
    {
       modifiers: ['meta'],
       key: 'o',
-      command: 'openDialog'
+      command: 'open'
    },
    {
       modifiers: ['meta'],

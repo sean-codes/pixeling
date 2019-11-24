@@ -319,7 +319,7 @@ class Easel extends Base  {
          mouseup: this.eventMouseup.bind(this),
       }
 
-      const supportsPointerEvents = PointerEvent ? true : false
+      const supportsPointerEvents = window.PointerEvent ? true : false
       if (supportsPointerEvents) {
          events = {
             pointermove: this.eventMousemove.bind(this),

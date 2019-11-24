@@ -3,7 +3,7 @@ app.config.menu = [
         name: 'home',
         items: [
            { label: 'create', command: 'createDialog' },
-           { label: 'open', command: 'openDialog', hint: 'ctrl-o' },
+           { label: 'open', command: 'open', hint: 'ctrl-o' },
            { label: 'export', command: 'export', hint: 'ctrl-s' },
            { label: 'edit', to: 'edit', transition: 'forward' },
            { label: 'view', to: 'view', transition: 'forward' },
@@ -34,17 +34,11 @@ app.config.menu = [
            { label: 'undo', hint: 'ctrl-z', command: 'undo', stay_open: true },
            { label: 'redo', hint: 'ctrl-shift-z', command: 'redo', stay_open: true },
            { label: 'delete', command: 'delete' },
+           { label: 'flip h', command: 'flipHorizontal', hint: 'ctrl-shift-h' },
+           { label: 'flip v', command: 'flipVertical', hint: 'ctrl-shift-v' },
            { label: 'crop', command: 'crop' },
            { label: 'canvas size', command: 'canvasDialog' },
-           { label: 'flip', to: 'flip', transition: 'forward' }
-        ]
-     },
-     {
-        name: 'flip',
-        items: [
-           { label: 'back', to: 'edit', transition: 'backward' },
-           { label: 'horizontal', command: 'flipHorizontal', hint: 'ctrl-shift-h' },
-           { label: 'vertical', command: 'flipVertical', hint: 'ctrl-shift-v' },
+           { label: 'make frames', command: 'makeFramesDialog' }
         ]
      },
      {
