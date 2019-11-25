@@ -35,6 +35,7 @@ app.tools.fill = new app.tools.Base({
 
       var frame = app.frames.getCurrentFrame()
       var frameImageData = frame.ctx.getImageData(0, 0, app.frames.width, app.frames.height)
+      var tempImageData = app.frames.temporaryCtx.getImageData(0, 0, app.frames.width, app.frames.height)
 
       while (check < pointer && pointer < 2000 * 2000 * 2) {
          var x = unconfirmed[check]
@@ -56,10 +57,10 @@ app.tools.fill = new app.tools.Base({
             && Math.abs(frameImageData.data[dataId + 2] - color.b) < 3
             && Math.abs(frameImageData.data[dataId + 3] - color.a) < 3
          ) {
-            frameImageData.data[dataId] = app.rgba.r
-            frameImageData.data[dataId + 1] = app.rgba.g
-            frameImageData.data[dataId + 2] = app.rgba.b
-            frameImageData.data[dataId + 3] = app.rgba.a
+            tempImageData.data[dataId] = app.rgba.r
+            tempImageData.data[dataId + 1] = app.rgba.g
+            tempImageData.data[dataId + 2] = app.rgba.b
+            tempImageData.data[dataId + 3] = app.rgba.a
 
             unconfirmed[pointer] = x
             unconfirmed[pointer + 1] = y - 1
@@ -73,7 +74,9 @@ app.tools.fill = new app.tools.Base({
          }
       }
 
-      frame.ctx.putImageData(frameImageData, 0, 0)
+      app.frames.temporaryCtx.putImageData(tempImageData, 0, 0)
+      app.frames.temporaryApply()
+      app.frames.temporaryClear()
    },
 
    colorsCloseEnough(c1, c2) {
