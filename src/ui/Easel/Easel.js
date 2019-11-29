@@ -122,10 +122,14 @@ class Easel extends Base  {
          var pointer0 = this.pointers.find(p => p.e.pointerId === e.pointerId)
          var pointer1 = this.pointers.find(p => p.e.pointerId !== e.pointerId)
 
+         var movementX = offsetX - pointer0.offsetX
+         var movementY = offsetY - pointer0.offsetY
+
          var diffX = offsetX - pointer1.offsetX
          var diffY = offsetY - pointer1.offsetY
          var oldDiffX = pointer0.offsetX - pointer1.e.offsetX
          var oldDiffY = pointer0.offsetY - pointer1.e.offsetY
+
          var distance = Math.sqrt(diffX*diffX + diffY*diffY)
          var oldDistance = Math.sqrt(oldDiffX*oldDiffX + oldDiffY*oldDiffY)
          var scale = (oldDistance - distance) * (this.scale/(this.scaleDampen*5))
@@ -137,22 +141,21 @@ class Easel extends Base  {
 
          var moveX = 0
          var moveY = 0
-         if (Math.sign(e.movementX) == Math.sign(pointer1.moveX)) {
+         if (Math.sign(movementX) == Math.sign(pointer1.moveX)) {
             pointer0.moveX = 0
             pointer1.moveX = 0
-            moveX = e.movementX
+            moveX = movementX
          } else {
-            pointer0.moveX = e.movementX
+            pointer0.moveX = movementX
          }
 
-         if (Math.sign(e.movementY) == Math.sign(pointer1.moveY)) {
+         if (Math.sign(movementY) == Math.sign(pointer1.moveY)) {
             pointer0.moveY = 0
             pointer1.moveY = 0
-            moveY = e.movementY
+            moveY = movementY
          } else {
-            pointer0.moveY = e.movementY
+            pointer0.moveY = movementY
          }
-
 
          pointer0.e = e
          pointer0.offsetX = offsetX
@@ -242,8 +245,8 @@ class Easel extends Base  {
 
    moveCanvas(moveX, moveY) {
 
-      var xRatio = this.xRatio + ((moveX/window.devicePixelRatio) / this.eleEasel.clientWidth)
-      var yRatio = this.yRatio + ((moveY/window.devicePixelRatio) / this.eleEasel.clientHeight)
+      var xRatio = this.xRatio + (moveX / this.eleEasel.clientWidth)
+      var yRatio = this.yRatio + (moveY / this.eleEasel.clientHeight)
 
       this.setCanvas(xRatio, yRatio)
    }
