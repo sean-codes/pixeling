@@ -9,8 +9,7 @@ app.open = {
       this.eleInput.style.display = 'none'
       document.body.appendChild(this.eleInput)
 
-      this.eleInput.addEventListener('input', this.file.bind(this))
-
+      this.eleInput.addEventListener('change', this.file.bind(this))
    },
 
    request: function() {
@@ -21,6 +20,7 @@ app.open = {
       var file = this.eleInput.files[0]
       if(!file) return
 
+      app.history.name = file.name
       // read file into image
       var reader = new FileReader()
       reader.onload = (e) => {

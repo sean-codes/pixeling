@@ -1,0 +1,15 @@
+{
+   "permissions": ["storage"],
+   "name": "pixeling",
+   "short_name": "pixeling",
+   "scope": "/pixeling",
+   "start_url": "/pixeling",
+   "display": "fullscreen",
+   "icons": [
+      {
+         "src": "icon.png",
+         "type": "image/png",
+         "sizes": "192x192"
+      }
+   ]
+}

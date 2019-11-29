@@ -42,7 +42,7 @@ app.command = {
       var base64 = app.frames.export()
       var link = document.createElement('a')
       link.setAttribute('href', base64)
-      link.setAttribute('download', 'pixeling.png')
+      link.setAttribute('download', app.history.name)
       link.click()
    },
 
@@ -103,6 +103,7 @@ app.command = {
    selectTool: function(info) {
       app.ui.toolbox.selectTool(info.tool)
    },
+
    undo: function() {
       app.history.undo()
    },

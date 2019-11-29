@@ -1,6 +1,7 @@
 app.history = {
    store: [],
    point: -1,
+   name: 'pixeling',
 
    hardSave: function() {
       const hardSave = this.store.map((item) => {
@@ -10,7 +11,8 @@ app.history = {
             width: item.width,
             height: item.height,
             imageData: item.currentFrame,
-            frames: item.frames
+            frames: item.frames,
+            name: this.name
          }
       })
 
@@ -30,6 +32,7 @@ app.history = {
 
          this.store = store
          this.point = this.store.length - 1
+         this.name = this.store[this.point].name || 'pixeling'
 
          this.load().then(yay).catch(nay)
       })
