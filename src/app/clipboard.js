@@ -57,9 +57,21 @@ app.clipboard = {
       var copyCanvas = document.createElement('canvas')
       copyCanvas.width = selected.width
       copyCanvas.height = selected.height
+
+      // constrain
+      var cXStart = Math.max(selected.x, 0)
+      var cYStart = Math.max(selected.y, 0)
+      var offsetX = cXStart - selected.x
+      var offsetY = cYStart - selected.y
+      var cXEnd = Math.min(app.frames.width, (selected.x + selected.width))
+      var cYEnd = Math.min(app.frames.height, (selected.y + selected.height))
+
+      var width = cXEnd - cXStart
+      var height = cYEnd - cYStart
+
       copyCanvas.getContext('2d').drawImage(frame.canvas,
-         selected.x, selected.y, selected.width, selected.height,
-         0, 0, selected.width, selected.height
+         cXStart, cYStart, width, height, //source
+         offsetX, offsetY, width, height, //dest
       )
 
       return copyCanvas
