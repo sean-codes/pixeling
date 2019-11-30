@@ -19,70 +19,70 @@ app.scratchCtx = app.scratchCanvas.getContext('2d')
 app.imports = {
    js: [
       // globals
-      './src/app/util.js',
+      { path: './src/app/util.js' },
       // config
-      './src/app/Config/keybinds.js',
-      './src/app/Config/menu.js',
+      { path: './src/app/Config/keybinds.js' },
+      { path: './src/app/Config/menu.js' },
       // ui
-      './src/ui/Base.js',
-      './src/ui/Appbar/Appbar.js',
-      './src/ui/ColorMixer/ColorMixer.js',
-      './src/ui/ContextMenu/ContextMenu.js',
-      './src/ui/Dialog/Dialog.js',
-      './src/ui/Easel/Easel.js',
-      './src/ui/Canvas/Canvas.js',
-      './src/ui/Cursor/Cursor.js',
-      './src/ui/Frames/Frames.js',
-      './src/ui/Filedrop/Filedrop.js',
-      './src/ui/Layout/Layout.js',
-      './src/ui/Menu/Menu.js',
-      './src/ui/Pallet/Pallet.js',
-      './src/ui/Preview/Preview.js',
-      './src/ui/Statusbar/Statusbar.js',
-      './src/ui/Toolbox/Toolbox.js',
+      { path: './src/ui/Base.js', loadBeforeNext: true },
+      { path: './src/ui/Appbar/Appbar.js' },
+      { path: './src/ui/ColorMixer/ColorMixer.js' },
+      { path: './src/ui/ContextMenu/ContextMenu.js' },
+      { path: './src/ui/Dialog/Dialog.js' },
+      { path: './src/ui/Easel/Easel.js' },
+      { path: './src/ui/Canvas/Canvas.js' },
+      { path: './src/ui/Cursor/Cursor.js' },
+      { path: './src/ui/Frames/Frames.js' },
+      { path: './src/ui/Filedrop/Filedrop.js' },
+      { path: './src/ui/Layout/Layout.js' },
+      { path: './src/ui/Menu/Menu.js' },
+      { path: './src/ui/Pallet/Pallet.js' },
+      { path: './src/ui/Preview/Preview.js' },
+      { path: './src/ui/Statusbar/Statusbar.js' },
+      { path: './src/ui/Toolbox/Toolbox.js' },
       // app
-      './src/app/clipboard.js',
-      './src/app/command.js',
-      './src/app/initializeUI.js',
-      './src/app/history.js',
-      './src/app/frames.js',
-      './src/app/fullscreen.js',
-      './src/app/keyboard.js',
-      './src/app/onLoad.js',
-      './src/app/open.js',
-      './src/app/updateFrame.js',
+      { path: './src/app/clipboard.js' },
+      { path: './src/app/command.js' },
+      { path: './src/app/initializeUI.js' },
+      { path: './src/app/history.js' },
+      { path: './src/app/frames.js' },
+      { path: './src/app/fullscreen.js' },
+      { path: './src/app/keyboard.js' },
+      { path: './src/app/onLoad.js' },
+      { path: './src/app/open.js' },
+      { path: './src/app/updateFrame.js' },
       // tools
-      './src/app/Tools/Base.js',
-      './src/app/Tools/Draw.js',
-      './src/app/Tools/Eraser.js',
-      './src/app/Tools/Fill.js',
-      './src/app/Tools/Line.js',
-      './src/app/Tools/Read.js',
-      './src/app/Tools/Rectangle.js',
-      './src/app/Tools/Select.js',
+      { path: './src/app/Tools/Base.js', loadBeforeNext: true },
+      { path: './src/app/Tools/Draw.js' },
+      { path: './src/app/Tools/Eraser.js' },
+      { path: './src/app/Tools/Fill.js' },
+      { path: './src/app/Tools/Line.js' },
+      { path: './src/app/Tools/Read.js' },
+      { path: './src/app/Tools/Rectangle.js' },
+      { path: './src/app/Tools/Select.js' },
       // dialogs
-      './src/app/Dialogs/New.js',
-      './src/app/Dialogs/MakeFrames.js',
-      './src/app/Dialogs/Canvas.js',
-      './src/app/Dialogs/OnionFrames.js'
+      { path: './src/app/Dialogs/New.js' },
+      { path: './src/app/Dialogs/MakeFrames.js' },
+      { path: './src/app/Dialogs/Canvas.js' },
+      { path: './src/app/Dialogs/OnionFrames.js' },
    ],
    css: [
-      './src/ui/Appbar/Appbar.css',
-      './src/ui/Dialog/Dialog.css',
-      './src/ui/Easel/Easel.css',
-      './src/ui/Canvas/Canvas.css',
-      './src/ui/ColorMixer/ColorMixer.css',
-      './src/ui/ContextMenu/ContextMenu.css',
-      './src/ui/Cursor/Cursor.css',
-      './src/ui/Frames/Frames.css',
-      './src/ui/Filedrop/Filedrop.css',
-      './src/ui/Layout/Layout.css',
-      './src/ui/Menu/Menu.css',
-      './src/ui/Pallet/Pallet.css',
-      './src/ui/Preview/Preview.css',
-      './src/ui/Statusbar/Statusbar.css',
-      './src/ui/Toolbox/Toolbox.css',
-      './src/ui/Toolbox/ToolboxIcons.css'
+      { path: './src/ui/Appbar/Appbar.css' },
+      { path: './src/ui/Dialog/Dialog.css' },
+      { path: './src/ui/Easel/Easel.css' },
+      { path: './src/ui/Canvas/Canvas.css' },
+      { path: './src/ui/ColorMixer/ColorMixer.css' },
+      { path: './src/ui/ContextMenu/ContextMenu.css' },
+      { path: './src/ui/Cursor/Cursor.css' },
+      { path: './src/ui/Frames/Frames.css' },
+      { path: './src/ui/Filedrop/Filedrop.css' },
+      { path: './src/ui/Layout/Layout.css' },
+      { path: './src/ui/Menu/Menu.css' },
+      { path: './src/ui/Pallet/Pallet.css' },
+      { path: './src/ui/Preview/Preview.css' },
+      { path: './src/ui/Statusbar/Statusbar.css' },
+      { path: './src/ui/Toolbox/Toolbox.css' },
+      { path: './src/ui/Toolbox/ToolboxIcons.css' },
    ]
 }
 
@@ -98,38 +98,46 @@ app.load = function(options){
          var breakCache = "?v="+Math.round(Math.random()*1000000000000000000)
 
          var element = {
-            css: { tag: 'link', attr: { href: file+breakCache, rel: 'stylesheet' } },
-            js: { tag: 'script', attr: { src: file+breakCache } },
+            css: { tag: 'link', attr: { href: file.path+breakCache, rel: 'stylesheet' }, file: file },
+            js: { tag: 'script', attr: { src: file.path+breakCache }, file: file },
          }[fileType]
 
          app.importing.push(element)
       }
    }
-   app.importingLength = app.importing.length
+
+   app.loadingTotal = app.importing.length
+   app.loading = app.importing.length
 
    app.loadNext()
 }
 
 app.loadNext = function() {
-   if(!app.importing.length) return app.isLoaded()
+   if (!app.importing.length) return
+   const importing = app.importing.shift()
 
-   var importing = app.importing.shift()
-   console.log(importing.attr.href ? importing.attr.href : importing.attr.src)
-
+   // create the element
    var htmlImporting = document.createElement(importing.tag)
    for(var attr in importing.attr) htmlImporting.setAttribute(attr, importing.attr[attr])
-
    document.head.appendChild(htmlImporting)
 
+   console.log(importing.attr.href ? importing.attr.href : importing.attr.src)
+
+   // this lets us pause on files incase they need to be extended by others
+   if (!importing.file.loadBeforeNext) app.loadNext()
+
    htmlImporting.onload = () => {
-      var percent = (app.importingLength - app.importing.length) / app.importingLength
+      app.loading -= 1
+      var percent = 1 - (app.loading / app.loadingTotal)
       app.onLoadStatus(percent, importing)
-      setTimeout(app.loadNext, 1) // trying to figure out github issue
+
+      if (!app.loading) app.isLoaded()
+      else if (importing.file.loadBeforeNext) app.loadNext()
    }
 }
 
 app.isLoaded = function() {
    console.groupEnd()
    console.log('importing complete: ' + (Date.now() - app.importStartTime) + 'ms')
-   app.onLoad()
+   setTimeout(app.onLoad, 10)
 }
